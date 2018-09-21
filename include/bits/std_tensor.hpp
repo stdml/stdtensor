@@ -13,7 +13,7 @@ template <typename R, rank_t r> class basic_tensor
   public:
     template <typename... D>
     constexpr explicit basic_tensor(D... d)
-        : shape_({static_cast<dim_t>(d)...}), data_(new R[shape_.size()])
+        : shape_(d...), data_(new R[shape_.size()])
     {
     }
 
