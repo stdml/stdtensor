@@ -3,9 +3,10 @@ language: cpp
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-5
+    - g++-5
 
 before_install:
-    - export CXX=g++-5
+- export CC=gcc-5
+- export CXX=g++-5
