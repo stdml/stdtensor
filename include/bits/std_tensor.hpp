@@ -23,5 +23,3 @@ template <typename R, rank_t r> class basic_tensor
     const shape<r> shape_;
     const std::unique_ptr<R[]> data_;
 };
-
-template <typename R, rank_t r> using tensor = basic_tensor<R, r>;

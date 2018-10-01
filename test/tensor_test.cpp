@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include <bits/std_tensor.hpp>
+#include <stdtensor>
 
 void test_1()
 {

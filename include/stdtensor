@@ -1,2 +1,2 @@
 #pragma once
-#include <bits/std_tensor.hpp>
+#include <stdtensor.hpp>
