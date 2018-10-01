@@ -46,6 +46,8 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     R *const data_;
 
   public:
+    static constexpr rank_t rank = 0;
+
     explicit basic_tensor_ref(R *data) : data_(data) {}
 
     explicit basic_tensor_ref(R *data, const shape_t &) : data_(data) {}
@@ -68,6 +70,8 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
     const R *const data_;
 
   public:
+    // static constexpr rank_t rank = 0;
+
     basic_tensor_view(const R *data) : data_(data) {}
 
     basic_tensor_view(const R *data, const shape_t &) : data_(data) {}
@@ -80,6 +84,8 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
     std::unique_ptr<R[]> data_;
 
   public:
+    static constexpr rank_t rank = 0;
+
     basic_tensor() : data_(new R[1]) {}
 
     using base_t = R;  // FIXME: deprecate
@@ -146,6 +152,8 @@ class basic_tensor_ref
     R *const data_;
 
   public:
+    static constexpr rank_t rank = r;
+
     template <typename... D>
     constexpr explicit basic_tensor_ref(R *data, D... d)
         : shape_(d...), data_(data)
@@ -202,6 +210,8 @@ class basic_tensor_view
     const R *const data_;
 
   public:
+    // static constexpr rank_t rank = r;
+
     template <typename... D>
     constexpr explicit basic_tensor_view(const R *data, D... d)
         : shape_(d...), data_(data)
@@ -245,6 +255,8 @@ class basic_tensor
     std::unique_ptr<R[]> data_;
 
   public:
+    static constexpr rank_t rank = r;
+
     template <typename... D>
     constexpr explicit basic_tensor(D... d)
         : shape_(d...), data_(new R[shape_.size()])
