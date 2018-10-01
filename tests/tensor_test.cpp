@@ -4,6 +4,8 @@
 
 #include <stdtensor>
 
+using namespace ttl;
+
 TEST(tensor_test, test1)
 {
     int h = 2;

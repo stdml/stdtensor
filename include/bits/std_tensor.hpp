@@ -3,6 +3,11 @@
 
 #include <bits/std_shape.hpp>
 
+namespace ttl
+{
+namespace internal
+{
+
 /* forward declarations */
 
 template <typename R, rank_t r, typename shape_t, typename elem_t>
@@ -241,3 +246,5 @@ class basic_tensor
 
     iterator end() const { return ref(*this).end(); }
 };
+}  // namespace internal
+}  // namespace ttl

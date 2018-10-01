@@ -1,5 +1,7 @@
 #include <stdtensor>
 
+using namespace ttl;
+
 void example_1()
 {
     using pixel_t = std::array<uint8_t, 3>;

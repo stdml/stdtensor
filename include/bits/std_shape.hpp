@@ -7,7 +7,9 @@
 #include <numeric>
 #include <utility>
 
-namespace
+namespace ttl
+{
+namespace internal
 {
 template <size_t off, typename T, size_t r, size_t... Is>
 constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
@@ -15,7 +17,6 @@ constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
 {
     return std::array<T, r - 1>{std::get<Is + off>(a)...};
 }
-}  // namespace
 
 using rank_t = uint8_t;
 
@@ -72,3 +73,5 @@ template <rank_t r, typename dim_t = uint32_t> class basic_shape
     //   private:
     const std::array<dim_t, r> dims;
 };
+}  // namespace internal
+}  // namespace ttl

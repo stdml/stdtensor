@@ -2,6 +2,8 @@
 
 #include <stdtensor>
 
+using namespace ttl::internal;
+
 using dim_t = uint32_t;
 template <rank_t r> using shape = basic_shape<r, dim_t>;
 
