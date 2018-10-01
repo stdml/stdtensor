@@ -2,6 +2,9 @@
 
 #include <stdtensor>
 
+using dim_t = uint32_t;
+template <rank_t r> using shape = basic_shape<r, dim_t>;
+
 void test_1()
 {
     int h = 2;

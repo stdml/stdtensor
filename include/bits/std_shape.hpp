@@ -8,7 +8,7 @@
 
 using rank_t = uint8_t;
 
-template <typename dim_t, rank_t r> class basic_shape
+template <rank_t r, typename dim_t = uint32_t> class basic_shape
 {
   public:
     static constexpr rank_t rank = r;
@@ -44,7 +44,3 @@ template <typename dim_t, rank_t r> class basic_shape
     //   private:
     const std::array<dim_t, r> dims;
 };
-
-using dim_t = uint32_t;
-
-template <rank_t r> using shape = basic_shape<dim_t, r>;
