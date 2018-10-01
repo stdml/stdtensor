@@ -23,17 +23,6 @@ TEST(tensor_test, test1)
     ASSERT_EQ(sum, n * (n + 1) / 2);
 }
 
-TEST(tensor_test, test2)
-{
-    using pixel_t = std::array<uint8_t, 3>;
-    static_assert(sizeof(pixel_t) == 3, "invalid pixel size");
-    using bmp_t = matrix<pixel_t>;
-
-    int h = 1024;
-    int w = 768;
-    bmp_t img(h, w);  // Note that img is fully packed, without row padding
-}
-
 template <bool write, typename T> struct test_assign_ {
     void operator()(T &x, int v) { x = v; }
 };
@@ -73,6 +62,23 @@ template <typename T, bool write = true> struct test_5d_array {
             int n = 3 * 4 * 5 * 6 * 7;
             int tot = std::accumulate(t.data(), t.data() + n, 0);
             if (write) { ASSERT_EQ(n * (n + 1) / 2, tot); }
+        }
+
+        if (write) {
+            int idx = 0;
+            for (const auto &t1 : t) {
+                for (const auto &t2 : t1) {
+                    for (const auto &t3 : t2) {
+                        for (const auto &&t4 : t3) {
+                            for (auto &&t5 : t4) {
+                                ++idx;
+                                auto v = scalar(t5);
+                                ASSERT_EQ(v, idx);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 };

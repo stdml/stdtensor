@@ -10,4 +10,5 @@ INSTALL(DIRECTORY include DESTINATION .)
 # TODO: C API
 
 ENABLE_TESTING()
-INCLUDE(cmake/test.cmake)
+INCLUDE(cmake/tests.cmake)
+INCLUDE(cmake/examples.cmake)
