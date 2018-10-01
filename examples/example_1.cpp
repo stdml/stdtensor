@@ -6,8 +6,8 @@ void example_1()
     static_assert(sizeof(pixel_t) == 3, "invalid pixel size");
     using bmp_t = matrix<pixel_t>;
 
-    int h = 1024;
-    int w = 768;
+    int w = 1024;
+    int h = 768;
     bmp_t img(h, w);  // Note that img is fully packed, without row padding
 }
 
