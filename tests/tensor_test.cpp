@@ -110,3 +110,11 @@ TEST(tensor_test, auto_ref)
 
     // f(t);  // FIXME: make it work
 }
+
+auto f2()
+{
+    tensor<int, 5> t(3, 4, 5, 6, 7);
+    return t;
+}
+
+TEST(tensor_test, return_tensor) { auto t = f2(); }

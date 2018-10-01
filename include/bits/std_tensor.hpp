@@ -236,7 +236,7 @@ class basic_tensor
         basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_ref_t>;
 
     const shape_t shape_;
-    const std::unique_ptr<R[]> data_;
+    std::unique_ptr<R[]> data_;
 
   public:
     template <typename... D>
