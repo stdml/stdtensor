@@ -9,6 +9,5 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 INSTALL(DIRECTORY include DESTINATION .)
 # TODO: C API
 
-# Targets
-ADD_EXECUTABLE(shape_test tests/shape_test.cpp)
-ADD_EXECUTABLE(tensor_test tests/tensor_test.cpp)
+ENABLE_TESTING()
+INCLUDE(cmake/test.cmake)

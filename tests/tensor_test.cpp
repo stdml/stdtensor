@@ -1,9 +1,10 @@
-#include <cassert>
+#include <gtest/gtest.h>
+
 #include <numeric>
 
 #include <stdtensor>
 
-void test_1()
+TEST(tensor_test, test1)
 {
     int h = 2;
     int w = 3;
@@ -19,10 +20,10 @@ void test_1()
     }
 
     int n = h * w - 1;
-    assert(sum == n * (n + 1) / 2);
+    ASSERT_EQ(sum, n * (n + 1) / 2);
 }
 
-void test_2()
+TEST(tensor_test, test2)
 {
     using pixel_t = std::array<uint8_t, 3>;
     static_assert(sizeof(pixel_t) == 3, "invalid pixel size");
@@ -71,12 +72,12 @@ template <typename T, bool write = true> struct test_5d_array {
             }
             int n = 3 * 4 * 5 * 6 * 7;
             int tot = std::accumulate(t.data(), t.data() + n, 0);
-            if (write) { assert(n * (n + 1) / 2 == tot); }
+            if (write) { ASSERT_EQ(n * (n + 1) / 2, tot); }
         }
     }
 };
 
-void test_3()
+TEST(tensor_test, test3)
 {
     tensor<int, 5> t(3, 4, 5, 6, 7);
     tensor_ref<int, 5> r(t.data(), t.shape());
@@ -85,12 +86,4 @@ void test_3()
     test_5d_array<decltype(t)>()(t);
     test_5d_array<decltype(r)>()(r);
     test_5d_array<decltype(v), false>()(v);
-}
-
-int main()
-{
-    test_1();
-    test_2();
-    test_3();
-    return 0;
 }
