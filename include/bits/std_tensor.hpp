@@ -44,9 +44,14 @@ class basic_tensor_iterator<R, 0, shape_t, elem_t>
 template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
 {
   public:
-    basic_tensor_ref(R *data) : data_(data) {}
+    explicit basic_tensor_ref(R *data) : data_(data) {}
 
-    basic_tensor_ref(R *data, const shape_t &) : data_(data) {}
+    explicit basic_tensor_ref(R *data, const shape_t &) : data_(data) {}
+
+    // basic_tensor_ref(const basic_tensor<R, 0, shape_t> &t) : data_(t.data())
+    // {
+    //     // FIXME: check if it is necessary
+    // }
 
     // R *data() { return data_; }
     // const R *data() const { return data_; }
@@ -137,6 +142,12 @@ class basic_tensor_ref
     constexpr explicit basic_tensor_ref(R *data, const shape_t &shape)
         : shape_(shape), data_(data)
     {
+    }
+
+    basic_tensor_ref(const basic_tensor<R, r, shape_t> &t)
+        : shape_(t.shape()), data_(t.data())
+    {
+        // FIXME: check if it is necessary
     }
 
     R *data() { return data_; }
