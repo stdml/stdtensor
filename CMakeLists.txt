@@ -9,6 +9,15 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 INSTALL(DIRECTORY include DESTINATION .)
 # TODO: C API
 
+OPTION(BUILD_TESTS "Build tests." ON)
+OPTION(BUILD_EXAMPLES "Build examples." ON)
+
 ENABLE_TESTING()
-INCLUDE(cmake/tests.cmake)
-INCLUDE(cmake/examples.cmake)
+
+IF(BUILD_TESTS)
+    INCLUDE(cmake/tests.cmake)
+ENDIF()
+
+IF(BUILD_EXAMPLES)
+    INCLUDE(cmake/examples.cmake)
+ENDIF()
