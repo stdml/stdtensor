@@ -95,3 +95,18 @@ TEST(tensor_test, test3)
     test_5d_array<decltype(r)>()(r);
     test_5d_array<decltype(v), false>()(v);
 }
+
+template <typename T> void f(const tensor_ref<T, 5> &x) {}
+
+TEST(tensor_test, auto_ref)
+{
+    tensor<int, 5> t(3, 4, 5, 6, 7);
+    f(ref(t));
+
+    tensor_ref<int, 5> r = t;
+    f(r);
+
+    f(tensor_ref<int, 5>(t));
+
+    // f(t);  // FIXME: make it work
+}
