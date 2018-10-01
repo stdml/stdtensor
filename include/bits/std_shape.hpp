@@ -24,7 +24,7 @@ template <rank_t r, typename dim_t = uint32_t> class basic_shape
         static_assert(sizeof...(D) == r, "invalid number of dims");
     }
 
-    template <typename... I> dim_t index(I... args) const
+    template <typename... I> dim_t offset(I... args) const
     {
         static_assert(sizeof...(I) == r, "invalid number of indexes");
 

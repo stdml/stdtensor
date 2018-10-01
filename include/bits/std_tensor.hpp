@@ -18,7 +18,10 @@ class basic_tensor
     {
     }
 
-    template <typename... I> R &at(I... i) { return data_[shape_.index(i...)]; }
+    template <typename... I> R &at(I... i)
+    {
+        return data_[shape_.offset(i...)];
+    }
 
   private:
     const shape_t shape_;
@@ -35,7 +38,10 @@ class basic_tensor_ref
     {
     }
 
-    template <typename... I> R &at(I... i) { return data_[shape_.index(i...)]; }
+    template <typename... I> R &at(I... i)
+    {
+        return data_[shape_.offset(i...)];
+    }
 
   private:
     const shape_t shape_;
@@ -52,7 +58,7 @@ class basic_tensor_view
     {
     }
 
-    template <typename... I> R at(I... i) { return data_[shape_.index(i...)]; }
+    template <typename... I> R at(I... i) { return data_[shape_.offset(i...)]; }
 
   private:
     const shape_t shape_;
