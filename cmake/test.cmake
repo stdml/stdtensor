@@ -3,7 +3,8 @@ EXTERNALPROJECT_ADD(libgtest-dev
                     GIT_REPOSITORY
                     https://github.com/google/googletest
                     CMAKE_ARGS
-                    -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/3rdparty)
+                    -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/3rdparty
+                    -DCMAKE_CXX_FLAGS=-std=c++11)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/3rdparty/include)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/3rdparty/lib)
