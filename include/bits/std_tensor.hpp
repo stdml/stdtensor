@@ -59,6 +59,8 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     R *data() { return data_; }
 
     const R *data() const { return data_; }
+
+    using base_t = R;  // FIXME: deprecate
 };
 
 template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
@@ -79,6 +81,8 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
 
   public:
     basic_tensor() : data_(new R[1]) {}
+
+    using base_t = R;  // FIXME: deprecate
 };
 
 template <typename R, typename shape_t>
@@ -182,6 +186,8 @@ class basic_tensor_ref
         return subspace_t(data_ + i * shape_.subspace_size(),
                           shape_.subshape());
     }
+
+    using base_t = R;  // FIXME: deprecate
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
@@ -265,6 +271,8 @@ class basic_tensor
     iterator begin() const { return ref(*this).begin(); }
 
     iterator end() const { return ref(*this).end(); }
+
+    using base_t = R;  // FIXME: deprecate
 };
 }  // namespace internal
 }  // namespace ttl
