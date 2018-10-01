@@ -10,5 +10,5 @@ INSTALL(DIRECTORY include DESTINATION .)
 # TODO: C API
 
 # Targets
-ADD_EXECUTABLE(shape_test test/shape_test.cpp)
-ADD_EXECUTABLE(tensor_test test/tensor_test.cpp)
+ADD_EXECUTABLE(shape_test tests/shape_test.cpp)
+ADD_EXECUTABLE(tensor_test tests/tensor_test.cpp)
