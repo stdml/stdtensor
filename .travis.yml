@@ -7,6 +7,5 @@ addons:
     packages:
       - g++-5
 
-matrix:
-  include:
-  - env: CXX=g++-5
+before_install:
+    - export CXX=g++-5
