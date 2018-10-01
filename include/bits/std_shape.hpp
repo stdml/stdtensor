@@ -5,6 +5,17 @@
 #include <cstdint>
 #include <functional>
 #include <numeric>
+#include <utility>
+
+namespace
+{
+template <size_t off, typename T, size_t r, size_t... Is>
+constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
+                                         std::index_sequence<Is...>)
+{
+    return std::array<T, r - 1>{std::get<Is + off>(a)...};
+}
+}  // namespace
 
 using rank_t = uint8_t;
 
@@ -39,6 +50,23 @@ template <rank_t r, typename dim_t = uint32_t> class basic_shape
     {
         return std::accumulate(dims.begin(), dims.end(), 1,
                                std::multiplies<dim_t>());
+    }
+
+    dim_t subspace_size() const
+    {
+        return std::accumulate(dims.begin() + 1, dims.end(), 1,
+                               std::multiplies<dim_t>());
+    }
+
+    template <rank_t corank = 1>
+    using subshape_t = basic_shape<r - corank, dim_t>;
+
+    template <rank_t corank = 1> basic_shape<r - corank, dim_t> subshape() const
+    {
+        static_assert(0 <= corank && corank <= r, "invalid corank");
+        constexpr rank_t s = r - corank;
+        return basic_shape<s, dim_t>(
+            shift_idx<corank>(dims, std::make_index_sequence<s>()));
     }
 
     //   private:
