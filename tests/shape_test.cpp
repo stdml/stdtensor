@@ -32,3 +32,9 @@ TEST(shape_test, test1)
         ASSERT_EQ(s.offset(1, 2, 3, 4, 5), 12345);
     }
 }
+
+TEST(shape_test, assign_test)
+{
+    shape<3> t(2, 3, 4);
+    shape<3> s = t;
+}
