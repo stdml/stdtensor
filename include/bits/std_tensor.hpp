@@ -194,6 +194,11 @@ class basic_tensor_ref
         return data_[shape_.offset(i...)];
     }
 
+    template <typename... I> const R &at(I... i) const
+    {
+        return data_[shape_.offset(i...)];
+    }
+
     iterator begin() const { return iterator(data_, shape_.subshape()); }
 
     iterator end() const
@@ -249,7 +254,10 @@ class basic_tensor_view
 
     shape_t shape() const { return shape_; }
 
-    template <typename... I> R at(I... i) { return data_[shape_.offset(i...)]; }
+    template <typename... I> const R &at(I... i) const
+    {
+        return data_[shape_.offset(i...)];
+    }
 
     iterator begin() const { return iterator(data_, shape_.subshape()); }
 
@@ -292,6 +300,11 @@ class basic_tensor
     shape_t shape() const { return shape_; }
 
     template <typename... I> R &at(I... i)
+    {
+        return data_[shape_.offset(i...)];
+    }
+
+    template <typename... I> const R &at(I... i) const
     {
         return data_[shape_.offset(i...)];
     }
