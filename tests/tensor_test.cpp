@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <numeric>
+#include <type_traits>
 
 #include <stdtensor>
 
@@ -96,19 +97,55 @@ TEST(tensor_test, test3)
     test_5d_array<decltype(v), false>()(v);
 }
 
-template <typename T> void f(const tensor_ref<T, 5> &x) {}
+template <typename T, uint8_t r> void ref_func(const tensor_ref<T, r> &x) {}
+
+template <typename T, uint8_t r> void test_auto_ref()
+{
+    static_assert(std::is_convertible<tensor<T, r>, tensor_ref<T, r>>::value,
+                  "can't convert to ref");
+}
 
 TEST(tensor_test, auto_ref)
 {
+    test_auto_ref<int, 0>();
+    test_auto_ref<int, 1>();
+    test_auto_ref<int, 2>();
+
     tensor<int, 5> t(3, 4, 5, 6, 7);
-    f(ref(t));
+    ref_func(ref(t));
 
     tensor_ref<int, 5> r = t;
-    f(r);
+    ref_func(r);
 
-    f(tensor_ref<int, 5>(t));
+    ref_func(tensor_ref<int, 5>(t));
+    // f(t);  // NOT possible
+}
 
-    // f(t);  // FIXME: make it work
+template <typename T, uint8_t r> void view_func(const tensor_view<T, r> &x) {}
+
+template <typename T, uint8_t r> void test_auto_view()
+{
+    static_assert(std::is_convertible<tensor<T, r>, tensor_view<T, r>>::value,
+                  "can't convert to ref");
+    static_assert(
+        std::is_convertible<tensor_ref<T, r>, tensor_view<T, r>>::value,
+        "can't convert to ref");
+}
+
+TEST(tensor_test, auto_view)
+{
+    test_auto_view<int, 0>();
+    test_auto_view<int, 1>();
+    test_auto_view<int, 2>();
+
+    tensor<int, 5> t(3, 4, 5, 6, 7);
+    view_func(view(t));
+
+    tensor_view<int, 5> r = t;
+    view_func(r);
+
+    view_func(tensor_view<int, 5>(t));
+    // view_func(t);  // NOT possible
 }
 
 auto f2()

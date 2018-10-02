@@ -55,7 +55,6 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     basic_tensor_ref(const basic_tensor<R, 0, shape_t> &t)
         : data_((R *)t.data())
     {
-        // FIXME: check if it is necessary
     }
 
     R *data() { return data_; }
@@ -75,6 +74,13 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
     basic_tensor_view(const R *data) : data_(data) {}
 
     basic_tensor_view(const R *data, const shape_t &) : data_(data) {}
+
+    basic_tensor_view(const basic_tensor<R, 0, shape_t> &t) : data_(t.data()) {}
+
+    basic_tensor_view(const basic_tensor_ref<R, 0, shape_t> &t)
+        : data_(t.data())
+    {
+    }
 
     const R *data() const { return data_; }
 };
@@ -110,6 +116,13 @@ basic_tensor_ref<R, r, shape_t> ref(const T<R, r, shape_t> &t)
     const R *const c_ptr = t.data();
     R *ptr = (R *)/* FIXME */ c_ptr;
     return basic_tensor_ref<R, r, shape_t>(ptr, t.shape());
+}
+
+template <template <typename, rank_t, typename> class T, typename R, rank_t r,
+          typename shape_t>
+basic_tensor_view<R, r, shape_t> view(const T<R, r, shape_t> &t)
+{
+    return basic_tensor_view<R, r, shape_t>(t.data(), t.shape());
 }
 
 /* rank > 0 */
@@ -168,7 +181,6 @@ class basic_tensor_ref
     basic_tensor_ref(const basic_tensor<R, r, shape_t> &t)
         : shape_(t.shape()), data_((R *)t.data())
     {
-        // FIXME: check if it is necessary
     }
 
     R *data() { return data_; }
@@ -220,6 +232,16 @@ class basic_tensor_view
 
     constexpr explicit basic_tensor_view(const R *data, const shape_t &shape)
         : shape_(shape), data_(data)
+    {
+    }
+
+    basic_tensor_view(const basic_tensor<R, r, shape_t> &t)
+        : shape_(t.shape()), data_(t.data())
+    {
+    }
+
+    basic_tensor_view(const basic_tensor_ref<R, r, shape_t> &t)
+        : shape_(t.shape()), data_(t.data())
     {
     }
 
