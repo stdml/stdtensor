@@ -1,7 +1,14 @@
 INCLUDE(ExternalProject)
+
+SET(GTEST_GIT_URL
+    https://github.com/google/googletest.git
+    CACHE
+    STRING
+    "URL for clone gtest")
+
 EXTERNALPROJECT_ADD(libgtest-dev
                     GIT_REPOSITORY
-                    https://github.com/google/googletest
+                    ${GTEST_GIT_URL}
                     CMAKE_ARGS
                     -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/3rdparty
                     -DCMAKE_CXX_FLAGS=-std=c++11

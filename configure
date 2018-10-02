@@ -1,3 +1,14 @@
+#!/bin/bash
+set -e
+
 PREFIX=$(pwd)/local
 
-cmake . -DCMAKE_INSTALL_PREFIX=${PREFIX}
+CMAKE_FLAGS=-DCMAKE_INSTALL_PREFIX=${PREFIX}
+
+if [ ! -z ${GTEST_GIT_URL} ]; then
+    echo "Using GTEST_GIT_URL=${GTEST_GIT_URL}"
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DGTEST_GIT_URL=${GTEST_GIT_URL}"
+fi
+
+echo "Using CMAKE_FLAGS=${CMAKE_FLAGS}"
+cmake . ${CMAKE_FLAGS}
