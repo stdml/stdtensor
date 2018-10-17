@@ -148,10 +148,56 @@ TEST(tensor_test, auto_view)
     // view_func(t);  // NOT possible
 }
 
-auto f2()
+auto create_tensor_func()
 {
     tensor<int, 5> t(3, 4, 5, 6, 7);
     return t;
 }
 
-TEST(tensor_test, return_tensor) { auto t = f2(); }
+TEST(tensor_test, return_tensor) { auto t = create_tensor_func(); }
+
+template <typename R> R read_tensor_func(const tensor<R, 2> &t, int i, int j)
+{
+    const R x = t.at(i, j);
+    return x;
+}
+
+template <typename R>
+R read_tensor_ref_func(const tensor_ref<R, 2> &t, int i, int j)
+{
+    const R x = t.at(i, j);
+    return x;
+}
+
+template <typename R>
+R read_tensor_view_func(const tensor_view<R, 2> &t, int i, int j)
+{
+    const R x = t.at(i, j);
+    return x;
+}
+
+TEST(tensor_test, test_read_access)
+{
+    tensor<int, 2> t(2, 2);
+
+    scalar(t[0][0]) = 1;
+    ASSERT_EQ(1, read_tensor_func(t, 0, 0));
+
+    scalar(t[0][0]) = 2;
+    ASSERT_EQ(2, read_tensor_ref_func(ref(t), 0, 0));
+
+    scalar(t[0][0]) = 3;
+    ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
+
+    {
+        auto v = view(t);
+        auto p = v.at(0, 0);
+        p += 1;
+        ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
+    }
+    {
+        auto &p = t.at(0, 0);
+        p += 1;
+        ASSERT_EQ(4, read_tensor_view_func(view(t), 0, 0));
+    }
+}
