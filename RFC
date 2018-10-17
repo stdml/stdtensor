@@ -1,6 +1,7 @@
 # stdtensor
 
 ## Overview
+
 The goal of stdtensor is to provide a C++ library for tensors in STL style.
 It will allow user to write program in a type safe and generic way.
 
@@ -10,14 +11,15 @@ It will allow user to write program in a type safe and generic way.
 
 ```cpp
 template <typename R, rank_t r>
-tensor_t<R, r>;  // the data owner type
+tensor<R, r>;  // the data owner type
 
 template <typename R, rank_t r>
-tensor_ref_t<R, r>; // the reference type
+tensor_ref<R, r>; // the reference type
 
 template <typename R, rank_t r>
-tensor_view_t<R, r>; // the read only reference type, like https://en.cppreference.com/w/cpp/header/string_view
+tensor_view<R, r>; // the read only reference type, like https://en.cppreference.com/w/cpp/header/string_view
 ```
+
 All the 3 kinds of data types should have the following methods:
 They should be as consist as https://en.cppreference.com/w/cpp/container/vector
 
@@ -29,17 +31,21 @@ R &at(...);
 const R at();
 
 rank_t rank();
-std::array_t<dim_t, r> dims();
+std::array<dim_t, r> dims();
 
 size_t size(); // the product of all dims
 ```
 
 ### generic algorithms for tensors
 
-### advanced features
-- allow memory to be allocated on GPU via [`thrust::device_vector`](https://github.com/thrust/thrust)
+TODO
 
-## Potential usages:
+### advanced features
+
+- allow memory to be allocated on GPU via [`thrust::device_vector`](https://github.com/thrust/thrust)
+- small tensors with constexpr shape
+
+## Potential usages
 
 - type safe memory buffer
 - the tensor counter part of [`std::vector`](https://en.cppreference.com/w/cpp/container/vector)
