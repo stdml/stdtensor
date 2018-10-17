@@ -201,12 +201,7 @@ class basic_tensor_ref
 
     shape_t shape() const { return shape_; }
 
-    template <typename... I> R &at(I... i)
-    {
-        return data_[shape_.offset(i...)];
-    }
-
-    template <typename... I> const R &at(I... i) const
+    template <typename... I> R &at(I... i) const
     {
         return data_[shape_.offset(i...)];
     }
@@ -318,12 +313,7 @@ class basic_tensor
 
     shape_t shape() const { return shape_; }
 
-    template <typename... I> R &at(I... i)
-    {
-        return data_[shape_.offset(i...)];
-    }
-
-    template <typename... I> const R &at(I... i) const
+    template <typename... I> R &at(I... i) const
     {
         return data_[shape_.offset(i...)];
     }
