@@ -75,7 +75,7 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
   public:
     using value_type = R;
 
-    // static constexpr rank_t rank = 0;
+    static constexpr rank_t rank = 0;
 
     basic_tensor_view(const R *data) : data_(data) {}
 
@@ -236,7 +236,7 @@ class basic_tensor_view
   public:
     using value_type = R;
 
-    // static constexpr rank_t rank = r;
+    static constexpr rank_t rank = r;
 
     template <typename... D>
     constexpr explicit basic_tensor_view(const R *data, D... d)

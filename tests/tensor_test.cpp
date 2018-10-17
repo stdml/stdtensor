@@ -201,3 +201,41 @@ TEST(tensor_test, test_read_access)
         ASSERT_EQ(4, read_tensor_view_func(view(t), 0, 0));
     }
 }
+
+template <template <typename, ttl::internal::rank_t, typename> class T,
+          typename R, ttl::internal::rank_t r, typename shape_type>
+void test_static_properties(const T<R, r, shape_type> &)
+{
+    using t = T<R, r, shape_type>;
+    static_assert(std::is_same<typename t::value_type, R>::value,
+                  "invalid value_type");
+    static_assert(t::rank == r, "invalid rank");
+}
+
+TEST(tensor_test, test_static_properties)
+{
+    {
+        tensor<float, 0> t;
+        test_static_properties(t);
+        test_static_properties(ref(t));
+        test_static_properties(view(t));
+    }
+    {
+        tensor<float, 1> t(1);
+        test_static_properties(t);
+        test_static_properties(ref(t));
+        test_static_properties(view(t));
+    }
+    {
+        tensor<float, 2> t(1, 1);
+        test_static_properties(t);
+        test_static_properties(ref(t));
+        test_static_properties(view(t));
+    }
+    {
+        tensor<float, 3> t(1, 1, 1);
+        test_static_properties(t);
+        test_static_properties(ref(t));
+        test_static_properties(view(t));
+    }
+}
