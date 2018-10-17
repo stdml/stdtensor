@@ -99,6 +99,8 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
     static constexpr rank_t rank = 0;
 
     basic_tensor() : data_(new R[1]) {}
+
+    explicit basic_tensor(const shape_t &_) : data_(new R[1]) {}
 };
 
 template <typename R, typename shape_t>
