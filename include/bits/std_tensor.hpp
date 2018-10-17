@@ -104,7 +104,7 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
 
     shape_t shape() const { return shape_t(); }
 
-    R *data() const { return data_; }
+    R *data() const { return data_.get(); }
 };
 
 template <typename R, typename shape_t>
