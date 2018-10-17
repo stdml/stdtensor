@@ -217,6 +217,8 @@ class basic_tensor_ref
         return subspace_t(data_ + i * shape_.subspace_size(),
                           shape_.subshape());
     }
+
+    using own_t = basic_tensor<R, r, shape_t>;  // FIXME: deprecate
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
