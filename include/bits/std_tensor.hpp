@@ -327,7 +327,7 @@ class basic_tensor
 
     iterator end() const { return ref(*this).end(); }
 
-    using ref_t = subspace_ref_t;  // FIXME: deprecate
+    using ref_t = basic_tensor_ref<R, r, subshape_shape_t>;  // FIXME: deprecate
 };
 }  // namespace internal
 }  // namespace ttl
