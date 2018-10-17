@@ -103,6 +103,8 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
     explicit basic_tensor(const shape_t &_) : data_(new R[1]) {}
 
     shape_t shape() const { return shape_t(); }
+
+    R *data() const { return data_; }
 };
 
 template <typename R, typename shape_t>
