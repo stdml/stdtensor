@@ -61,9 +61,7 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     {
     }
 
-    R *data() { return data_; }
-
-    const R *data() const { return data_; }
+    R *data() const { return data_; }
 
     using own_t = basic_tensor<R, 0, shape_t>;  // FIXME: deprecate
 };
@@ -191,9 +189,7 @@ class basic_tensor_ref
     {
     }
 
-    R *data() { return data_; }
-
-    const R *data() const { return data_; }
+    R *data() const { return data_; }
 
     shape_t shape() const { return shape_; }
 
@@ -305,9 +301,7 @@ class basic_tensor
     {
     }
 
-    R *data() { return data_.get(); }
-
-    const R *data() const { return data_.get(); }
+    R *data() const { return data_.get(); }
 
     shape_t shape() const { return shape_; }
 
