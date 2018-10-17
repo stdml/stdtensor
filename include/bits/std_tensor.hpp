@@ -301,6 +301,11 @@ class basic_tensor
     {
     }
 
+    constexpr explicit basic_tensor(const shape_t &shape)
+        : shape_(shape), data_(new R[shape_.size()])
+    {
+    }
+
     R *data() const { return data_.get(); }
 
     shape_t shape() const { return shape_; }
