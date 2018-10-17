@@ -61,6 +61,8 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     {
     }
 
+    shape_t shape() const { return shape_t(); }
+
     R *data() const { return data_; }
 
     using own_t = basic_tensor<R, 0, shape_t>;  // FIXME: deprecate
