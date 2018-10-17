@@ -204,12 +204,13 @@ TEST(tensor_test, test_read_access)
 
 template <template <typename, ttl::internal::rank_t, typename> class T,
           typename R, ttl::internal::rank_t r, typename shape_type>
-void test_static_properties(const T<R, r, shape_type> &)
+void test_static_properties(const T<R, r, shape_type> &x)
 {
     using t = T<R, r, shape_type>;
     static_assert(std::is_same<typename t::value_type, R>::value,
                   "invalid value_type");
     static_assert(t::rank == r, "invalid rank");
+    static_assert(decltype(x.shape())::rank == r, "invalid rank of shape");
 }
 
 TEST(tensor_test, test_static_properties)

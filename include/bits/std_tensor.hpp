@@ -88,6 +88,8 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
     {
     }
 
+    shape_t shape() const { return shape_t(); }
+
     const R *data() const { return data_; }
 };
 
