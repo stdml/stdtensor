@@ -211,6 +211,11 @@ void test_static_properties(const T<R, r, shape_type> &x)
                   "invalid value_type");
     static_assert(t::rank == r, "invalid rank");
     static_assert(decltype(x.shape())::rank == r, "invalid rank of shape");
+    static_assert(
+        std::is_same<typename std::remove_const<typename std::remove_pointer<
+                         decltype(x.data())>::type>::type,
+                     R>::value,
+        "invalid data type");
 }
 
 TEST(tensor_test, test_static_properties)
