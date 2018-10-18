@@ -39,6 +39,8 @@ class basic_tensor_iterator<R, 0, shape_t, elem_t>
     void _advance(size_t k) { pos += k; }
 
     elem_t operator*() const { return elem_t((R *)/* FIXME */ pos, shape_t()); }
+    // TODO: return elem_t::value_type instead of elem_t
+    // typename elem_t::value_type operator*() const { *pos; }
 };
 
 template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
@@ -46,6 +48,8 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     R *const data_;
 
   public:
+    using value_type = R;
+
     static constexpr rank_t rank = 0;
 
     explicit basic_tensor_ref(R *data) : data_(data) {}
@@ -57,11 +61,11 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     {
     }
 
-    R *data() { return data_; }
+    shape_t shape() const { return shape_t(); }
 
-    const R *data() const { return data_; }
+    R *data() const { return data_; }
 
-    using base_t = R;  // FIXME: deprecate
+    using own_t = basic_tensor<R, 0, shape_t>;  // FIXME: deprecate
 };
 
 template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
@@ -69,7 +73,9 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
     const R *const data_;
 
   public:
-    // static constexpr rank_t rank = 0;
+    using value_type = R;
+
+    static constexpr rank_t rank = 0;
 
     basic_tensor_view(const R *data) : data_(data) {}
 
@@ -82,6 +88,8 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
     {
     }
 
+    shape_t shape() const { return shape_t(); }
+
     const R *data() const { return data_; }
 };
 
@@ -90,11 +98,17 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
     std::unique_ptr<R[]> data_;
 
   public:
+    using value_type = R;
+
     static constexpr rank_t rank = 0;
 
     basic_tensor() : data_(new R[1]) {}
 
-    using base_t = R;  // FIXME: deprecate
+    explicit basic_tensor(const shape_t &_) : data_(new R[1]) {}
+
+    shape_t shape() const { return shape_t(); }
+
+    R *data() const { return data_.get(); }
 };
 
 template <typename R, typename shape_t>
@@ -165,6 +179,8 @@ class basic_tensor_ref
     R *const data_;
 
   public:
+    using value_type = R;
+
     static constexpr rank_t rank = r;
 
     template <typename... D>
@@ -183,18 +199,11 @@ class basic_tensor_ref
     {
     }
 
-    R *data() { return data_; }
-
-    const R *data() const { return data_; }
+    R *data() const { return data_; }
 
     shape_t shape() const { return shape_; }
 
-    template <typename... I> R &at(I... i)
-    {
-        return data_[shape_.offset(i...)];
-    }
-
-    template <typename... I> const R &at(I... i) const
+    template <typename... I> R &at(I... i) const
     {
         return data_[shape_.offset(i...)];
     }
@@ -212,7 +221,7 @@ class basic_tensor_ref
                           shape_.subshape());
     }
 
-    using base_t = R;  // FIXME: deprecate
+    using own_t = basic_tensor<R, r, shape_t>;  // FIXME: deprecate
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
@@ -227,7 +236,9 @@ class basic_tensor_view
     const R *const data_;
 
   public:
-    // static constexpr rank_t rank = r;
+    using value_type = R;
+
+    static constexpr rank_t rank = r;
 
     template <typename... D>
     constexpr explicit basic_tensor_view(const R *data, D... d)
@@ -285,6 +296,8 @@ class basic_tensor
     std::unique_ptr<R[]> data_;
 
   public:
+    using value_type = R;
+
     static constexpr rank_t rank = r;
 
     template <typename... D>
@@ -293,18 +306,16 @@ class basic_tensor
     {
     }
 
-    R *data() { return data_.get(); }
+    constexpr explicit basic_tensor(const shape_t &shape)
+        : shape_(shape), data_(new R[shape_.size()])
+    {
+    }
 
-    const R *data() const { return data_.get(); }
+    R *data() const { return data_.get(); }
 
     shape_t shape() const { return shape_; }
 
-    template <typename... I> R &at(I... i)
-    {
-        return data_[shape_.offset(i...)];
-    }
-
-    template <typename... I> const R &at(I... i) const
+    template <typename... I> R &at(I... i) const
     {
         return data_[shape_.offset(i...)];
     }
@@ -319,8 +330,7 @@ class basic_tensor
 
     iterator end() const { return ref(*this).end(); }
 
-    using base_t = R;              // FIXME: deprecate
-    using ref_t = subspace_ref_t;  // FIXME: deprecate
+    using ref_t = basic_tensor_ref<R, r, shape_t>;  // FIXME: deprecate
 };
 }  // namespace internal
 }  // namespace ttl

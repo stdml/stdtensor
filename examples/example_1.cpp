@@ -4,17 +4,6 @@ using namespace ttl;
 
 void example_1()
 {
-    using pixel_t = std::array<uint8_t, 3>;
-    static_assert(sizeof(pixel_t) == 3, "invalid pixel size");
-    using bmp_t = matrix<pixel_t>;
-
-    int h = 768;
-    int w = 1024;
-    bmp_t img(h, w);  // Note that img is fully packed, without row padding
-}
-
-void example_2()
-{
     const int h = 3;
     const int w = 4;
     const int c = 5;
@@ -51,6 +40,5 @@ void example_2()
 int main()
 {
     example_1();
-    example_2();
     return 0;
 }
