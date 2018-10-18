@@ -19,15 +19,16 @@ EXTERNALPROJECT_ADD(libgtest-dev
                     -Dgtest_disable_pthreads=1
                     -DBUILD_GMOCK=0)
 
-INCLUDE_DIRECTORIES(${PREFIX}/include)
 LINK_DIRECTORIES(${PREFIX}/lib)
 
 ADD_EXECUTABLE(all_tests
                tests/shape_test.cpp
+               tests/generic_shape_test.cpp
                tests/tensor_test.cpp
+               tests/generic_tensor_test.cpp
                tests/test_all.cpp)
-
 TARGET_LINK_LIBRARIES(all_tests gtest)
 ADD_DEPENDENCIES(all_tests libgtest-dev)
+TARGET_INCLUDE_DIRECTORIES(all_tests PRIVATE ${PREFIX}/include)
 
 ADD_TEST(NAME all_tests COMMAND all_tests)
