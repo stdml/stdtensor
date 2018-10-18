@@ -21,14 +21,15 @@ EXTERNALPROJECT_ADD(libgtest-dev
 
 LINK_DIRECTORIES(${PREFIX}/lib)
 
-ADD_EXECUTABLE(all_tests
-               tests/shape_test.cpp
-               tests/generic_shape_test.cpp
-               tests/tensor_test.cpp
-               tests/generic_tensor_test.cpp
-               tests/test_all.cpp)
-TARGET_LINK_LIBRARIES(all_tests gtest)
-ADD_DEPENDENCIES(all_tests libgtest-dev)
-TARGET_INCLUDE_DIRECTORIES(all_tests PRIVATE ${PREFIX}/include)
+FUNCTION(ADD_GTEST target)
+    ADD_EXECUTABLE(${target} ${ARGN} tests/test_all.cpp)
+    TARGET_LINK_LIBRARIES(${target} gtest)
+    ADD_DEPENDENCIES(${target} libgtest-dev)
+    TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${PREFIX}/include)
+    ADD_TEST(NAME ${target} COMMAND ${target})
+ENDFUNCTION()
 
-ADD_TEST(NAME all_tests COMMAND all_tests)
+ADD_GTEST(shape-test tests/shape_test.cpp)
+ADD_GTEST(generic-shape-test tests/generic_shape_test.cpp)
+ADD_GTEST(tensor-test tests/tensor_test.cpp)
+ADD_GTEST(generic-tensor-test tests/generic_tensor_test.cpp)
