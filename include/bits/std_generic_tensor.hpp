@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <memory>
 
-#include <bits/std_data_type_encoding.hpp>
 #include <bits/std_generic_shape.hpp>
+#include <bits/std_scalar_type_encoding.hpp>
 #include <bits/std_tensor.hpp>
 
 namespace ttl

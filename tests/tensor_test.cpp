@@ -5,7 +5,9 @@
 
 #include <stdtensor>
 
-using namespace ttl;
+using ttl::tensor;
+using ttl::tensor_ref;
+using ttl::tensor_view;
 
 TEST(tensor_test, test1)
 {

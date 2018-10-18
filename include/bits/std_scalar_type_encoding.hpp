@@ -3,7 +3,6 @@
 
 namespace ttl
 {
-
 namespace internal
 {
 

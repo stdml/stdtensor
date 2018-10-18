@@ -1,10 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <bits/std_data_type_encoding.hpp>
-#include <bits/std_generic_tensor.hpp>
+#include <stdtensor>
 
-using generic_shape = ttl::internal::basic_generic_shape<std::uint32_t>;
-using generic_tensor = ttl::internal::basic_generic_tensor<generic_shape>;
+using ttl::generic_shape;
+using ttl::generic_tensor;
 
 TEST(generic_tensor_test, test1)
 {
