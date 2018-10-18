@@ -12,8 +12,7 @@ namespace ttl
 namespace internal
 {
 
-template <typename shape_t = basic_generic_shape<std::uint32_t>>
-class basic_generic_tensor
+template <typename shape_t = basic_generic_shape<>> class basic_generic_tensor
 {
     const data_type_info value_type_;
     const shape_t shape_;
@@ -56,18 +55,11 @@ class basic_generic_tensor
   private:
     template <typename T> T _ranked_as() const
     {
-        constexpr rank_t r = T::rank;
         using R = typename T::value_type;
-        using dim_t = typename shape_t::dim_type;
-
         // TODO: use contracts of c++20
         assert(typeinfo<R>().code == value_type_.code);
-        assert(r == shape_.rank());
-        std::array<dim_t, r> d;
-        std::copy(shape_.dims.begin(), shape_.dims.end(), d.begin());
-        const basic_shape<r, dim_t> shape(
-            d);  // FIXME: use shape_.as_ranked<r>()
-        return T(reinterpret_cast<R *>(data_.get()), shape);
+        return T(reinterpret_cast<R *>(data_.get()),
+                 shape_.template as_ranked<T::rank>());
     }
 };
 

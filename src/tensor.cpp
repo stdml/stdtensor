@@ -1,39 +1,32 @@
 #include <cstdarg>
 
+#include <stdtensor>
 #include <tensor.h>
 
-#include <stdtensor>
+using ttl::generic_shape;
+using ttl::generic_tensor;
 
-#include <bits/std_generic_tensor.hpp>
-
-template <typename T>
-using encoding = ttl::internal::default_data_type_encoding<T>;
-
-using generic_shape = ttl::internal::basic_generic_shape<std::uint32_t>;
-using generic_tensor = ttl::internal::basic_generic_tensor<generic_shape>;
-
-class tensor_s
-{
-  public:
-    tensor_s(generic_tensor *ptr) : ptr(ptr) {}
+struct tensor_s {
+    tensor_s(generic_tensor *ptr) : ptr_(ptr) {}
 
   private:
-    std::unique_ptr<generic_tensor> ptr;
+    std::unique_ptr<generic_tensor> ptr_;
 };
 
 tensor_t *new_tensor(uint8_t data_type, int rank, ...)
 {
-    std::vector<uint32_t> dims;
+    std::vector<generic_shape::dim_type> dims;
     va_list list;
     va_start(list, rank);
     for (auto i = 0; i < rank; ++i) {
-        uint32_t dim = va_arg(list, uint32_t);
+        generic_shape::dim_type dim = va_arg(list, generic_shape::dim_type);
         dims.push_back(dim);
     }
     va_end(list);
     generic_shape shape(dims);
 
-    ttl::internal::data_type_info value_type = {data_type, 1};
+    ttl::internal::data_type_info value_type = {
+        data_type, 1};  // FIXME: get data size by data_type
     return new tensor_s(new generic_tensor(value_type, shape));
 }
 
