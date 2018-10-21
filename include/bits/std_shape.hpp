@@ -20,9 +20,13 @@ constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
 
 using rank_t = uint8_t;
 
-template <rank_t r, typename dim_t = uint32_t> class basic_shape
+template <rank_t r, typename Dim = uint32_t> class basic_shape
 {
+    using dim_t = Dim;
+
   public:
+    using dimension_type = Dim;
+
     static constexpr rank_t rank = r;
 
     constexpr explicit basic_shape(const std::array<dim_t, r> &dims)
@@ -49,13 +53,13 @@ template <rank_t r, typename dim_t = uint32_t> class basic_shape
 
     dim_t size() const
     {
-        return std::accumulate(dims.begin(), dims.end(), 1,
+        return std::accumulate(dims.begin(), dims.end(), (dim_t)1,
                                std::multiplies<dim_t>());
     }
 
     dim_t subspace_size() const
     {
-        return std::accumulate(dims.begin() + 1, dims.end(), 1,
+        return std::accumulate(dims.begin() + 1, dims.end(), (dim_t)1,
                                std::multiplies<dim_t>());
     }
 

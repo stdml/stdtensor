@@ -11,10 +11,12 @@ namespace ttl
 namespace internal
 {
 
-template <typename dim_t = uint32_t> class basic_generic_shape
+template <typename Dim = uint32_t> class basic_generic_shape
 {
+    using dim_t = Dim;
+
   public:
-    using dim_type = dim_t;
+    using dimension_type = Dim;
 
     template <typename... D>
     explicit basic_generic_shape(D... d) : dims({static_cast<dim_t>(d)...})
@@ -28,7 +30,7 @@ template <typename dim_t = uint32_t> class basic_generic_shape
 
     dim_t size() const
     {
-        return std::accumulate(dims.begin(), dims.end(), 1,
+        return std::accumulate(dims.begin(), dims.end(), (dim_t)1,
                                std::multiplies<dim_t>());
     }
 

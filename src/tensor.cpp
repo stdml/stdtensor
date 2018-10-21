@@ -15,11 +15,13 @@ struct tensor_s {
 
 tensor_t *new_tensor(uint8_t data_type, int rank, ...)
 {
-    std::vector<generic_shape::dim_type> dims;
+    using dim_t = generic_shape::dimension_type;
+
+    std::vector<dim_t> dims;
     va_list list;
     va_start(list, rank);
     for (auto i = 0; i < rank; ++i) {
-        generic_shape::dim_type dim = va_arg(list, generic_shape::dim_type);
+        dim_t dim = va_arg(list, dim_t);
         dims.push_back(dim);
     }
     va_end(list);
