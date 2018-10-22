@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 
 #include <bits/std_raw_shape.hpp>
 #include <bits/std_scalar_type_encoding.hpp>
@@ -57,7 +58,9 @@ template <typename shape_t = basic_raw_shape<>> class basic_raw_tensor
     {
         using R = typename T::value_type;
         // TODO: use contracts of c++20
-        assert(typeinfo<R>().code == value_type_.code);
+        if (typeinfo<R>().code != value_type_.code) {
+            throw std::invalid_argument("invalid scalar type");
+        }
         return T(reinterpret_cast<R *>(data_.get()),
                  shape_.template as_ranked<T::rank>());
     }

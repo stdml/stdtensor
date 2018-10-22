@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <functional>
 #include <numeric>
+#include <stdexcept>
 #include <vector>
 
 #include <bits/std_shape.hpp>
@@ -37,7 +38,7 @@ template <typename Dim = uint32_t> class basic_raw_shape
     template <rank_t r> basic_shape<r, dim_t> as_ranked() const
     {
         // TODO: use contracts of c++20
-        assert(r == rank());
+        if (r != rank()) { throw std::invalid_argument("invalid rank"); }
         std::array<dim_t, r> d;
         std::copy(dims.begin(), dims.end(), d.begin());
         return basic_shape<r, dim_t>(d);
