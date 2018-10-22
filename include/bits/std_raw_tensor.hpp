@@ -22,8 +22,7 @@ template <typename shape_t = basic_raw_shape<>> class basic_raw_tensor
   public:
     template <typename... D>
     explicit basic_raw_tensor(const data_type_info &value_type, D... d)
-        : value_type_(value_type), shape_(d...),
-          data_(new char[shape_.size() * value_type.size])
+        : basic_raw_tensor(value_type, shape_t(d...))
     {
     }
 
@@ -44,17 +43,17 @@ template <typename shape_t = basic_raw_shape<>> class basic_raw_tensor
     template <typename R, rank_t r, typename shape_type = basic_shape<r>>
     basic_tensor_ref<R, r, shape_type> ref_as() const
     {
-        return _ranked_as<basic_tensor_ref<R, r, shape_type>>();
+        return ranked_as<basic_tensor_ref<R, r, shape_type>>();
     }
 
     template <typename R, rank_t r, typename shape_type = basic_shape<r>>
     basic_tensor_view<R, r, shape_type> view_as() const
     {
-        return _ranked_as<basic_tensor_view<R, r, shape_type>>();
+        return ranked_as<basic_tensor_view<R, r, shape_type>>();
     }
 
   private:
-    template <typename T> T _ranked_as() const
+    template <typename T> T ranked_as() const
     {
         using R = typename T::value_type;
         // TODO: use contracts of c++20

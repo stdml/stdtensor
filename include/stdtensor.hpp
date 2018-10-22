@@ -1,4 +1,6 @@
 #pragma once
+#include <bits/std_flat_tensor.hpp>
+#include <bits/std_raw_tensor.hpp>
 #include <bits/std_tensor.hpp>
 
 namespace ttl
@@ -20,12 +22,9 @@ template <typename R> using vector_view = tensor_view<R, 1>;
 template <typename R> using matrix = tensor<R, 2>;
 template <typename R> using matrix_ref = tensor_ref<R, 2>;
 template <typename R> using matrix_view = tensor_view<R, 2>;
-}  // namespace ttl
 
-#include <bits/std_raw_tensor.hpp>
-
-namespace ttl
-{
 using raw_shape = internal::basic_raw_shape<>;
-using raw_tensor = internal::basic_raw_tensor<raw_shape>;
+using raw_tensor = internal::basic_raw_tensor<>;
+
+template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
 }  // namespace ttl
