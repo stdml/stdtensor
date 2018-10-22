@@ -6,11 +6,8 @@
 using ttl::raw_shape;
 using ttl::raw_tensor;
 
-struct tensor_s {
-    tensor_s(raw_tensor *ptr) : ptr_(ptr) {}
-
-  private:
-    std::unique_ptr<raw_tensor> ptr_;
+struct tensor_s : raw_tensor {
+    using raw_tensor::raw_tensor;
 };
 
 tensor_t *new_tensor(uint8_t data_type, int rank, ...)
@@ -29,7 +26,7 @@ tensor_t *new_tensor(uint8_t data_type, int rank, ...)
 
     ttl::internal::data_type_info value_type = {
         data_type, 1};  // FIXME: get data size by data_type
-    return new tensor_s(new raw_tensor(value_type, shape));
+    return new tensor_s(value_type, shape);
 }
 
 void del_tensor(const tensor_t *pt) { delete pt; }
