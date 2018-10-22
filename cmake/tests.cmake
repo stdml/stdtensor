@@ -26,6 +26,7 @@ FUNCTION(ADD_GTEST target)
     TARGET_LINK_LIBRARIES(${target} gtest)
     ADD_DEPENDENCIES(${target} libgtest-dev)
     TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${PREFIX}/include)
+    TARGET_LINK_LIBRARIES(${target} stdtensor)
     ADD_TEST(NAME ${target} COMMAND ${target})
 ENDFUNCTION()
 
