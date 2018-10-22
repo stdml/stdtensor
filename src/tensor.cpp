@@ -3,19 +3,19 @@
 #include <stdtensor>
 #include <tensor.h>
 
-using ttl::generic_shape;
-using ttl::generic_tensor;
+using ttl::raw_shape;
+using ttl::raw_tensor;
 
 struct tensor_s {
-    tensor_s(generic_tensor *ptr) : ptr_(ptr) {}
+    tensor_s(raw_tensor *ptr) : ptr_(ptr) {}
 
   private:
-    std::unique_ptr<generic_tensor> ptr_;
+    std::unique_ptr<raw_tensor> ptr_;
 };
 
 tensor_t *new_tensor(uint8_t data_type, int rank, ...)
 {
-    using dim_t = generic_shape::dimension_type;
+    using dim_t = raw_shape::dimension_type;
 
     std::vector<dim_t> dims;
     va_list list;
@@ -25,11 +25,11 @@ tensor_t *new_tensor(uint8_t data_type, int rank, ...)
         dims.push_back(dim);
     }
     va_end(list);
-    generic_shape shape(dims);
+    raw_shape shape(dims);
 
     ttl::internal::data_type_info value_type = {
         data_type, 1};  // FIXME: get data size by data_type
-    return new tensor_s(new generic_tensor(value_type, shape));
+    return new tensor_s(new raw_tensor(value_type, shape));
 }
 
 void del_tensor(const tensor_t *pt) { delete pt; }

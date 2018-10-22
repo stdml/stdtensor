@@ -22,10 +22,10 @@ template <typename R> using matrix_ref = tensor_ref<R, 2>;
 template <typename R> using matrix_view = tensor_view<R, 2>;
 }  // namespace ttl
 
-#include <bits/std_generic_tensor.hpp>
+#include <bits/std_raw_tensor.hpp>
 
 namespace ttl
 {
-using generic_shape = internal::basic_generic_shape<>;
-using generic_tensor = internal::basic_generic_tensor<generic_shape>;
+using raw_shape = internal::basic_raw_shape<>;
+using raw_tensor = internal::basic_raw_tensor<raw_shape>;
 }  // namespace ttl

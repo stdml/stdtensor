@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <memory>
 
-#include <bits/std_generic_shape.hpp>
+#include <bits/std_raw_shape.hpp>
 #include <bits/std_scalar_type_encoding.hpp>
 #include <bits/std_tensor.hpp>
 
@@ -12,7 +12,7 @@ namespace ttl
 namespace internal
 {
 
-template <typename shape_t = basic_generic_shape<>> class basic_generic_tensor
+template <typename shape_t = basic_raw_shape<>> class basic_raw_tensor
 {
     const data_type_info value_type_;
     const shape_t shape_;
@@ -20,14 +20,14 @@ template <typename shape_t = basic_generic_shape<>> class basic_generic_tensor
 
   public:
     template <typename... D>
-    explicit basic_generic_tensor(const data_type_info &value_type, D... d)
+    explicit basic_raw_tensor(const data_type_info &value_type, D... d)
         : value_type_(value_type), shape_(d...),
           data_(new char[shape_.size() * value_type.size])
     {
     }
 
-    explicit basic_generic_tensor(const data_type_info &value_type,
-                                  const shape_t &shape)
+    explicit basic_raw_tensor(const data_type_info &value_type,
+                              const shape_t &shape)
         : value_type_(value_type), shape_(shape),
           data_(new char[shape_.size() * value_type.size])
     {

@@ -11,7 +11,7 @@ namespace ttl
 namespace internal
 {
 
-template <typename Dim = uint32_t> class basic_generic_shape
+template <typename Dim = uint32_t> class basic_raw_shape
 {
     using dim_t = Dim;
 
@@ -19,12 +19,12 @@ template <typename Dim = uint32_t> class basic_generic_shape
     using dimension_type = Dim;
 
     template <typename... D>
-    explicit basic_generic_shape(D... d) : dims({static_cast<dim_t>(d)...})
+    explicit basic_raw_shape(D... d) : dims({static_cast<dim_t>(d)...})
     {
         static_assert(sizeof...(D) <= 0xff, "too many dimensions");
     }
 
-    explicit basic_generic_shape(const std::vector<dim_t> &dims) : dims(dims) {}
+    explicit basic_raw_shape(const std::vector<dim_t> &dims) : dims(dims) {}
 
     rank_t rank() const { return dims.size(); }
 
