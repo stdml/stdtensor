@@ -53,14 +53,14 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
 
     dim_t size() const
     {
-        return std::accumulate(dims.begin(), dims.end(), (dim_t)1,
+        return std::accumulate(dims.begin(), dims.end(), static_cast<dim_t>(1),
                                std::multiplies<dim_t>());
     }
 
     dim_t subspace_size() const
     {
-        return std::accumulate(dims.begin() + 1, dims.end(), (dim_t)1,
-                               std::multiplies<dim_t>());
+        return std::accumulate(dims.begin() + 1, dims.end(),
+                               static_cast<dim_t>(1), std::multiplies<dim_t>());
     }
 
     template <rank_t corank = 1>
