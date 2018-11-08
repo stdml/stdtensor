@@ -13,23 +13,27 @@ namespace ttl
 namespace internal
 {
 
-template <typename shape_t = basic_raw_shape<>> class basic_raw_tensor
+template <typename shape_t = basic_raw_shape<>,
+          typename DataEncoder = default_scalar_type_encoder>
+class basic_raw_tensor
 {
-    const data_type_info value_type_;
+    using value_type_t = typename DataEncoder::data_type;
+
+    const value_type_t value_type_;
     const shape_t shape_;
     std::unique_ptr<char[]> data_;
 
   public:
     template <typename... D>
-    explicit basic_raw_tensor(const data_type_info &value_type, D... d)
+    explicit basic_raw_tensor(const value_type_t value_type, D... d)
         : basic_raw_tensor(value_type, shape_t(d...))
     {
     }
 
-    explicit basic_raw_tensor(const data_type_info &value_type,
+    explicit basic_raw_tensor(const value_type_t value_type,
                               const shape_t &shape)
         : value_type_(value_type), shape_(shape),
-          data_(new char[shape_.size() * value_type.size])
+          data_(new char[shape_.size() * DataEncoder::size(value_type)])
     {
     }
 
@@ -57,7 +61,7 @@ template <typename shape_t = basic_raw_shape<>> class basic_raw_tensor
     {
         using R = typename T::value_type;
         // TODO: use contracts of c++20
-        if (typeinfo<R>().code != value_type_.code) {
+        if (DataEncoder::template value<R>() != value_type_) {
             throw std::invalid_argument("invalid scalar type");
         }
         return T(reinterpret_cast<R *>(data_.get()),

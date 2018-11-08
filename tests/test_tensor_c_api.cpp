@@ -18,10 +18,12 @@ TEST(c_api_test, test1)
         }
     }
 
-    ASSERT_EQ(ttl::internal::typeinfo<uint8_t>().code, dtypes.u8);
-    ASSERT_EQ(ttl::internal::typeinfo<int8_t>().code, dtypes.i8);
-    ASSERT_EQ(ttl::internal::typeinfo<int16_t>().code, dtypes.i16);
-    ASSERT_EQ(ttl::internal::typeinfo<int32_t>().code, dtypes.i32);
-    ASSERT_EQ(ttl::internal::typeinfo<float>().code, dtypes.f32);
-    ASSERT_EQ(ttl::internal::typeinfo<double>().code, dtypes.f64);
+    using scalar_encoding = ttl::internal::default_scalar_type_encoder;
+
+    ASSERT_EQ(scalar_encoding::value<uint8_t>(), dtypes.u8);
+    ASSERT_EQ(scalar_encoding::value<int8_t>(), dtypes.i8);
+    ASSERT_EQ(scalar_encoding::value<int16_t>(), dtypes.i16);
+    ASSERT_EQ(scalar_encoding::value<int32_t>(), dtypes.i32);
+    ASSERT_EQ(scalar_encoding::value<float>(), dtypes.f32);
+    ASSERT_EQ(scalar_encoding::value<double>(), dtypes.f64);
 }
