@@ -37,4 +37,5 @@ TEST(shape_test, assign_test)
 {
     shape<3> t(2, 3, 4);
     shape<3> s = t;
+    ASSERT_EQ(s.size(), 24);
 }

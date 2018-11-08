@@ -5,7 +5,9 @@
 
 #include <stdtensor>
 
-using namespace ttl;
+using ttl::tensor;
+using ttl::tensor_ref;
+using ttl::tensor_view;
 
 TEST(tensor_test, test1)
 {
@@ -267,4 +269,26 @@ TEST(tensor_test, test_static_properties)
         test_static_properties(ref(t));
         test_static_properties(view(t));
     }
+}
+
+TEST(tensor_test, test_const_properties)
+{
+    tensor<float, 1> t(1);
+    auto r = ref(t);
+    auto v = view(t);
+
+    static_assert(
+        !std::is_const<
+            typename std::remove_reference<decltype(t.at(0))>::type>::value,
+        "");
+
+    static_assert(
+        !std::is_const<
+            typename std::remove_reference<decltype(r.at(0))>::type>::value,
+        "");
+
+    static_assert(
+        std::is_const<
+            typename std::remove_reference<decltype(v.at(0))>::type>::value,
+        "");
 }
