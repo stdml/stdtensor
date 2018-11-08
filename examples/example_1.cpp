@@ -14,7 +14,9 @@ void example_1()
         int idx = 0;
         for (const auto &t1 : t) {
             for (const auto &t2 : t1) {
-                for (const auto &t3 : t2) { scalar(t3) = idx++; }
+                for (const auto &t3 : t2) {
+                    t3 = idx++;  //
+                }
             }
         }
     }

@@ -202,6 +202,29 @@ TEST(tensor_test, test_read_access)
     }
 }
 
+TEST(tensor_test, test_scalar_assignment)
+{
+    tensor<int, 2> t(2, 2);
+    int x = 0;
+
+    x = t[0][0] = 1;
+    ASSERT_EQ(1, read_tensor_func(t, 0, 0));
+    ASSERT_EQ(1, x);
+
+    x = t[0][0] = 2;
+    ASSERT_EQ(2, read_tensor_ref_func(ref(t), 0, 0));
+
+    t[0][0] = 3;
+    ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
+
+    tensor<int, 0> s;
+    s = 1;
+    ASSERT_EQ(1, s.data()[0]);
+    x = s = 2;
+    ASSERT_EQ(2, s.data()[0]);
+    ASSERT_EQ(2, x);
+}
+
 template <template <typename, ttl::internal::rank_t, typename> class T,
           typename R, ttl::internal::rank_t r, typename shape_type>
 void test_static_properties(const T<R, r, shape_type> &x)
