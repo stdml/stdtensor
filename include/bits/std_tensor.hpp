@@ -118,7 +118,7 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
 template <typename R, typename shape_t>
 R &scalar(const basic_tensor_ref<R, 0, shape_t> &t)
 {
-    return ((R *)/* FIXME */ t.data())[0];
+    return (t.data())[0];
 }
 
 template <typename R, typename shape_t>
@@ -131,9 +131,7 @@ template <template <typename, rank_t, typename> class T, typename R, rank_t r,
           typename shape_t>
 basic_tensor_ref<R, r, shape_t> ref(const T<R, r, shape_t> &t)
 {
-    const R *const c_ptr = t.data();
-    R *ptr = (R *)/* FIXME */ c_ptr;
-    return basic_tensor_ref<R, r, shape_t>(ptr, t.shape());
+    return basic_tensor_ref<R, r, shape_t>(t.data(), t.shape());
 }
 
 template <template <typename, rank_t, typename> class T, typename R, rank_t r,
