@@ -50,7 +50,7 @@ struct type_encoder {
         return encoding::data_type<R>::value;
     }
 
-    static constexpr std::size_t size(const data_type type)
+    static std::size_t size(const data_type type)
     {
         switch (type) {
         case value<std::uint8_t>():
