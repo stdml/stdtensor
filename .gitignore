@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+*.log
 
 /3rdparty
 /bin

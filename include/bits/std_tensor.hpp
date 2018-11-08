@@ -61,6 +61,8 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     {
     }
 
+    R operator=(const R &val) const { return *data_ = val; }
+
     shape_t shape() const { return shape_t(); }
 
     R *data() const { return data_; }
@@ -95,16 +97,18 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
 
 template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
 {
-    std::unique_ptr<R[]> data_;
+    std::unique_ptr<R> data_;
 
   public:
     using value_type = R;
 
     static constexpr rank_t rank = 0;
 
-    basic_tensor() : data_(new R[1]) {}
+    basic_tensor() : data_(new R) {}
 
-    explicit basic_tensor(const shape_t &_) : data_(new R[1]) {}
+    explicit basic_tensor(const shape_t &_) : data_(new R) {}
+
+    R operator=(const R &val) const { return *data_ = val; }
 
     shape_t shape() const { return shape_t(); }
 
