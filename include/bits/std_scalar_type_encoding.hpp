@@ -8,11 +8,6 @@ namespace ttl
 namespace internal
 {
 
-struct data_type_info {
-    const uint8_t code;
-    const uint8_t size;
-};
-
 using data_type_t = std::uint8_t;
 
 namespace idx_format
