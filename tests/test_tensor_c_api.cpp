@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <stdtensor>
 #include <tensor.h>
 
-#include <bits/std_scalar_type_encoding.hpp>
+using ttl::raw_tensor;
 
 TEST(c_api_test, test1)
 {
@@ -18,7 +19,7 @@ TEST(c_api_test, test1)
         }
     }
 
-    using scalar_encoding = ttl::internal::default_scalar_type_encoder;
+    using scalar_encoding = raw_tensor::encoder_type;
 
     ASSERT_EQ(scalar_encoding::value<uint8_t>(), dtypes.u8);
     ASSERT_EQ(scalar_encoding::value<int8_t>(), dtypes.i8);

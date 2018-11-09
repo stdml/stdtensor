@@ -2,12 +2,12 @@
 
 #include <stdtensor>
 
-using ttl::raw_shape;
 using ttl::raw_tensor;
 
 TEST(raw_tensor_test, test1)
 {
-    using scalar_encoding = ttl::internal::default_scalar_type_encoder;
+    using scalar_encoding = raw_tensor::encoder_type;
+
     {
         raw_tensor t(scalar_encoding::value<float>());
         ASSERT_EQ(t.shape().size(), 1);

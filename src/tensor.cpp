@@ -3,10 +3,8 @@
 #include <stdtensor>
 #include <tensor.h>
 
-using ttl::raw_shape;
 using ttl::raw_tensor;
-
-using scalar_encoding = ttl::internal::default_scalar_type_encoder;
+using scalar_encoding = raw_tensor::encoder_type;
 
 const dtypes_t dtypes = {
     scalar_encoding::value<uint8_t>(),  //
@@ -23,6 +21,7 @@ struct tensor_s : raw_tensor {
 
 tensor_t *new_tensor(uint8_t value_type, int rank, ...)
 {
+    using raw_shape = raw_tensor::shape_type;
     using dim_t = raw_shape::dimension_type;
 
     std::vector<dim_t> dims;

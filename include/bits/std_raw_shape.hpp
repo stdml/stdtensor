@@ -11,7 +11,6 @@ namespace ttl
 {
 namespace internal
 {
-
 template <typename Dim = uint32_t> class basic_raw_shape
 {
     using dim_t = Dim;
@@ -31,7 +30,7 @@ template <typename Dim = uint32_t> class basic_raw_shape
 
     dim_t size() const
     {
-        return std::accumulate(dims.begin(), dims.end(), (dim_t)1,
+        return std::accumulate(dims.begin(), dims.end(), static_cast<dim_t>(1),
                                std::multiplies<dim_t>());
     }
 
@@ -46,6 +45,5 @@ template <typename Dim = uint32_t> class basic_raw_shape
 
     const std::vector<dim_t> dims;
 };
-
 }  // namespace internal
 }  // namespace ttl

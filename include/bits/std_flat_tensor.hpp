@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 #include <bits/std_raw_shape.hpp>
-#include <bits/std_scalar_type_encoding.hpp>
 #include <bits/std_tensor.hpp>
 
 namespace ttl

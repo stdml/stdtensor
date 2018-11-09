@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 #include <bits/std_raw_shape.hpp>
-#include <bits/std_scalar_type_encoding.hpp>
 #include <bits/std_tensor.hpp>
 
 namespace ttl
@@ -13,8 +12,7 @@ namespace ttl
 namespace internal
 {
 
-template <typename shape_t = basic_raw_shape<>,
-          typename DataEncoder = default_scalar_type_encoder>
+template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
 class basic_raw_tensor
 {
     using value_type_t = typename DataEncoder::data_type;
@@ -24,6 +22,9 @@ class basic_raw_tensor
     std::unique_ptr<char[]> data_;
 
   public:
+    using encoder_type = DataEncoder;
+    using shape_type = shape_t;
+
     template <typename... D>
     explicit basic_raw_tensor(const value_type_t value_type, D... d)
         : basic_raw_tensor(value_type, shape_t(d...))
@@ -41,6 +42,10 @@ class basic_raw_tensor
 
     template <typename R> R *data() const
     {
+        // TODO: use contracts of c++20
+        if (DataEncoder::template value<R>() != value_type_) {
+            throw std::invalid_argument("invalid scalar type");
+        }
         return reinterpret_cast<R *>(data_.get());
     }
 
@@ -59,12 +64,7 @@ class basic_raw_tensor
   private:
     template <typename T> T ranked_as() const
     {
-        using R = typename T::value_type;
-        // TODO: use contracts of c++20
-        if (DataEncoder::template value<R>() != value_type_) {
-            throw std::invalid_argument("invalid scalar type");
-        }
-        return T(reinterpret_cast<R *>(data_.get()),
+        return T(data<typename T::value_type>(),
                  shape_.template as_ranked<T::rank>());
     }
 };
