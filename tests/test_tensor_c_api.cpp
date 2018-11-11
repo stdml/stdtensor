@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "testing.hpp"
 
 #include <stdtensor>
 #include <tensor.h>
