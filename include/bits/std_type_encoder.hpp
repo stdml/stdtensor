@@ -23,15 +23,6 @@ template <typename encoding> class basic_type_encoder
   public:
     using data_type = typename encoding::data_type;
 
-  private:
-    using all_types = std::tuple<std::uint8_t, std::int8_t, std::int16_t,
-                                 std::int32_t, float, double>;
-
-    static constexpr int N = std::tuple_size<all_types>::value;
-
-    using P = std::pair<data_type, std::size_t>;
-
-  public:
     template <typename R> static constexpr data_type value()
     {
         return encoding::template value<R>();
@@ -39,8 +30,12 @@ template <typename encoding> class basic_type_encoder
 
     static std::size_t size(const data_type type)
     {
+        static constexpr int N =
+            std::tuple_size<typename encoding::types>::value;
+        using P = std::pair<data_type, std::size_t>;
+
         static constexpr std::array<P, N> type_sizes =
-            get_type_sizes<all_types, P, encoding>(
+            get_type_sizes<typename encoding::types, P, encoding>(
                 std::make_index_sequence<N>());
 
         for (int i = 0; i < N; ++i) {

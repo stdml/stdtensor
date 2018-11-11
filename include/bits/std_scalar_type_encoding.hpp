@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <tuple>
 
 namespace ttl
 {
@@ -37,6 +38,9 @@ template <> struct data_type_t<double> {
 };
 
 struct encoding {
+    using types = std::tuple<std::uint8_t, std::int8_t, std::int16_t,
+                             std::int32_t, float, double>;
+
     using data_type = V;
     template <typename R> static constexpr data_type value()
     {
