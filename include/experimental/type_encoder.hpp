@@ -4,9 +4,9 @@
 #include <tuple>
 #include <utility>
 
-namespace ttl
+namespace std
 {
-namespace internal
+namespace experimental
 {
 template <typename Ts, typename P, typename E, std::size_t... I>
 static constexpr std::array<P, sizeof...(I)>
@@ -45,5 +45,5 @@ template <typename encoding> class basic_type_encoder
     }
 };
 
-}  // namespace internal
-}  // namespace ttl
+}  // namespace experimental
+}  // namespace std
