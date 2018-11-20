@@ -1,14 +1,22 @@
 #!/bin/bash
 set -e
 
+# TODO: support ./configure --prefix=...
 PREFIX=$(pwd)/local
 
-CMAKE_FLAGS=-DCMAKE_INSTALL_PREFIX=${PREFIX}
+CMAKE_FLAGS=
+
+add_cmake_flag() {
+    CMAKE_FLAGS="${CMAKE_FLAGS} -D$1=$2"
+}
 
 if [ ! -z ${GTEST_GIT_URL} ]; then
     echo "Using GTEST_GIT_URL=${GTEST_GIT_URL}"
-    CMAKE_FLAGS="${CMAKE_FLAGS} -DGTEST_GIT_URL=${GTEST_GIT_URL}"
+    add_cmake_flag GTEST_GIT_URL ${GTEST_GIT_URL}
 fi
+
+add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
+# add_cmake_flag BUILD_DOCS 1
 
 echo "Using CMAKE_FLAGS=${CMAKE_FLAGS}"
 cmake . ${CMAKE_FLAGS}

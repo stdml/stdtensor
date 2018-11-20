@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "testing.hpp"
 
 #include <numeric>
 #include <type_traits>
