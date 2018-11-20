@@ -15,7 +15,7 @@ namespace internal
 template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
 class basic_raw_tensor
 {
-    using value_type_t = typename DataEncoder::data_type;
+    using value_type_t = typename DataEncoder::value_type;
 
     const value_type_t value_type_;
     const shape_t shape_;
