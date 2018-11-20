@@ -8,6 +8,8 @@ namespace std
 {
 namespace experimental
 {
+namespace internal
+{
 template <typename Ts, typename P, typename E, std::size_t... I>
 static constexpr std::array<P, sizeof...(I)>
 get_type_sizes(std::index_sequence<I...>)
@@ -17,25 +19,26 @@ get_type_sizes(std::index_sequence<I...>)
         sizeof(typename std::tuple_element<I, Ts>::type),
     }...};
 }
+}  // namespace internal
 
 template <typename encoding> class basic_type_encoder
 {
   public:
-    using data_type = typename encoding::data_type;
+    using value_type = typename encoding::value_type;
 
-    template <typename R> static constexpr data_type value()
+    template <typename R> static constexpr value_type value()
     {
         return encoding::template value<R>();
     }
 
-    static std::size_t size(const data_type type)
+    static std::size_t size(const value_type type)
     {
         static constexpr int N =
             std::tuple_size<typename encoding::types>::value;
-        using P = std::pair<data_type, std::size_t>;
+        using P = std::pair<value_type, std::size_t>;
 
         static constexpr std::array<P, N> type_sizes =
-            get_type_sizes<typename encoding::types, P, encoding>(
+            internal::get_type_sizes<typename encoding::types, P, encoding>(
                 std::make_index_sequence<N>());
 
         for (int i = 0; i < N; ++i) {
