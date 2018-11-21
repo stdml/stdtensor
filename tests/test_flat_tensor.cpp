@@ -8,7 +8,9 @@ TEST(flat_tensor_test, test1)
 {
     {
         flat_tensor<float> t;
-        ASSERT_EQ(t.shape().size(), 1);
+        using flat_shape = flat_tensor<float>::shape_type;
+
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(1));
         t.ref_as<0>();
         t.view_as<0>();
 
@@ -16,19 +18,25 @@ TEST(flat_tensor_test, test1)
     }
     {
         flat_tensor<float> t(1);
-        ASSERT_EQ(t.shape().size(), 1);
+        using flat_shape = flat_tensor<float>::shape_type;
+
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(1));
         t.ref_as<1>();
         t.view_as<1>();
     }
     {
         flat_tensor<float> t(1, 2);
-        ASSERT_EQ(t.shape().size(), 2);
+        using flat_shape = flat_tensor<float>::shape_type;
+
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(2));
         t.ref_as<2>();
         t.view_as<2>();
     }
     {
         flat_tensor<float> t(1, 2, 3);
-        ASSERT_EQ(t.shape().size(), 6);
+        using flat_shape = flat_tensor<float>::shape_type;
+
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(6));
         t.ref_as<3>();
         t.view_as<3>();
     }

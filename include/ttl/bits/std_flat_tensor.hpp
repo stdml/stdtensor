@@ -20,6 +20,7 @@ class basic_flat_tensor
 
   public:
     using value_type = R;
+    using shape_type = shape_t;
 
     template <typename... D>
     explicit basic_flat_tensor(D... d) : basic_flat_tensor(shape_t(d...))
