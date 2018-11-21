@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include <bits/std_shape.hpp>
+#include <ttl/bits/std_shape.hpp>
 
 namespace ttl
 {

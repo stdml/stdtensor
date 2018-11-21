@@ -12,9 +12,9 @@ ENDFUNCTION()
 ADD_CPP_EXAMPLE(example-1 examples/example_1.cpp)
 ADD_C_EXAMPLE(example-c-api examples/example_c_api.c)
 
-OPTION(HAVE_OPENCV "Have libopencv-dev" OFF)
+OPTION(USE_OPENCV "Build examples with libopencv-dev" OFF)
 
-IF(HAVE_OPENCV)
+IF(USE_OPENCV)
     FIND_PACKAGE(OpenCV)
     ADD_CPP_EXAMPLE(example-opencv examples/example_opencv.cpp)
     TARGET_LINK_LIBRARIES(example-opencv opencv_imgcodecs)

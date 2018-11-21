@@ -1,7 +1,7 @@
 #include <cstdarg>
 
-#include <stdtensor>
 #include <tensor.h>
+#include <ttl/tensor>
 
 using ttl::raw_tensor;
 using scalar_encoding = raw_tensor::encoder_type;

@@ -1,6 +1,6 @@
 #include "testing.hpp"
 
-#include <stdtensor>
+#include <ttl/tensor>
 
 using ttl::flat_tensor;
 

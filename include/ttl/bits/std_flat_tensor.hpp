@@ -4,8 +4,8 @@
 #include <memory>
 #include <stdexcept>
 
-#include <bits/std_raw_shape.hpp>
-#include <bits/std_tensor.hpp>
+#include <ttl/bits/std_raw_shape.hpp>
+#include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
 {
