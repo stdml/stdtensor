@@ -2,7 +2,7 @@
 
 #include <ttl/tensor>
 
-using ttl::flat_tensor;
+using ttl::experimental::flat_tensor;
 
 TEST(flat_tensor_test, test1)
 {

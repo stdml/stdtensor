@@ -3,7 +3,7 @@
 #include <tensor.h>
 #include <ttl/tensor>
 
-using ttl::raw_tensor;
+using ttl::experimental::raw_tensor;
 
 TEST(c_api_test, test1)
 {

@@ -29,7 +29,10 @@ template <typename R> using matrix_view = tensor_view<R, 2>;
 
 namespace ttl
 {
+namespace experimental
+{
 template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
+}
 }  // namespace ttl
 
 #include <experimental/type_encoder>
@@ -38,6 +41,9 @@ template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
 
 namespace ttl
 {
+namespace experimental
+{
 using raw_tensor = internal::basic_raw_tensor<
     std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
 }
+}  // namespace ttl

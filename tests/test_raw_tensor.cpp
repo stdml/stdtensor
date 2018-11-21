@@ -2,7 +2,7 @@
 
 #include <ttl/tensor>
 
-using ttl::raw_tensor;
+using ttl::experimental::raw_tensor;
 
 TEST(raw_tensor_test, test1)
 {
