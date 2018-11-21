@@ -24,3 +24,26 @@ template <typename R> using matrix = tensor<R, 2>;
 template <typename R> using matrix_ref = tensor_ref<R, 2>;
 template <typename R> using matrix_view = tensor_view<R, 2>;
 }  // namespace ttl
+
+#include <ttl/bits/std_flat_tensor.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
+}
+}  // namespace ttl
+
+#include <experimental/type_encoder>
+#include <ttl/bits/std_raw_tensor.hpp>
+#include <ttl/bits/std_scalar_type_encoding.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+using raw_tensor = internal::basic_raw_tensor<
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+}
+}  // namespace ttl
