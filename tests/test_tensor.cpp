@@ -3,7 +3,7 @@
 #include <numeric>
 #include <type_traits>
 
-#include <stdtensor>
+#include <ttl/tensor>
 
 using ttl::tensor;
 using ttl::tensor_ref;

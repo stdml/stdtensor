@@ -1,14 +1,13 @@
-#include <opencv2/opencv.hpp>
-#include <stdtensor>
 #include <typeinfo>
 #include <vector>
 
-using namespace ttl;
+#include <opencv2/opencv.hpp>
+#include <ttl/tensor>
 
 using pixel_t = std::array<uint8_t, 3>;
 static_assert(sizeof(pixel_t) == 3, "invalid pixel size");
 
-using bmp_t = matrix<pixel_t>;
+using bmp_t = ttl::matrix<pixel_t>;
 
 void save_bmp(const bmp_t &bmp)
 {

@@ -5,7 +5,7 @@
 
 #include <cuda_runtime.h>
 
-#include <bits/std_shape.hpp>
+#include <ttl/bits/std_shape.hpp>
 
 template <typename T> struct cuda_mem_allocator {
     T *operator()(int count)

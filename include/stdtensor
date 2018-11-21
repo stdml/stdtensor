@@ -1,2 +1,3 @@
+// For backward compatibility
 #pragma once
-#include <stdtensor.hpp>
+#include <ttl/tensor>
