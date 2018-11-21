@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include <bits/std_shape.hpp>
+#include <ttl/bits/std_shape.hpp>
 
 namespace ttl
 {

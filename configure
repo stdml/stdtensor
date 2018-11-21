@@ -1,8 +1,29 @@
 #!/bin/bash
 set -e
 
-# TODO: support ./configure --prefix=...
 PREFIX=$(pwd)/local
+USE_OPENCV=0
+BUILD_TESTS=1
+
+parse_args() {
+    for i in "$@"; do
+        case $i in
+        --prefix=*)
+            PREFIX="${i#*=}"
+            ;;
+        --use-opencv)
+            USE_OPENCV=1
+            ;;
+        --no-tests)
+            BUILD_TESTS=0
+            ;;
+        *)
+            echo "unknown argument $1"
+            exit
+            ;;
+        esac
+    done
+}
 
 CMAKE_FLAGS=
 
@@ -10,13 +31,25 @@ add_cmake_flag() {
     CMAKE_FLAGS="${CMAKE_FLAGS} -D$1=$2"
 }
 
-if [ ! -z ${GTEST_GIT_URL} ]; then
-    echo "Using GTEST_GIT_URL=${GTEST_GIT_URL}"
-    add_cmake_flag GTEST_GIT_URL ${GTEST_GIT_URL}
-fi
+add_cmake_flags() {
+    if [ ! -z ${GTEST_GIT_URL} ]; then
+        echo "Using GTEST_GIT_URL=${GTEST_GIT_URL}"
+        add_cmake_flag GTEST_GIT_URL ${GTEST_GIT_URL}
+    fi
 
-add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
-# add_cmake_flag BUILD_DOCS 1
+    add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
+    add_cmake_flag USE_OPENCV ${USE_OPENCV}
+    add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
 
-echo "Using CMAKE_FLAGS=${CMAKE_FLAGS}"
-cmake . ${CMAKE_FLAGS}
+    # add_cmake_flag BUILD_DOCS 1
+}
+
+main() {
+    parse_args $@
+    add_cmake_flags
+
+    echo "Using CMAKE_FLAGS=${CMAKE_FLAGS}"
+    cmake . ${CMAKE_FLAGS}
+}
+
+main $@

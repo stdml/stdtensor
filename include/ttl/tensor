@@ -1,5 +1,5 @@
 #pragma once
-#include <bits/std_tensor.hpp>
+#include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
 {
@@ -11,7 +11,10 @@ using tensor_ref = internal::basic_tensor_ref<R, r>;
 
 template <typename R, internal::rank_t r>
 using tensor_view = internal::basic_tensor_view<R, r>;
+}  // namespace ttl
 
+namespace ttl
+{
 // Don't be confused with std::vector
 template <typename R> using vector = tensor<R, 1>;
 template <typename R> using vector_ref = tensor_ref<R, 1>;

@@ -1,6 +1,8 @@
-#include <stdtensor>
+#include <ttl/tensor>
 
-using namespace ttl;
+using ttl::tensor;
+using ttl::tensor_ref;
+using ttl::tensor_view;
 
 void example_1()
 {
