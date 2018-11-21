@@ -1,10 +1,7 @@
 INCLUDE(ExternalProject)
 
-SET(GTEST_GIT_URL
-    https://github.com/google/googletest.git
-    CACHE
-    STRING
-    "URL for clone gtest")
+SET(GTEST_GIT_URL https://github.com/google/googletest.git
+    CACHE STRING "URL for clone gtest")
 
 SET(PREFIX ${CMAKE_SOURCE_DIR}/3rdparty)
 
@@ -26,6 +23,7 @@ FUNCTION(ADD_GTEST target)
     TARGET_LINK_LIBRARIES(${target} gtest)
     ADD_DEPENDENCIES(${target} libgtest-dev)
     TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${PREFIX}/include)
+    TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     TARGET_LINK_LIBRARIES(${target} stdtensor)
     ADD_TEST(NAME ${target} COMMAND ${target})
 ENDFUNCTION()
@@ -33,6 +31,9 @@ ENDFUNCTION()
 FILE(GLOB tests tests/test_*.cpp)
 FOREACH(t ${tests})
     GET_FILENAME_COMPONENT(name ${t} NAME_WE)
-    STRING(REPLACE "_" "-" name ${name})
+    STRING(REPLACE "_"
+                   "-"
+                   name
+                   ${name})
     ADD_GTEST(${name} ${t})
 ENDFOREACH()

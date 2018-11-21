@@ -41,6 +41,9 @@ add_cmake_flags() {
     add_cmake_flag USE_OPENCV ${USE_OPENCV}
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
 
+    add_cmake_flag CMAKE_RUNTIME_OUTPUT_DIRECTORY $(pwd)/bin
+    add_cmake_flag LIBRARY_OUTPUT_PATH $(pwd)/lib # TODO: upgrade to CMAKE_LIBRARY_OUTPUT_DIRECTORY
+
     # add_cmake_flag BUILD_DOCS 1
 }
 
