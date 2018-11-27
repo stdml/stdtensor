@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept>
 
+#include <ttl/bits/std_flat_tensor.hpp>
 #include <ttl/bits/std_raw_shape.hpp>
 #include <ttl/bits/std_tensor.hpp>
 
@@ -63,6 +64,11 @@ class basic_raw_tensor
     basic_tensor_view<R, r, shape_type> view_as() const
     {
         return ranked_as<basic_tensor_view<R, r, shape_type>>();
+    }
+
+    template <typename R> basic_flat_tensor_ref<R, shape_t> typed_as() const
+    {
+        return basic_flat_tensor_ref<R, shape_t>(data<R>(), shape_);
     }
 
   private:
