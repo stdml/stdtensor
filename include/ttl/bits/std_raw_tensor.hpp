@@ -38,6 +38,8 @@ class basic_raw_tensor
     {
     }
 
+    value_type_t value_type() const { return value_type_; }
+
     shape_t shape() const { return shape_; }
 
     template <typename R> R *data() const
@@ -48,6 +50,8 @@ class basic_raw_tensor
         }
         return reinterpret_cast<R *>(data_.get());
     }
+
+    void *data() const { return data_.get(); }
 
     template <typename R, rank_t r, typename shape_type = basic_shape<r>>
     basic_tensor_ref<R, r, shape_type> ref_as() const
