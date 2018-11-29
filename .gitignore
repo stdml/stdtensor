@@ -42,4 +42,8 @@ CMakeCache.txt
 CMakeFiles/
 CTestTestfile.cmake
 install_manifest.txt
-Makefile
+/Makefile
+
+*.aux
+*.log
+*.pdf

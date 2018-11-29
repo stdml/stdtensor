@@ -4,6 +4,7 @@ set -e
 PREFIX=$(pwd)/local
 USE_OPENCV=0
 BUILD_TESTS=1
+BUILD_DOCS=0
 
 parse_args() {
     for i in "$@"; do
@@ -16,6 +17,9 @@ parse_args() {
             ;;
         --no-tests)
             BUILD_TESTS=0
+            ;;
+        --docs)
+            BUILD_DOCS=1
             ;;
         *)
             echo "unknown argument $1"
@@ -40,11 +44,10 @@ add_cmake_flags() {
     add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
     add_cmake_flag USE_OPENCV ${USE_OPENCV}
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
+    add_cmake_flag BUILD_DOCS ${BUILD_DOCS}
 
     add_cmake_flag CMAKE_RUNTIME_OUTPUT_DIRECTORY $(pwd)/bin
     add_cmake_flag LIBRARY_OUTPUT_PATH $(pwd)/lib # TODO: upgrade to CMAKE_LIBRARY_OUTPUT_DIRECTORY
-
-    # add_cmake_flag BUILD_DOCS 1
 }
 
 main() {

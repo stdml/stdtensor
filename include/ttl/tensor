@@ -47,3 +47,14 @@ using raw_tensor = internal::basic_raw_tensor<
     std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
 }
 }  // namespace ttl
+
+#include <ttl/bits/std_strided_tensor.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+template <internal::rank_t r> using sshape = internal::basic_strided_shape<r>;
+
+}  // namespace experimental
+}  // namespace ttl

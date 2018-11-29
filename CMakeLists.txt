@@ -13,6 +13,7 @@ INSTALL(TARGETS stdtensor ARCHIVE DESTINATION lib)
 
 OPTION(BUILD_TESTS "Build tests." ON)
 OPTION(BUILD_EXAMPLES "Build examples." ON)
+OPTION(BUILD_DOCS "Build documents." OFF)
 
 IF(BUILD_TESTS)
     ENABLE_TESTING()
@@ -21,4 +22,8 @@ ENDIF()
 
 IF(BUILD_EXAMPLES)
     INCLUDE(cmake/examples.cmake)
+ENDIF()
+
+IF(BUILD_DOCS)
+    INCLUDE(cmake/docs.cmake)
 ENDIF()
