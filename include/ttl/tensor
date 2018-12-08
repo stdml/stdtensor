@@ -51,5 +51,11 @@ namespace experimental
 {
 using raw_tensor = internal::basic_raw_tensor<
     std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
-}
+
+using raw_tensor_ref = internal::basic_raw_tensor_ref<
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+
+using raw_tensor_view = internal::basic_raw_tensor_view<
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+}  // namespace experimental
 }  // namespace ttl

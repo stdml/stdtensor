@@ -14,7 +14,15 @@ namespace internal
 {
 
 template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
-class basic_raw_tensor
+class basic_raw_tensor;
+
+template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
+class basic_raw_tensor_ref;
+
+template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
+class basic_raw_tensor_view;
+
+template <typename DataEncoder, typename shape_t> class basic_raw_tensor
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -76,6 +84,60 @@ class basic_raw_tensor
     {
         return T(data<typename T::value_type>(),
                  shape_.template as_ranked<T::rank>());
+    }
+};
+
+template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
+{
+    using value_type_t = typename DataEncoder::value_type;
+
+    const value_type_t value_type_;
+    const shape_t shape_;
+
+    void *const data_;
+
+  public:
+    using encoder_type = DataEncoder;
+    using shape_type = shape_t;
+
+    template <typename... D>
+    explicit basic_raw_tensor_ref(void *data, const value_type_t value_type,
+                                  D... d)
+        : basic_raw_tensor_ref(data, value_type, shape_t(d...))
+    {
+    }
+
+    explicit basic_raw_tensor_ref(void *data, const value_type_t value_type,
+                                  const shape_t &shape)
+        : value_type_(value_type), shape_(shape), data_(data)
+    {
+    }
+};
+
+template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
+{
+    using value_type_t = typename DataEncoder::value_type;
+
+    const value_type_t value_type_;
+    const shape_t shape_;
+
+    const void *const data_;
+
+  public:
+    using encoder_type = DataEncoder;
+    using shape_type = shape_t;
+
+    template <typename... D>
+    explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
+                                   D... d)
+        : basic_raw_tensor_view(data, value_type, shape_t(d...))
+    {
+    }
+
+    explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
+                                   const shape_t &shape)
+        : value_type_(value_type), shape_(shape), data_(data)
+    {
     }
 };
 
