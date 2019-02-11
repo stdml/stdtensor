@@ -36,6 +36,7 @@ parse_args() {
 CMAKE_FLAGS=
 
 add_cmake_flag() {
+    echo "usinig $1=$2"
     CMAKE_FLAGS="${CMAKE_FLAGS} -D$1=$2"
 }
 
