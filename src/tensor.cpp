@@ -48,3 +48,5 @@ tensor_t *new_tensor1(uint8_t value_type, int rank, const int *_dims)
 }
 
 void del_tensor(const tensor_t *pt) { delete pt; }
+
+void *tensor_data(tensor_t *pt) { return pt->data(); }

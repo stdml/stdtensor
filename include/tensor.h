@@ -28,6 +28,8 @@ extern tensor_t *new_tensor1(uint8_t /*! value_type */, int /*! rank */,
 
 extern void del_tensor(const tensor_t * /*! p_tensor_t */);
 
+extern void *tensor_data(tensor_t * /*! p_tensor_t */);
+
 #ifdef __cplusplus
 }
 #endif
