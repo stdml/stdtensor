@@ -1,6 +1,8 @@
 #include "testing.hpp"
 
+#ifdef USE_FAKE_CUDA_RUNTIME
 #include "fake_cuda_runtime.h"
+#endif
 
 #include <ttl/bits/std_cuda_tensor.hpp>
 #include <ttl/tensor>
