@@ -6,7 +6,7 @@ USE_OPENCV=0
 BUILD_TESTS=1
 HAVE_CUDA=0
 
-if [ $(find /usr/include/cuda_runtime.h | wc -l) -gt 1 ]; then
+if [ $(find /usr/include/cuda_runtime.h | wc -l) -gt 0 ]; then
     HAVE_CUDA=1
 fi
 
