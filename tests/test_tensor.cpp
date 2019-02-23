@@ -305,8 +305,23 @@ template <typename T> void test_slice_57_52_53_slice_19_38(const T &t)
 
 TEST(tensor_test, test_slice)
 {
-    tensor<float, 3> t(57, 52, 53);
-    test_slice_57_52_53_slice_19_38(t);
-    test_slice_57_52_53_slice_19_38(ref(t));
-    test_slice_57_52_53_slice_19_38(view(t));
+    {
+        tensor<float, 3> t(57, 52, 53);
+        test_slice_57_52_53_slice_19_38(t);
+        test_slice_57_52_53_slice_19_38(ref(t));
+        test_slice_57_52_53_slice_19_38(view(t));
+    }
+
+    {
+        tensor<int, 3> t(3, 2, 2);
+        std::iota(t.data(), t.data() + t.shape().size(), 1);
+        const auto t1 = t.slice(0, 2);
+        const auto t2 = t.slice(2, 3);
+        const auto s1 =
+            std::accumulate(t1.data(), t1.data() + t1.shape().size(), 0);
+        const auto s2 =
+            std::accumulate(t2.data(), t2.data() + t2.shape().size(), 0);
+        ASSERT_EQ(s1, (1 + 8) * 8 / 2);
+        ASSERT_EQ(s2, 9 + 10 + 11 + 12);
+    }
 }
