@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <map>
 #include <stdexcept>
 
