@@ -114,8 +114,5 @@ class basic_cuda_tensor_ref
     }
 };
 
-template <typename R, rank_t r> using cuda_tensor = basic_cuda_tensor<R, r>;
-template <typename R, rank_t r>
-using cuda_tensor_ref = basic_cuda_tensor_ref<R, r>;
 }  // namespace internal
 }  // namespace ttl

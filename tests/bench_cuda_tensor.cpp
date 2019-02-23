@@ -4,12 +4,12 @@
 #include "fake_cuda_runtime.h"
 #endif
 
-#include <ttl/bits/std_cuda_tensor.hpp>
+#include <ttl/cuda_tensor>
 
 template <typename R, int n> struct bench_cuda_tensor {
     static void run(benchmark::State &state)
     {
-        ttl::internal::cuda_tensor<R, 1> m1(n);
+        ttl::cuda_tensor<R, 1> m1(n);
         ttl::tensor<R, 1> m2(n);
 
         for (auto _ : state) {
