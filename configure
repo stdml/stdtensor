@@ -4,6 +4,7 @@ set -e
 PREFIX=$(pwd)/local
 USE_OPENCV=0
 BUILD_TESTS=1
+BUILD_BENCHMARKS=1
 HAVE_CUDA=0
 
 if [ $(find /usr/include/cuda_runtime.h | wc -l) -gt 0 ]; then
@@ -21,6 +22,9 @@ parse_args() {
             ;;
         --no-tests)
             BUILD_TESTS=0
+            ;;
+        --no-benchmarks)
+            BUILD_BENCHMARKS=0
             ;;
         --no-cuda)
             HAVE_CUDA=0
@@ -45,10 +49,15 @@ add_cmake_flags() {
         echo "Using GTEST_GIT_URL=${GTEST_GIT_URL}"
         add_cmake_flag GTEST_GIT_URL ${GTEST_GIT_URL}
     fi
+    if [ ! -z ${GBENCH_GIT_URL} ]; then
+        echo "Using GBENCH_GIT_URL=${GBENCH_GIT_URL}"
+        add_cmake_flag GBENCH_GIT_URL ${GBENCH_GIT_URL}
+    fi
 
     add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
     add_cmake_flag USE_OPENCV ${USE_OPENCV}
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
+    add_cmake_flag BUILD_TESTS ${BUILD_BENCHMARKS}
     add_cmake_flag HAVE_CUDA ${HAVE_CUDA}
 
     add_cmake_flag CMAKE_RUNTIME_OUTPUT_DIRECTORY $(pwd)/bin

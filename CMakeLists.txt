@@ -12,6 +12,7 @@ INSTALL(DIRECTORY include DESTINATION .)
 INSTALL(TARGETS stdtensor ARCHIVE DESTINATION lib)
 
 OPTION(BUILD_TESTS "Build tests." ON)
+OPTION(BUILD_BENCHMARKS "Build benchmarks." ON)
 OPTION(BUILD_EXAMPLES "Build examples." ON)
 OPTION(HAVE_CUDA "Have cuda_runtime.h." OFF)
 
@@ -24,6 +25,10 @@ ENDIF()
 IF(BUILD_TESTS)
     ENABLE_TESTING()
     INCLUDE(cmake/tests.cmake)
+ENDIF()
+
+IF(BUILD_BENCHMARKS)
+    INCLUDE(cmake/benchmarks.cmake)
 ENDIF()
 
 IF(BUILD_EXAMPLES)

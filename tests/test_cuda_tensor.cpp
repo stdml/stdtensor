@@ -4,11 +4,11 @@
 #include "fake_cuda_runtime.h"
 #endif
 
-#include <ttl/bits/std_cuda_tensor.hpp>
+#include <ttl/cuda_tensor>
 #include <ttl/tensor>
 
+using ttl::cuda_tensor;
 using ttl::tensor;
-using ttl::internal::cuda_tensor;
 
 TEST(cuda_tensor_test, test1)
 {
