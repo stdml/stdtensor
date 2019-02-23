@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <map>
 #include <stdexcept>
 
@@ -48,13 +49,14 @@ class fake_device
         switch (direction) {
         case h2d:
             check_alloc(dst, size);
-            return;
+            break;
         case d2h:
             check_alloc(src, size);
-            return;
+            break;
         default:
             throw std::runtime_error("invalid memcpy direction");
         }
+        std::memcpy(dst, src, size);
     }
 };
 
