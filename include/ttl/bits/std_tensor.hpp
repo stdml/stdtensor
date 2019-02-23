@@ -172,6 +172,7 @@ class basic_tensor_iterator
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_tensor_ref
 {
+    using self_t = basic_tensor_ref<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
     using iterator =
@@ -182,6 +183,7 @@ class basic_tensor_ref
 
   public:
     using value_type = R;
+    using shape_type = shape_t;
 
     static constexpr rank_t rank = r;
 
@@ -217,10 +219,17 @@ class basic_tensor_ref
         return iterator(data_ + shape_.size(), shape_.subshape());
     }
 
-    subspace_t operator[](int i) const
+    subspace_t operator[](typename shape_t::dimension_type i) const
     {
         return subspace_t(data_ + i * shape_.subspace_size(),
                           shape_.subshape());
+    }
+
+    self_t slice(typename shape_t::dimension_type i,
+                 typename shape_t::dimension_type j) const
+    {
+        const auto sub_shape = shape_.subshape();
+        return self_t(data_ + i * sub_shape.size(), batch(j - i, sub_shape));
     }
 
     using own_t = basic_tensor<R, r, shape_t>;  // FIXME: deprecate
@@ -229,6 +238,7 @@ class basic_tensor_ref
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_tensor_view
 {
+    using self_t = basic_tensor_view<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_tensor_view<R, r - 1, subshape_shape_t>;
     using iterator =
@@ -239,6 +249,7 @@ class basic_tensor_view
 
   public:
     using value_type = R;
+    using shape_type = shape_t;
 
     static constexpr rank_t rank = r;
 
@@ -279,10 +290,17 @@ class basic_tensor_view
         return iterator(data_ + shape_.size(), shape_.subshape());
     }
 
-    subspace_t operator[](int i) const
+    subspace_t operator[](typename shape_t::dimension_type i) const
     {
         return subspace_t(data_ + i * shape_.subspace_size(),
                           shape_.subshape());
+    }
+
+    self_t slice(typename shape_t::dimension_type i,
+                 typename shape_t::dimension_type j) const
+    {
+        const auto sub_shape = shape_.subshape();
+        return self_t(data_ + i * sub_shape.size(), batch(j - i, sub_shape));
     }
 };
 
@@ -299,6 +317,7 @@ class basic_tensor
 
   public:
     using value_type = R;
+    using shape_type = shape_t;
 
     static constexpr rank_t rank = r;
 
@@ -322,17 +341,25 @@ class basic_tensor
         return data_[shape_.offset(i...)];
     }
 
-    subspace_ref_t operator[](int i) const
+    subspace_ref_t operator[](typename shape_t::dimension_type i) const
     {
         return subspace_ref_t(data_.get() + i * shape_.subspace_size(),
                               shape_.subshape());
     }
 
+    using ref_t = basic_tensor_ref<R, r, shape_t>;  // FIXME: deprecate
+
+    ref_t slice(typename shape_t::dimension_type i,
+                typename shape_t::dimension_type j) const
+    {
+        const auto sub_shape = shape_.subshape();
+        return ref_t(data_.get() + i * sub_shape.size(),
+                     batch(j - i, sub_shape));
+    }
+
     iterator begin() const { return ref(*this).begin(); }
 
     iterator end() const { return ref(*this).end(); }
-
-    using ref_t = basic_tensor_ref<R, r, shape_t>;  // FIXME: deprecate
 };
 }  // namespace internal
 }  // namespace ttl

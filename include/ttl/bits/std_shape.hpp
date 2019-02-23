@@ -17,11 +17,20 @@ constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
     return std::array<T, r - 1>{std::get<Is + off>(a)...};
 }
 
+template <typename T, size_t p, size_t q, size_t... Is, size_t... Js>
+constexpr std::array<T, p + q>
+merge_indexed(const std::array<T, p> &a, std::index_sequence<Is...>,
+              const std::array<T, q> &b, std::index_sequence<Js...>)
+{
+    return std::array<T, p + q>{std::get<Is>(a)..., std::get<Js>(b)...};
+}
+
 using rank_t = uint8_t;
 
 template <rank_t r, typename Dim = uint32_t> class basic_shape
 {
     using dim_t = Dim;
+    using self_t = basic_shape<r, dim_t>;
 
   public:
     using dimension_type = Dim;
@@ -73,8 +82,34 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
             shift_idx<corank>(dims, std::make_index_sequence<s>()));
     }
 
+    bool operator==(const self_t &s) const
+    {
+        for (rank_t i = 0; i < rank; ++i) {
+            if (dims[i] != s.dims[i]) { return false; }
+        }
+        return true;
+    }
+
     //   private:
     const std::array<dim_t, r> dims;
 };
+
+template <rank_t p, rank_t q, typename dim_t>
+constexpr basic_shape<p + q, dim_t> join_shape(const basic_shape<p, dim_t> &s,
+                                               const basic_shape<q, dim_t> &t)
+{
+    return basic_shape<p + q, dim_t>(
+        merge_indexed(s.dims, std::make_index_sequence<p>(),  //
+                      t.dims, std::make_index_sequence<q>()));
+}
+
+template <rank_t r, typename dim_t>
+basic_shape<r + 1, dim_t>
+batch(typename basic_shape<r, dim_t>::dimension_type n,
+      const basic_shape<r, dim_t> &s)
+{
+    return internal::join_shape(basic_shape<1, dim_t>(n), s);
+}
+
 }  // namespace internal
 }  // namespace ttl
