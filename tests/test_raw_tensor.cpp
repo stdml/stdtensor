@@ -2,10 +2,10 @@
 
 #include <ttl/tensor>
 
-using ttl::experimental::raw_tensor;
-
 TEST(raw_tensor_test, test1)
 {
+    using ttl::experimental::raw_tensor;
+
     using encoder = raw_tensor::encoder_type;
     using raw_shape = raw_tensor::shape_type;
 
@@ -40,5 +40,26 @@ TEST(raw_tensor_test, test1)
         ASSERT_EQ(t.data<float>(), t.data());
         t.ref_as<float, 3>();
         t.view_as<float, 3>();
+    }
+}
+
+TEST(raw_tensor_test, test_convert)
+{
+    using ttl::experimental::raw_tensor_ref;
+    using ttl::experimental::raw_tensor_view;
+
+    ttl::tensor<float, 4> t(10, 224, 244, 3);
+    {
+        raw_tensor_ref r(ref(t));
+        raw_tensor_view v(view(t));
+    }
+    {
+        ttl::tensor_ref<float, 4> rt = ref(t);
+        raw_tensor_ref r(rt);
+        raw_tensor_view v(view(rt));
+    }
+    {
+        ttl::tensor_view<float, 4> vt = view(t);
+        raw_tensor_view v(vt);
     }
 }

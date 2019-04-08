@@ -112,6 +112,13 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
         : value_type_(value_type), shape_(shape), data_(data)
     {
     }
+
+    template <typename R, rank_t r, typename S>
+    explicit basic_raw_tensor_ref(const basic_tensor_ref<R, r, S> &t)
+        : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
+          data_(t.data())
+    {
+    }
 };
 
 template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
@@ -137,6 +144,13 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
                                    const shape_t &shape)
         : value_type_(value_type), shape_(shape), data_(data)
+    {
+    }
+
+    template <typename R, rank_t r, typename S>
+    explicit basic_raw_tensor_view(const basic_tensor_view<R, r, S> &t)
+        : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
+          data_(t.data())
     {
     }
 };
