@@ -45,6 +45,9 @@ TEST(raw_tensor_test, test1)
 
 TEST(raw_tensor_test, test_convert)
 {
+    using ttl::experimental::raw_ref;
+    using ttl::experimental::raw_view;
+
     using ttl::experimental::raw_tensor_ref;
     using ttl::experimental::raw_tensor_view;
 
@@ -52,14 +55,23 @@ TEST(raw_tensor_test, test_convert)
     {
         raw_tensor_ref r(ref(t));
         raw_tensor_view v(view(t));
+
+        raw_tensor_ref r1 = raw_ref(t);
+        raw_tensor_view v1 = raw_view(t);
     }
     {
         ttl::tensor_ref<float, 4> rt = ref(t);
+
         raw_tensor_ref r(rt);
         raw_tensor_view v(view(rt));
+
+        raw_tensor_ref r1 = raw_ref(rt);
+        raw_tensor_view v1 = raw_view(rt);
     }
     {
         ttl::tensor_view<float, 4> vt = view(t);
+
         raw_tensor_view v(vt);
+        raw_tensor_view v1 = raw_view(vt);
     }
 }

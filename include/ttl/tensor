@@ -1,4 +1,6 @@
+// # -*- mode: c++ -*-
 #pragma once
+
 #include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
@@ -57,5 +59,15 @@ using raw_tensor_ref = internal::basic_raw_tensor_ref<
 
 using raw_tensor_view = internal::basic_raw_tensor_view<
     std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+
+template <typename T> raw_tensor_ref raw_ref(const T &t)
+{
+    return raw_tensor_ref(ref(t));
+}
+
+template <typename T> raw_tensor_view raw_view(const T &t)
+{
+    return raw_tensor_view(view(t));
+}
 }  // namespace experimental
 }  // namespace ttl
