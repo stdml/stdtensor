@@ -96,6 +96,15 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
 
     void *const data_;
 
+    template <typename R> R *data() const
+    {
+        // TODO: use contracts of c++20
+        if (DataEncoder::template value<R>() != value_type_) {
+            throw std::invalid_argument("invalid scalar type");
+        }
+        return reinterpret_cast<R *>(data_);
+    }
+
   public:
     using encoder_type = DataEncoder;
     using shape_type = shape_t;
@@ -119,6 +128,12 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
           data_(t.data())
     {
     }
+
+    template <typename R, rank_t r> basic_tensor_ref<R, r> ranked_as() const
+    {
+        return basic_tensor_ref<R, r>(data<R>(),
+                                      shape_.template as_ranked<r>());
+    }
 };
 
 template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
@@ -129,6 +144,15 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     const shape_t shape_;
 
     const void *const data_;
+
+    template <typename R> const R *data() const
+    {
+        // TODO: use contracts of c++20
+        if (DataEncoder::template value<R>() != value_type_) {
+            throw std::invalid_argument("invalid scalar type");
+        }
+        return reinterpret_cast<const R *>(data_);
+    }
 
   public:
     using encoder_type = DataEncoder;
@@ -152,6 +176,12 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
         : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
           data_(t.data())
     {
+    }
+
+    template <typename R, rank_t r> basic_tensor_view<R, r> ranked_as() const
+    {
+        return basic_tensor_view<R, r>(data<R>(),
+                                       shape_.template as_ranked<r>());
     }
 };
 

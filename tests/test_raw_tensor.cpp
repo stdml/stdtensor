@@ -51,13 +51,17 @@ TEST(raw_tensor_test, test_convert)
     using ttl::experimental::raw_tensor_ref;
     using ttl::experimental::raw_tensor_view;
 
-    ttl::tensor<float, 4> t(10, 224, 244, 3);
+    using R = float;
+    ttl::tensor<R, 4> t(10, 224, 244, 3);
     {
         raw_tensor_ref r(ref(t));
         raw_tensor_view v(view(t));
 
         raw_tensor_ref r1 = raw_ref(t);
         raw_tensor_view v1 = raw_view(t);
+
+        ttl::tensor_ref<R, 4> _tr = r.ranked_as<R, 4>();
+        ttl::tensor_view<R, 4> _tv = v.ranked_as<R, 4>();
     }
     {
         ttl::tensor_ref<float, 4> rt = ref(t);
