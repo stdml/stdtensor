@@ -61,7 +61,9 @@ TEST(raw_tensor_test, test_convert)
         raw_tensor_view v1 = raw_view(t);
 
         ttl::tensor_ref<R, 4> _tr = r.ranked_as<R, 4>();
+        UNUSED(_tr);
         ttl::tensor_view<R, 4> _tv = v.ranked_as<R, 4>();
+        UNUSED(_tv);
     }
     {
         ttl::tensor_ref<float, 4> rt = ref(t);
