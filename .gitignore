@@ -32,6 +32,9 @@
 *.app
 *.log
 
+# VIM
+*.swp
+
 /3rdparty
 /bin
 /libgtest-dev-prefix

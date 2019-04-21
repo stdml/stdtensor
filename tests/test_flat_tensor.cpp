@@ -13,8 +13,12 @@ TEST(flat_tensor_test, test1)
         ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(1));
         t.ref_as<0>();
         t.view_as<0>();
-
+        t.data();
         static_assert(std::is_same<decltype(t)::value_type, float>::value, "");
+
+        const auto r = ref(t);
+        r.ref_as<0>();
+        r.view_as<0>();
     }
     {
         flat_tensor<float> t(1);
@@ -23,6 +27,7 @@ TEST(flat_tensor_test, test1)
         ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(1));
         t.ref_as<1>();
         t.view_as<1>();
+        t.data();
     }
     {
         flat_tensor<float> t(1, 2);
@@ -31,6 +36,7 @@ TEST(flat_tensor_test, test1)
         ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(2));
         t.ref_as<2>();
         t.view_as<2>();
+        t.data();
     }
     {
         flat_tensor<float> t(1, 2, 3);
@@ -39,5 +45,6 @@ TEST(flat_tensor_test, test1)
         ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(6));
         t.ref_as<3>();
         t.view_as<3>();
+        t.data();
     }
 }
