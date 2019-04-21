@@ -1,4 +1,6 @@
+// # -*- mode: c++ -*-
 #pragma once
+
 #include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
@@ -32,7 +34,13 @@ namespace ttl
 namespace experimental
 {
 template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
-}
+
+template <typename R>
+using flat_tensor_ref = internal::basic_flat_tensor_ref<R>;
+
+template <typename R>
+using flat_tensor_view = internal::basic_flat_tensor_view<R>;
+}  // namespace experimental
 }  // namespace ttl
 
 #include <experimental/type_encoder>
@@ -45,5 +53,21 @@ namespace experimental
 {
 using raw_tensor = internal::basic_raw_tensor<
     std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+
+using raw_tensor_ref = internal::basic_raw_tensor_ref<
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+
+using raw_tensor_view = internal::basic_raw_tensor_view<
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+
+template <typename T> raw_tensor_ref raw_ref(const T &t)
+{
+    return raw_tensor_ref(ref(t));
 }
+
+template <typename T> raw_tensor_view raw_view(const T &t)
+{
+    return raw_tensor_view(view(t));
+}
+}  // namespace experimental
 }  // namespace ttl
