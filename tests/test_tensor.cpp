@@ -325,3 +325,35 @@ TEST(tensor_test, test_slice)
         ASSERT_EQ(s2, 9 + 10 + 11 + 12);
     }
 }
+
+template <typename T> void test_data_end(const T &t)
+{
+    ASSERT_EQ(t.data_end(), t.data() + t.shape().size());
+    {
+        const int s1 = t.data_end() - t.data();
+        const int s2 = t.shape().size();
+        ASSERT_EQ(s1, s2);
+    }
+}
+
+TEST(tensor_test, test_data_end)
+{
+    {
+        tensor<int, 0> t;
+        test_data_end(t);
+        test_data_end(ref(t));
+        test_data_end(view(t));
+    }
+    {
+        tensor<int, 1> t(10);
+        test_data_end(t);
+        test_data_end(ref(t));
+        test_data_end(view(t));
+    }
+    {
+        tensor<int, 2> t(2, 3);
+        test_data_end(t);
+        test_data_end(ref(t));
+        test_data_end(view(t));
+    }
+}
