@@ -336,13 +336,24 @@ template <typename T> void test_data_end(const T &t)
     }
 }
 
+template <typename R, typename T> void test_data_end_raw(const T &t)
+{
+    ASSERT_EQ(static_cast<char *>(t.data_end()) - static_cast<char *>(t.data()),
+              t.shape().size() * sizeof(R));
+}
+
 template <typename R> void test_data_end_all()
 {
+    // using ttl::experimental::raw_ref;
+    // using ttl::experimental::raw_view;
+
     {
         tensor<R, 0> t;
         test_data_end(t);
         test_data_end(ref(t));
         test_data_end(view(t));
+        // test_data_end_raw<R>(raw_ref(t));
+        // test_data_end_raw<R>(raw_view(t));
     }
     {
         tensor<R, 1> t(10);
@@ -356,12 +367,46 @@ template <typename R> void test_data_end_all()
         test_data_end(ref(t));
         test_data_end(view(t));
     }
+    {
+        using ttl::experimental::flat_tensor;
+
+        flat_tensor<R> t0;
+        test_data_end(t0);
+
+        flat_tensor<R> t1(2);
+        test_data_end(t1);
+
+        flat_tensor<R> t2(2, 3);
+        test_data_end(t2);
+    }
 }
 
 TEST(tensor_test, test_data_end)
 {
     test_data_end_all<char>();
+    test_data_end_all<unsigned char>();
     test_data_end_all<int>();
     test_data_end_all<float>();
     test_data_end_all<double>();
+
+    {
+        using ttl::experimental::raw_tensor;
+        using encoder = raw_tensor::encoder_type;
+        // using ttl::experimental::raw_ref;
+        // using ttl::experimental::raw_view;
+
+        // TODO: data_end for raw_ref and raw_view
+
+        using R = float;
+        raw_tensor t0(encoder::value<R>());
+        raw_tensor t1(encoder::value<R>(), 2);
+        raw_tensor t2(encoder::value<R>(), 2, 3);
+
+        test_data_end_raw<R>(t0);
+        // test_data_end_raw<R>(raw_ref(t0));
+        // test_data_end_raw<R>(raw_view(t0));
+
+        test_data_end_raw<R>(t1);
+        test_data_end_raw<R>(t2);
+    }
 }

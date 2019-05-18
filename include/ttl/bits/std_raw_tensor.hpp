@@ -62,6 +62,12 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor
 
     void *data() const { return data_.get(); }
 
+    void *data_end() const
+    {
+        return static_cast<char *>(data_.get()) +
+               shape().size() * DataEncoder::size(value_type_);
+    }
+
     template <typename R, rank_t r, typename shape_type = basic_shape<r>>
     basic_tensor_ref<R, r, shape_type> ref_as() const
     {

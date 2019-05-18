@@ -33,6 +33,8 @@ class abstract_flat_tensor
 
     R *data() const { return data_.get(); }
 
+    R *data_end() const { return data_.get() + shape().size(); }
+
     template <rank_t r, typename shape_type = basic_shape<r>>
     basic_tensor_ref<R, r, shape_type> ref_as() const
     {
