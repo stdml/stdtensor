@@ -67,6 +67,8 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
 
     R *data() const { return data_; }
 
+    R *data_end() const { return data_ + 1; }
+
     using own_t = basic_tensor<R, 0, shape_t>;  // FIXME: deprecate
 };
 
@@ -93,6 +95,8 @@ template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
     shape_t shape() const { return shape_t(); }
 
     const R *data() const { return data_; }
+
+    const R *data_end() const { return data_ + 1; }
 };
 
 template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
@@ -113,6 +117,8 @@ template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
     shape_t shape() const { return shape_t(); }
 
     R *data() const { return data_.get(); }
+
+    R *data_end() const { return data_.get() + 1; }
 };
 
 template <typename R, typename shape_t>
@@ -205,6 +211,8 @@ class basic_tensor_ref
 
     R *data() const { return data_; }
 
+    R *data_end() const { return data_ + shape().size(); }
+
     shape_t shape() const { return shape_; }
 
     template <typename... I> R &at(I... i) const
@@ -276,6 +284,8 @@ class basic_tensor_view
 
     const R *data() const { return data_; }
 
+    const R *data_end() const { return data_ + shape().size(); }
+
     shape_t shape() const { return shape_; }
 
     template <typename... I> const R &at(I... i) const
@@ -333,6 +343,8 @@ class basic_tensor
     }
 
     R *data() const { return data_.get(); }
+
+    R *data_end() const { return data_.get() + shape().size(); }
 
     shape_t shape() const { return shape_; }
 
