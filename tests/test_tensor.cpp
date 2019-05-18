@@ -336,24 +336,32 @@ template <typename T> void test_data_end(const T &t)
     }
 }
 
-TEST(tensor_test, test_data_end)
+template <typename R> void test_data_end_all()
 {
     {
-        tensor<int, 0> t;
+        tensor<R, 0> t;
         test_data_end(t);
         test_data_end(ref(t));
         test_data_end(view(t));
     }
     {
-        tensor<int, 1> t(10);
+        tensor<R, 1> t(10);
         test_data_end(t);
         test_data_end(ref(t));
         test_data_end(view(t));
     }
     {
-        tensor<int, 2> t(2, 3);
+        tensor<R, 2> t(2, 3);
         test_data_end(t);
         test_data_end(ref(t));
         test_data_end(view(t));
     }
+}
+
+TEST(tensor_test, test_data_end)
+{
+    test_data_end_all<char>();
+    test_data_end_all<int>();
+    test_data_end_all<float>();
+    test_data_end_all<double>();
 }
