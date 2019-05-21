@@ -177,13 +177,14 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     using shape_type = shape_t;
 
     template <typename... D>
-    explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
-                                   D... d)
+    explicit basic_raw_tensor_view(const void *data,
+                                   const value_type_t value_type, D... d)
         : basic_raw_tensor_view(data, value_type, shape_t(d...))
     {
     }
 
-    explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
+    explicit basic_raw_tensor_view(const void *data,
+                                   const value_type_t value_type,
                                    const shape_t &shape)
         : value_type_(value_type), shape_(shape), data_(data)
     {
