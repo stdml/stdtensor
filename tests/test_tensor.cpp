@@ -336,12 +336,6 @@ template <typename T> void test_data_end(const T &t)
     }
 }
 
-template <typename R, typename T> void test_data_end_raw(const T &t)
-{
-    ASSERT_EQ(static_cast<char *>(t.data_end()) - static_cast<char *>(t.data()),
-              static_cast<ptrdiff_t>(t.shape().size() * sizeof(R)));
-}
-
 template <typename R> void test_data_end_all()
 {
     // using ttl::experimental::raw_ref;

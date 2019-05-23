@@ -140,6 +140,18 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
         return basic_tensor_ref<R, r>(data<R>(),
                                       shape_.template as_ranked<r>());
     }
+
+    value_type_t value_type() const { return value_type_; }
+
+    shape_t shape() const { return shape_; }
+
+    void *data() const { return data_; }
+
+    void *data_end() const
+    {
+        return static_cast<char *>(data_) +
+               shape().size() * DataEncoder::size(value_type_);
+    }
 };
 
 template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
@@ -165,13 +177,14 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     using shape_type = shape_t;
 
     template <typename... D>
-    explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
-                                   D... d)
+    explicit basic_raw_tensor_view(const void *data,
+                                   const value_type_t value_type, D... d)
         : basic_raw_tensor_view(data, value_type, shape_t(d...))
     {
     }
 
-    explicit basic_raw_tensor_view(void *data, const value_type_t value_type,
+    explicit basic_raw_tensor_view(const void *data,
+                                   const value_type_t value_type,
                                    const shape_t &shape)
         : value_type_(value_type), shape_(shape), data_(data)
     {
@@ -188,6 +201,18 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     {
         return basic_tensor_view<R, r>(data<R>(),
                                        shape_.template as_ranked<r>());
+    }
+
+    value_type_t value_type() const { return value_type_; }
+
+    shape_t shape() const { return shape_; }
+
+    const void *data() const { return data_; }
+
+    const void *data_end() const
+    {
+        return static_cast<const char *>(data_) +
+               shape().size() * DataEncoder::size(value_type_);
     }
 };
 

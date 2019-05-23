@@ -81,3 +81,33 @@ TEST(raw_tensor_test, test_convert)
         raw_tensor_view v1 = raw_view(vt);
     }
 }
+
+template <typename R, typename T> void test_raw_accessors(const T &t)
+{
+    t.shape();
+    t.value_type();
+    test_data_end_raw<R>(t);
+}
+
+TEST(raw_tensor_test, test_data)
+{
+    using ttl::experimental::raw_tensor;
+    using encoder = raw_tensor::encoder_type;
+
+    using ttl::experimental::raw_ref;
+    using ttl::experimental::raw_view;
+
+    using ttl::experimental::raw_tensor_ref;
+    using ttl::experimental::raw_tensor_view;
+
+    using R = float;
+    ttl::tensor<R, 4> t(10, 224, 244, 3);
+
+    raw_tensor rt(encoder::value<R>(), 10, 224, 244, 3);
+    raw_tensor_ref rr = raw_ref(t);
+    raw_tensor_view rv = raw_view(t);
+
+    test_raw_accessors<R>(rt);
+    test_raw_accessors<R>(rr);
+    test_raw_accessors<R>(rv);
+}
