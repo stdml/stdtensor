@@ -1,0 +1,13 @@
+// # -*- mode: c++ -*-
+#pragma once
+
+#include <ttl/bits/std_tensor_algo.hpp>
+
+namespace ttl
+{
+using ttl::internal::argmax;
+using ttl::internal::cast;
+using ttl::internal::fill;
+using ttl::internal::hamming_distance;
+using ttl::internal::sum;
+}  // namespace ttl
