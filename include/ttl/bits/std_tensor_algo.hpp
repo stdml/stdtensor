@@ -40,6 +40,18 @@ D hamming_distance(const basic_tensor_view<R, r, S> &x,
 }
 
 template <typename R, rank_t r, typename S>
+R max(const basic_tensor_view<R, r, S> &t)
+{
+    return *std::max_element(t.data(), t.data_end());
+}
+
+template <typename R, rank_t r, typename S>
+R min(const basic_tensor_view<R, r, S> &t)
+{
+    return *std::min_element(t.data(), t.data_end());
+}
+
+template <typename R, rank_t r, typename S>
 R sum(const basic_tensor_view<R, r, S> &t)
 {
     return std::accumulate(t.data(), t.data_end(), static_cast<R>(0));
