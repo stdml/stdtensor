@@ -8,7 +8,7 @@ TEST(tensor_algo_test, test_argmax)
     using R = float;
     ttl::tensor<R, 1> t(10);
     std::iota(t.data(), t.data_end(), 1);
-    ASSERT_EQ(9, ttl::argmax(view(t)));
+    ASSERT_EQ(static_cast<uint32_t>(9), ttl::argmax(view(t)));
 }
 
 TEST(tensor_algo_test, test_cast)
@@ -50,7 +50,8 @@ TEST(tensor_algo_test, test_hamming_distance)
     ttl::fill(ref(x), -1);
     ttl::tensor<R, 1> y(n);
     ttl::fill(ref(y), 1);
-    ASSERT_EQ(n, ttl::hamming_distance(view(x), view(y)));
+    ASSERT_EQ(static_cast<uint32_t>(n),
+              ttl::hamming_distance(view(x), view(y)));
 }
 
 TEST(tensor_algo_test, test_summaries)
