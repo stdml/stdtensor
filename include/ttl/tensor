@@ -5,6 +5,12 @@
 
 namespace ttl
 {
+using internal::rank_t;
+
+template <rank_t r> using shape = ttl::internal::basic_shape<r>;
+
+using internal::make_shape;
+
 template <typename R, internal::rank_t r>
 using tensor = internal::basic_tensor<R, r>;
 
