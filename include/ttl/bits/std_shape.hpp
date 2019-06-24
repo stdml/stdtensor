@@ -94,6 +94,11 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
     const std::array<dim_t, r> dims;
 };
 
+template <typename... D> basic_shape<sizeof...(D)> make_shape(const D... d)
+{
+    return basic_shape<sizeof...(D)>(d...);
+}
+
 template <rank_t p, rank_t q, typename dim_t>
 constexpr basic_shape<p + q, dim_t> join_shape(const basic_shape<p, dim_t> &s,
                                                const basic_shape<q, dim_t> &t)

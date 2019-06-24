@@ -39,3 +39,23 @@ TEST(shape_test, assign_test)
     shape<3> s = t;
     ASSERT_EQ(s.size(), static_cast<dim_t>(24));
 }
+
+TEST(shape_test, make_test)
+{
+    {
+        const auto s = ttl::make_shape();
+        ASSERT_EQ(s.size(), static_cast<dim_t>(1));
+    }
+    {
+        const auto s = ttl::make_shape(2);
+        ASSERT_EQ(s.size(), static_cast<dim_t>(2));
+    }
+    {
+        const auto s = ttl::make_shape(2, 3);
+        ASSERT_EQ(s.size(), static_cast<dim_t>(6));
+    }
+    {
+        const auto s = ttl::make_shape(2, 3, 4);
+        ASSERT_EQ(s.size(), static_cast<dim_t>(24));
+    }
+}
