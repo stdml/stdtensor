@@ -57,5 +57,11 @@ R sum(const basic_tensor_view<R, r, S> &t)
     return std::accumulate(t.data(), t.data_end(), static_cast<R>(0));
 }
 
+template <typename R, rank_t r, typename S>
+R mean(const basic_tensor_view<R, r, S> &t)
+{
+    return sum(t) / static_cast<R>(t.shape().size());
+}
+
 }  // namespace internal
 }  // namespace ttl

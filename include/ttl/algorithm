@@ -10,6 +10,7 @@ using ttl::internal::cast;
 using ttl::internal::fill;
 using ttl::internal::hamming_distance;
 using ttl::internal::max;
+using ttl::internal::mean;
 using ttl::internal::min;
 using ttl::internal::sum;
 }  // namespace ttl
