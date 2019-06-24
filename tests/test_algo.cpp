@@ -54,7 +54,7 @@ TEST(tensor_algo_test, test_hamming_distance)
               ttl::hamming_distance(view(x), view(y)));
 }
 
-TEST(tensor_algo_test, test_summaries)
+TEST(tensor_algo_test, test_summaries_int)
 {
     using R = int;
     const int n = 10;
@@ -63,4 +63,17 @@ TEST(tensor_algo_test, test_summaries)
     ASSERT_EQ(-5, ttl::min(view(x)));
     ASSERT_EQ(4, ttl::max(view(x)));
     ASSERT_EQ(-5, ttl::sum(view(x)));
+    ASSERT_EQ(0, ttl::mean(view(x)));
+}
+
+TEST(tensor_algo_test, test_summaries_float)
+{
+    using R = float;
+    const int n = 10;
+    ttl::tensor<R, 1> x(n);
+    std::iota(x.data(), x.data_end(), -5);
+    ASSERT_EQ(-5, ttl::min(view(x)));
+    ASSERT_EQ(4, ttl::max(view(x)));
+    ASSERT_EQ(-5, ttl::sum(view(x)));
+    ASSERT_EQ(-0.5, ttl::mean(view(x)));
 }
