@@ -86,6 +86,8 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         return std::equal(dims.begin(), dims.end(), s.dims.begin());
     }
 
+    bool operator!=(const basic_shape &s) const { return !operator==(s); }
+
     //   private:
     const std::array<dim_t, r> dims;
 };

@@ -63,3 +63,9 @@ TEST(shape_test, make_test)
         ASSERT_EQ(s, ttl::shape<3>(2, 3, 4));
     }
 }
+
+TEST(shape_test, cmp_test)
+{
+    ASSERT_TRUE(ttl::shape<2>(2, 3) != ttl::shape<2>(3, 2));
+    ASSERT_FALSE(ttl::shape<2>(2, 3) != ttl::shape<2>(2, 3));
+}
