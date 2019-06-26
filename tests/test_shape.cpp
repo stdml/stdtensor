@@ -69,3 +69,14 @@ TEST(shape_test, cmp_test)
     ASSERT_TRUE(ttl::shape<2>(2, 3) != ttl::shape<2>(3, 2));
     ASSERT_FALSE(ttl::shape<2>(2, 3) != ttl::shape<2>(2, 3));
 }
+
+TEST(shape_test, accessors_test)
+{
+    ttl::shape<3> shape(2, 3, 4);
+    auto dims = shape.dims();
+
+    using dim_t = ttl::shape<3>::dimension_type;
+    ASSERT_EQ(dims[0], static_cast<dim_t>(2));
+    ASSERT_EQ(dims[1], static_cast<dim_t>(3));
+    ASSERT_EQ(dims[2], static_cast<dim_t>(4));
+}

@@ -30,3 +30,15 @@ TEST(raw_shape_test, test1)
         shape.as_ranked<3>();
     }
 }
+
+TEST(raw_shape_test, test_dims)
+{
+    using raw_shape = ttl::internal::basic_raw_shape<uint32_t>;
+    raw_shape shape(2, 3, 4);
+    auto dims = shape.dims();
+
+    using dim_t = raw_shape::dimension_type;
+    ASSERT_EQ(dims[0], static_cast<dim_t>(2));
+    ASSERT_EQ(dims[1], static_cast<dim_t>(3));
+    ASSERT_EQ(dims[2], static_cast<dim_t>(4));
+}
