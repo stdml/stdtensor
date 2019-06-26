@@ -30,7 +30,6 @@ using rank_t = uint8_t;
 template <rank_t r, typename Dim = uint32_t> class basic_shape
 {
     using dim_t = Dim;
-    using self_t = basic_shape<r, dim_t>;
 
   public:
     using dimension_type = Dim;
@@ -82,13 +81,12 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
             shift_idx<corank>(dims, std::make_index_sequence<s>()));
     }
 
-    bool operator==(const self_t &s) const
+    bool operator==(const basic_shape &s) const
     {
-        for (rank_t i = 0; i < rank; ++i) {
-            if (dims[i] != s.dims[i]) { return false; }
-        }
-        return true;
+        return std::equal(dims.begin(), dims.end(), s.dims.begin());
     }
+
+    bool operator!=(const basic_shape &s) const { return !operator==(s); }
 
     //   private:
     const std::array<dim_t, r> dims;
