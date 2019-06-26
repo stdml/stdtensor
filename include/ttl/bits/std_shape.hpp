@@ -31,18 +31,20 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
 {
     using dim_t = Dim;
 
+    const std::array<dim_t, r> dims_;
+
   public:
     using dimension_type = Dim;
 
     static constexpr rank_t rank = r;
 
     constexpr explicit basic_shape(const std::array<dim_t, r> &dims)
-        : dims(dims)
+        : dims_(dims)
     {
     }
 
     template <typename... D>
-    constexpr explicit basic_shape(D... d) : dims({static_cast<dim_t>(d)...})
+    constexpr explicit basic_shape(D... d) : dims_({static_cast<dim_t>(d)...})
     {
         static_assert(sizeof...(D) == r, "invalid number of dims");
     }
@@ -54,19 +56,19 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         // TODO: expand the expression
         const std::array<dim_t, r> offs({static_cast<dim_t>(args)...});
         dim_t off = 0;
-        for (rank_t i = 0; i < r; ++i) { off = off * dims[i] + offs[i]; }
+        for (rank_t i = 0; i < r; ++i) { off = off * dims_[i] + offs[i]; }
         return off;
     }
 
     dim_t size() const
     {
-        return std::accumulate(dims.begin(), dims.end(), static_cast<dim_t>(1),
-                               std::multiplies<dim_t>());
+        return std::accumulate(dims_.begin(), dims_.end(),
+                               static_cast<dim_t>(1), std::multiplies<dim_t>());
     }
 
     dim_t subspace_size() const
     {
-        return std::accumulate(dims.begin() + 1, dims.end(),
+        return std::accumulate(dims_.begin() + 1, dims_.end(),
                                static_cast<dim_t>(1), std::multiplies<dim_t>());
     }
 
@@ -78,18 +80,17 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         static_assert(0 <= corank && corank <= r, "invalid corank");
         constexpr rank_t s = r - corank;
         return basic_shape<s, dim_t>(
-            shift_idx<corank>(dims, std::make_index_sequence<s>()));
+            shift_idx<corank>(dims_, std::make_index_sequence<s>()));
     }
 
     bool operator==(const basic_shape &s) const
     {
-        return std::equal(dims.begin(), dims.end(), s.dims.begin());
+        return std::equal(dims_.begin(), dims_.end(), s.dims().begin());
     }
 
     bool operator!=(const basic_shape &s) const { return !operator==(s); }
 
-    //   private:
-    const std::array<dim_t, r> dims;
+    const std::array<dim_t, r> &dims() const { return dims_; }
 };
 
 template <typename... D> basic_shape<sizeof...(D)> make_shape(const D... d)
@@ -102,8 +103,8 @@ constexpr basic_shape<p + q, dim_t> join_shape(const basic_shape<p, dim_t> &s,
                                                const basic_shape<q, dim_t> &t)
 {
     return basic_shape<p + q, dim_t>(
-        merge_indexed(s.dims, std::make_index_sequence<p>(),  //
-                      t.dims, std::make_index_sequence<q>()));
+        merge_indexed(s.dims(), std::make_index_sequence<p>(),  //
+                      t.dims(), std::make_index_sequence<q>()));
 }
 
 template <rank_t r, typename dim_t>

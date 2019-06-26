@@ -36,7 +36,7 @@ template <typename Dim = uint32_t> class basic_raw_shape
 
     template <rank_t r, typename D>
     explicit basic_raw_shape(const basic_shape<r, D> &shape)
-        : dims(std::move(arr2vec<Dim, D, r>(shape.dims)))
+        : dims(std::move(arr2vec<Dim, D, r>(shape.dims())))
     {
     }
 
