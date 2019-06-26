@@ -45,17 +45,21 @@ TEST(shape_test, make_test)
     {
         const auto s = ttl::make_shape();
         ASSERT_EQ(s.size(), static_cast<dim_t>(1));
+        ASSERT_EQ(s, ttl::shape<0>());
     }
     {
         const auto s = ttl::make_shape(2);
         ASSERT_EQ(s.size(), static_cast<dim_t>(2));
+        ASSERT_EQ(s, ttl::shape<1>(2));
     }
     {
         const auto s = ttl::make_shape(2, 3);
         ASSERT_EQ(s.size(), static_cast<dim_t>(6));
+        ASSERT_EQ(s, ttl::shape<2>(2, 3));
     }
     {
         const auto s = ttl::make_shape(2, 3, 4);
         ASSERT_EQ(s.size(), static_cast<dim_t>(24));
+        ASSERT_EQ(s, ttl::shape<3>(2, 3, 4));
     }
 }
