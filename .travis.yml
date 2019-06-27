@@ -5,8 +5,8 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - g++-5
+    - g++-7
 
 before_install:
-- export CC=gcc-5
-- export CXX=g++-5
+- export CC=gcc-7
+- export CXX=g++-7
