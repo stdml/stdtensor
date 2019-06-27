@@ -3,8 +3,8 @@ set -e
 
 PREFIX=$(pwd)/local
 USE_OPENCV=0
-BUILD_TESTS=1
-BUILD_BENCHMARKS=1
+BUILD_TESTS=0
+BUILD_BENCHMARKS=0
 HAVE_CUDA=0
 VERBOSE=0
 
@@ -21,8 +21,14 @@ parse_args() {
         --use-opencv)
             USE_OPENCV=1
             ;;
+        --tests)
+            BUILD_TESTS=1
+            ;;
         --no-tests)
             BUILD_TESTS=0
+            ;;
+        --benchmarks)
+            BUILD_BENCHMARKS=1
             ;;
         --no-benchmarks)
             BUILD_BENCHMARKS=0
@@ -48,14 +54,24 @@ add_cmake_flag() {
     CMAKE_FLAGS="${CMAKE_FLAGS} -D$1=$2"
 }
 
-add_cmake_flags() {
-    if [ ! -z ${GTEST_GIT_URL} ]; then
-        echo "Using GTEST_GIT_URL=${GTEST_GIT_URL}"
-        add_cmake_flag GTEST_GIT_URL ${GTEST_GIT_URL}
+pass_cmake_flag_from_env() {
+    local name=$1
+    local env_key=$2
+    if [ -z ${env_key} ]; then
+        env_key=$name
     fi
-    if [ ! -z ${GBENCH_GIT_URL} ]; then
-        echo "Using GBENCH_GIT_URL=${GBENCH_GIT_URL}"
-        add_cmake_flag GBENCH_GIT_URL ${GBENCH_GIT_URL}
+    local val=$(eval echo \$$env_key)
+    if [ ! -z "$val" ]; then
+        add_cmake_flag $name $val
+    fi
+}
+
+add_cmake_flags() {
+    if [ ${BUILD_TESTS} -eq 1 ]; then
+        pass_cmake_flag_from_env GTEST_GIT_URL
+    fi
+    if [ ${BUILD_BENCHMARKS} -eq 1 ]; then
+        pass_cmake_flag_from_env GBENCH_GIT_URL
     fi
 
     add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
