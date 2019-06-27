@@ -10,3 +10,8 @@ addons:
 before_install:
 - export CC=gcc-7
 - export CXX=g++-7
+
+script:
+- ./configure --tests --benchmarks
+- make
+- make test
