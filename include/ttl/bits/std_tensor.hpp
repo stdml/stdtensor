@@ -68,8 +68,6 @@ template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
     R *data() const { return data_; }
 
     R *data_end() const { return data_ + 1; }
-
-    using own_t = basic_tensor<R, 0, shape_t>;  // FIXME: deprecate
 };
 
 template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
@@ -239,8 +237,6 @@ class basic_tensor_ref
         const auto sub_shape = shape_.subshape();
         return self_t(data_ + i * sub_shape.size(), batch(j - i, sub_shape));
     }
-
-    using own_t = basic_tensor<R, r, shape_t>;  // FIXME: deprecate
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
@@ -317,6 +313,7 @@ class basic_tensor_view
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_tensor
 {
+    using ref_t = basic_tensor_ref<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_ref_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
     using iterator =
@@ -358,8 +355,6 @@ class basic_tensor
         return subspace_ref_t(data_.get() + i * shape_.subspace_size(),
                               shape_.subshape());
     }
-
-    using ref_t = basic_tensor_ref<R, r, shape_t>;  // FIXME: deprecate
 
     ref_t slice(typename shape_t::dimension_type i,
                 typename shape_t::dimension_type j) const
