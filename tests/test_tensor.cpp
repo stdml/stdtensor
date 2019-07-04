@@ -195,11 +195,13 @@ TEST(tensor_test, test_read_access)
         auto v = view(t);
         auto p = v.at(0, 0);
         p += 1;
+        UNUSED(p);
         ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
     }
     {
         auto &p = t.at(0, 0);
         p += 1;
+        UNUSED(p);
         ASSERT_EQ(4, read_tensor_view_func(view(t), 0, 0));
     }
 }
@@ -215,6 +217,7 @@ TEST(tensor_test, test_scalar_assignment)
 
     x = t[0][0] = 2;
     ASSERT_EQ(2, read_tensor_ref_func(ref(t), 0, 0));
+    ASSERT_EQ(2, x);
 
     t[0][0] = 3;
     ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
