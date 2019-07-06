@@ -6,6 +6,8 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-7
+    - libgtest-dev # FIXME: make it work with cmake
+    - cloc
 
 before_install:
 - export CC=gcc-7
@@ -15,3 +17,4 @@ script:
 - ./configure --tests --benchmarks
 - make
 - make test
+- cloc include

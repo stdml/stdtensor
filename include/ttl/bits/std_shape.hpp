@@ -14,7 +14,7 @@ template <size_t off, typename T, size_t r, size_t... Is>
 constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
                                          std::index_sequence<Is...>)
 {
-    return std::array<T, r - 1>{std::get<Is + off>(a)...};
+    return std::array<T, r - 1>({std::get<Is + off>(a)...});
 }
 
 template <typename T, size_t p, size_t q, size_t... Is, size_t... Js>
@@ -22,7 +22,7 @@ constexpr std::array<T, p + q>
 merge_indexed(const std::array<T, p> &a, std::index_sequence<Is...>,
               const std::array<T, q> &b, std::index_sequence<Js...>)
 {
-    return std::array<T, p + q>{std::get<Is>(a)..., std::get<Js>(b)...};
+    return std::array<T, p + q>({std::get<Is>(a)..., std::get<Js>(b)...});
 }
 
 using rank_t = uint8_t;
