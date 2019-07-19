@@ -15,6 +15,78 @@ namespace internal
 
 template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor;
 template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor_ref;
+template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor_view;
+
+template <typename R, typename shape_t> class basic_cuda_tensor<R, 0, shape_t>
+{
+    using allocator = cuda_mem_allocator<R>;
+
+    using D = std::unique_ptr<R[], cuda_mem_deleter>;
+    // using parent = base_tensor<R, shape_t, D>;
+
+    const shape_t shape_;
+    D data_;
+
+  public:
+    explicit basic_cuda_tensor(const shape_t &_) : basic_cuda_tensor() {}
+
+    explicit basic_cuda_tensor() : data_(allocator()(shape_.size())) {}
+
+    R *data() const { return data_.get(); }
+
+    R *data_end() const { return data_.get() + shape().size(); }
+
+    shape_t shape() const { return shape_; }
+
+    void from_host(const void *buffer) const
+    {
+        cudaMemcpy(data_.get(), buffer, shape_.size() * sizeof(R),
+                   cudaMemcpyHostToDevice);
+    }
+
+    void to_host(void *buffer) const
+    {
+        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
+                   cudaMemcpyDeviceToHost);
+    }
+};
+
+template <typename R, typename shape_t>
+class basic_cuda_tensor_ref<R, 0, shape_t>
+{
+    R *const data_;
+
+  public:
+    explicit basic_cuda_tensor_ref(R *data) : data_(data) {}
+
+    explicit basic_cuda_tensor_ref(R *data, const shape_t &) : data_(data) {}
+
+    shape_t shape() const { return shape_t(); }
+
+    R *data() const { return data_; }
+
+    R *data_end() const { return data_ + 1; }
+};
+
+template <typename R, typename shape_t>
+class basic_cuda_tensor_view<R, 0, shape_t>
+{
+    const R *const data_;
+
+  public:
+    explicit basic_cuda_tensor_view(const R *data) : data_(data) {}
+
+    explicit basic_cuda_tensor_view(const R *data, const shape_t &)
+        : data_(data)
+    {
+    }
+
+    shape_t shape() const { return shape_t(); }
+
+    const R *data() const { return data_; }
+
+    const R *data_end() const { return data_ + 1; }
+};
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor
@@ -31,14 +103,6 @@ class basic_cuda_tensor
     const shape_t shape_;
     D data_;
 
-    // using parent::data_;
-    // using parent::shape_;
-
-    // explicit basic_cuda_tensor(const shape_t &shape, allocator &alloc)
-    //     : parent(D(alloc(shape.size())), shape)
-    // {
-    // }
-
   public:
     template <typename... D>
     explicit basic_cuda_tensor(D... d) : basic_cuda_tensor(shape_t(d...))
@@ -46,7 +110,7 @@ class basic_cuda_tensor
     }
 
     explicit basic_cuda_tensor(const shape_t &shape)
-        : shape_(shape), data_(cuda_mem_allocator<R>()(shape.size()))
+        : shape_(shape), data_(allocator()(shape.size()))
     {
     }
 
@@ -82,7 +146,6 @@ class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 {
     using parent = base_tensor<R, shape_t, ref_ptr<R>>;
     using self_t = basic_cuda_tensor_ref<R, r, shape_t>;
-
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
 
@@ -103,13 +166,13 @@ class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 
     void from_host(const void *buffer) const
     {
-        cudaMemcpy(data_, buffer, shape_.size() * sizeof(R),
+        cudaMemcpy(data_.get(), buffer, shape_.size() * sizeof(R),
                    cudaMemcpyHostToDevice);
     }
 
     void to_host(void *buffer) const
     {
-        cudaMemcpy(buffer, data_, shape_.size() * sizeof(R),
+        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
                    cudaMemcpyDeviceToHost);
     }
 
@@ -151,7 +214,7 @@ class basic_cuda_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
 
     void to_host(void *buffer) const
     {
-        cudaMemcpy(buffer, data_, shape_.size() * sizeof(R),
+        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
                    cudaMemcpyDeviceToHost);
     }
 
