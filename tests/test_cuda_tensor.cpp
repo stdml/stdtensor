@@ -22,6 +22,14 @@ TEST(cuda_tensor_test, test2)
     cuda_tensor<R, 2> m1(10, 100);
     tensor<R, 2> m2(10, 100);
 
-    m1.fromHost(m2.data());
-    m1.toHost(m2.data());
+    m1.from_host(m2.data());
+    m1.to_host(m2.data());
+
+    m1.slice(1, 2);
+}
+
+TEST(cuda_tensor_test, test_3)
+{
+    using R = float;
+    cuda_tensor<R, 2> m1(ttl::make_shape(10, 100));
 }
