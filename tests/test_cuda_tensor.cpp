@@ -8,6 +8,8 @@
 #include <ttl/tensor>
 
 using ttl::cuda_tensor;
+using ttl::cuda_tensor_ref;
+using ttl::cuda_tensor_view;
 using ttl::tensor;
 
 TEST(cuda_tensor_test, test1)
@@ -26,6 +28,10 @@ TEST(cuda_tensor_test, test2)
     m1.to_host(m2.data());
 
     m1.slice(1, 2);
+    auto r = ref(m1);
+    UNUSED(r);
+    auto v = view(m1);
+    UNUSED(v);
 }
 
 TEST(cuda_tensor_test, test_3)

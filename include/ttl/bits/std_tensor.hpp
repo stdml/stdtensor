@@ -215,18 +215,14 @@ class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
         return iterator(this->data_end(), shape_.subshape());
     }
 
-    subspace_t operator[](typename shape_t::dimension_type i) const
+    subspace_t operator[](int i) const
     {
-        return subspace_t(data_.get() + i * shape_.subspace_size(),
-                          shape_.subshape());
+        return this->template _bracket<subspace_t>(i);
     }
 
-    self_t slice(typename shape_t::dimension_type i,
-                 typename shape_t::dimension_type j) const
+    self_t slice(int i, int j) const
     {
-        const auto sub_shape = shape_.subshape();
-        return self_t(data_.get() + i * sub_shape.size(),
-                      batch(j - i, sub_shape));
+        return this->template _slice<self_t>(i, j);
     }
 };
 
@@ -275,18 +271,14 @@ class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
         return iterator(data_.get() + shape_.size(), shape_.subshape());
     }
 
-    subspace_t operator[](typename shape_t::dimension_type i) const
+    subspace_t operator[](int i) const
     {
-        return subspace_t(data_.get() + i * shape_.subspace_size(),
-                          shape_.subshape());
+        return this->template _bracket<subspace_t>(i);
     }
 
-    self_t slice(typename shape_t::dimension_type i,
-                 typename shape_t::dimension_type j) const
+    self_t slice(int i, int j) const
     {
-        const auto sub_shape = shape_.subshape();
-        return self_t(data_.get() + i * sub_shape.size(),
-                      batch(j - i, sub_shape));
+        return this->template _slice<self_t>(i, j);
     }
 };
 

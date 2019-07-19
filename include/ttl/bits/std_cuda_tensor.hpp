@@ -50,6 +50,12 @@ class basic_cuda_tensor
     {
     }
 
+    R *data() const { return data_.get(); }
+
+    R *data_end() const { return data_.get() + shape().size(); }
+
+    shape_t shape() const { return shape_; }
+
     void from_host(const void *buffer) const
     {
         cudaMemcpy(data_.get(), buffer, shape_.size() * sizeof(R),
@@ -76,6 +82,9 @@ class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 {
     using parent = base_tensor<R, shape_t, ref_ptr<R>>;
     using self_t = basic_cuda_tensor_ref<R, r, shape_t>;
+
+    using subshape_shape_t = typename shape_t::template subshape_t<1>;
+    using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
 
     using parent::data_;
     using parent::shape_;
@@ -104,12 +113,14 @@ class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
                    cudaMemcpyDeviceToHost);
     }
 
-    self_t slice(typename shape_t::dimension_type i,
-                 typename shape_t::dimension_type j) const
+    subspace_t operator[](int i) const
     {
-        const auto sub_shape = shape_.subshape();
-        return self_t(data_.get() + i * sub_shape.size(),
-                      batch(j - i, sub_shape));
+        return this->template _bracket<subspace_t>(i);
+    }
+
+    self_t slice(int i, int j) const
+    {
+        return this->template _slice<self_t>(i, j);
     }
 };
 
@@ -118,6 +129,9 @@ class basic_cuda_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
 {
     using parent = base_tensor<R, shape_t, view_ptr<R>>;
     using self_t = basic_cuda_tensor_view<R, r, shape_t>;
+
+    using subshape_shape_t = typename shape_t::template subshape_t<1>;
+    using subspace_t = basic_cuda_tensor_view<R, r - 1, subshape_shape_t>;
 
     using parent::data_;
     using parent::shape_;
@@ -141,12 +155,14 @@ class basic_cuda_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
                    cudaMemcpyDeviceToHost);
     }
 
-    self_t slice(typename shape_t::dimension_type i,
-                 typename shape_t::dimension_type j) const
+    subspace_t operator[](int i) const
     {
-        const auto sub_shape = shape_.subshape();
-        return self_t(data_.get() + i * sub_shape.size(),
-                      batch(j - i, sub_shape));
+        return this->template _bracket<subspace_t>(i);
+    }
+
+    self_t slice(int i, int j) const
+    {
+        return this->template _slice<self_t>(i, j);
     }
 };
 
