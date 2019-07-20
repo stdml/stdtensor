@@ -45,58 +45,37 @@ class basic_tensor_iterator<R, 0, shape_t, elem_t>
     // typename elem_t::value_type operator*() const { *pos; }
 };
 
-template <typename R, typename shape_t> class basic_tensor_ref<R, 0, shape_t>
+template <typename R, typename shape_t>
+class basic_tensor_ref<R, 0, shape_t>
+    : public base_scalar<R, shape_t, ref_ptr<R>>
 {
-    R *const data_;
+    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+    using parent::parent;
 
   public:
-    using value_type = R;
+    using parent::data;
 
-    static constexpr rank_t rank = 0;
+    basic_tensor_ref(const basic_tensor<R, 0, shape_t> &t) : parent(t.data()) {}
 
-    explicit basic_tensor_ref(R *data) : data_(data) {}
-
-    explicit basic_tensor_ref(R *data, const shape_t &) : data_(data) {}
-
-    basic_tensor_ref(const basic_tensor<R, 0, shape_t> &t)
-        : data_((R *)t.data())
-    {
-    }
-
-    R operator=(const R &val) const { return *data_ = val; }
-
-    shape_t shape() const { return shape_t(); }
-
-    R *data() const { return data_; }
-
-    R *data_end() const { return data_ + 1; }
+    R operator=(const R &val) const { return *data() = val; }
 };
 
-template <typename R, typename shape_t> class basic_tensor_view<R, 0, shape_t>
+template <typename R, typename shape_t>
+class basic_tensor_view<R, 0, shape_t>
+    : public base_scalar<R, shape_t, view_ptr<R>>
 {
-    const R *const data_;
+    using parent = base_scalar<R, shape_t, view_ptr<R>>;
+    using parent::parent;
 
   public:
-    using value_type = R;
-
-    static constexpr rank_t rank = 0;
-
-    basic_tensor_view(const R *data) : data_(data) {}
-
-    basic_tensor_view(const R *data, const shape_t &) : data_(data) {}
-
-    basic_tensor_view(const basic_tensor<R, 0, shape_t> &t) : data_(t.data()) {}
-
-    basic_tensor_view(const basic_tensor_ref<R, 0, shape_t> &t)
-        : data_(t.data())
+    basic_tensor_view(const basic_tensor<R, 0, shape_t> &t) : parent(t.data())
     {
     }
 
-    shape_t shape() const { return shape_t(); }
-
-    const R *data() const { return data_; }
-
-    const R *data_end() const { return data_ + 1; }
+    basic_tensor_view(const basic_tensor_ref<R, 0, shape_t> &t)
+        : parent(t.data())
+    {
+    }
 };
 
 template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>

@@ -4,11 +4,15 @@ namespace ttl
 {
 namespace internal
 {
+using rank_t = uint8_t;
+
 template <typename R, typename S, typename D> class base_scalar
 {
   public:
     using value_type = R;
     using shape_type = S;
+
+    static constexpr rank_t rank = 0;
 
   protected:
     using data_ptr = typename D::ptr_type;
@@ -21,9 +25,9 @@ template <typename R, typename S, typename D> class base_scalar
 
     base_scalar(data_ptr data, const S &) : data_(data) {}
 
-    R *data() const { return data_.get(); }
+    data_ptr data() const { return data_.get(); }
 
-    R *data_end() const { return data_.get() + 1; }
+    data_ptr data_end() const { return data_.get() + 1; }
 
     S shape() const { return S(); }
 };
