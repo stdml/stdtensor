@@ -17,15 +17,33 @@ template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor;
 template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor_ref;
 template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor_view;
 
-template <typename R, typename shape_t> class basic_cuda_tensor<R, 0, shape_t>
+template <typename T> class base_cuda_tensor
+{
+  public:
+    void from_host(const void *buffer) const
+    {
+        void *data = static_cast<const T *>(this)->data();
+        const auto size = static_cast<const T *>(this)->data_size();
+        cudaMemcpy(data, buffer, size, cudaMemcpyHostToDevice);
+    }
+
+    void to_host(void *buffer) const
+    {
+        const void *data = static_cast<const T *>(this)->data();
+        const auto size = static_cast<const T *>(this)->data_size();
+        cudaMemcpy(buffer, data, size, cudaMemcpyDeviceToHost);
+    }
+};
+
+template <typename R, typename shape_t>
+class basic_cuda_tensor<R, 0, shape_t>
+    : public base_cuda_tensor<basic_cuda_tensor<R, 0, shape_t>>
 {
     using allocator = cuda_mem_allocator<R>;
-
-    using D = std::unique_ptr<R[], cuda_mem_deleter>;
-    // using parent = base_tensor<R, shape_t, D>;
+    using owner = std::unique_ptr<R[], cuda_mem_deleter>;
 
     const shape_t shape_;
-    D data_;
+    owner data_;
 
   public:
     explicit basic_cuda_tensor(const shape_t &_) : basic_cuda_tensor() {}
@@ -37,18 +55,6 @@ template <typename R, typename shape_t> class basic_cuda_tensor<R, 0, shape_t>
     R *data_end() const { return data_.get() + shape().size(); }
 
     shape_t shape() const { return shape_; }
-
-    void from_host(const void *buffer) const
-    {
-        cudaMemcpy(data_.get(), buffer, shape_.size() * sizeof(R),
-                   cudaMemcpyHostToDevice);
-    }
-
-    void to_host(void *buffer) const
-    {
-        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
-                   cudaMemcpyDeviceToHost);
-    }
 };
 
 template <typename R, typename shape_t>
@@ -67,38 +73,15 @@ class basic_cuda_tensor_view<R, 0, shape_t>
     using parent::parent;
 };
 
-template <typename R, typename S, typename D,
-          template <typename, rank_t, typename> class T>
-class base_cuda_tensor : public base_tensor<R, S, D, T>
-{
-  protected:
-    using parent = base_tensor<R, S, D, T>;
-    using parent::data_size;
-    using parent::parent;
-
-  public:
-    using parent::data;
-
-    void from_host(const void *buffer) const
-    {
-        cudaMemcpy(data(), buffer, data_size(), cudaMemcpyHostToDevice);
-    }
-
-    void to_host(void *buffer) const
-    {
-        cudaMemcpy(buffer, data(), data_size(), cudaMemcpyDeviceToHost);
-    }
-};
-
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor
-    : public base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>
+    : public base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>,
+      public base_cuda_tensor<basic_cuda_tensor<R, r, shape_t>>
 {
     using allocator = cuda_mem_allocator<R>;
     using owner = std::unique_ptr<R[], cuda_mem_deleter>;
 
-    using parent =
-        base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
+    using parent = base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
 
     owner data_owner_;
 
@@ -121,10 +104,10 @@ class basic_cuda_tensor
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_ref
-    : public base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>
+    : public base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>,
+      public base_cuda_tensor<basic_cuda_tensor_ref<R, r, shape_t>>
 {
-    using parent =
-        base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
+    using parent = base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
 
   public:
     template <typename... D>
@@ -141,11 +124,12 @@ class basic_cuda_tensor_ref
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_view
-    : public base_cuda_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>
+    : public base_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>,
+      public base_cuda_tensor<basic_cuda_tensor_view<R, r, shape_t>>
 {
-    using parent =
-        base_cuda_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>;
-    using parent::from_host;  // disable
+    using parent = base_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>;
+    using mixin = base_cuda_tensor<basic_cuda_tensor_view<R, r, shape_t>>;
+    using mixin::from_host;  // disable
 
   public:
     template <typename... D>

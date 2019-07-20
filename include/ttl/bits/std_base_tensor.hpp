@@ -82,8 +82,6 @@ class base_tensor
 
     using index_type = typename S::dimension_type;
 
-    size_t data_size() const { return shape_.size() * sizeof(R); }
-
     iterator _iter(data_ptr pos) const
     {
         return iterator(pos, shape_.subshape());
@@ -94,6 +92,8 @@ class base_tensor
     {
         static_assert(rank > 0, "");
     }
+
+    size_t data_size() const { return shape_.size() * sizeof(R); }
 
     S shape() const { return shape_; }
 
