@@ -102,11 +102,10 @@ basic_tensor_view<R, r, shape_t> view(const T<R, r, shape_t> &t)
 /* rank > 0 */
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor_ref : public base<R, shape_t, ref_ptr<R>>::type
+class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 {
-    using parent = typename base<R, shape_t, ref_ptr<R>>::type;
+    using parent = base_tensor<R, shape_t, ref_ptr<R>>;
     using sub_shape = typename parent::sub_shape;
-
     using slice_t = basic_tensor_ref<R, r, shape_t>;
     using element_t = basic_tensor_ref<R, r - 1, sub_shape>;
 
@@ -146,11 +145,10 @@ class basic_tensor_ref : public base<R, shape_t, ref_ptr<R>>::type
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor_view : public base<R, shape_t, view_ptr<R>>::type
+class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
 {
-    using parent = typename base<R, shape_t, view_ptr<R>>::type;
+    using parent = base_tensor<R, shape_t, view_ptr<R>>;
     using sub_shape = typename parent::sub_shape;
-
     using slice_t = basic_tensor_view<R, r, shape_t>;
     using element_t = basic_tensor_view<R, r - 1, sub_shape>;
 
@@ -195,18 +193,17 @@ class basic_tensor_view : public base<R, shape_t, view_ptr<R>>::type
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor : public base<R, shape_t, ref_ptr<R>>::type
+class basic_tensor : public base_tensor<R, shape_t, ref_ptr<R>>
 {
     using allocator = basic_allocator<R>;
-    using Own = std::unique_ptr<R[]>;
+    using owner = std::unique_ptr<R[]>;
 
-    using parent = typename base<R, shape_t, ref_ptr<R>>::type;
+    using parent = base_tensor<R, shape_t, ref_ptr<R>>;
     using sub_shape = typename parent::sub_shape;
-
     using slice_t = basic_tensor_ref<R, r, shape_t>;
     using element_t = basic_tensor_ref<R, r - 1, sub_shape>;
 
-    Own data_owner_;
+    owner data_owner_;
 
     explicit basic_tensor(R *data, const shape_t &shape)
         : parent(data, shape), data_owner_(data)

@@ -119,11 +119,5 @@ template <typename R, typename S, typename D> class base_tensor
     }
 };
 
-template <typename R, typename S, typename D> class base
-{
-  public:
-    using type = base_tensor<R, S, D>;
-};
-
 }  // namespace internal
 }  // namespace ttl
