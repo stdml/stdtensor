@@ -1,0 +1,18 @@
+// # -*- mode: c++ -*-
+#pragma once
+
+#include <ttl/bits/std_range.hpp>
+
+namespace ttl
+{
+using internal::range;
+
+using rank_t = uint8_t;
+
+// FIXME: make T less generic
+template <rank_t r, typename T> auto range(const T &t)
+{
+    return range(std::get<r>(t.shape().dims()));
+}
+
+}  // namespace ttl
