@@ -68,10 +68,10 @@ class basic_cuda_tensor_view<R, 0, shape_t>
 };
 
 template <typename R, typename S, typename D>
-class base_cuda_tensor : public base_tensor<R, S, D>
+class base_cuda_tensor : public base<R, S, D>::type
 {
   protected:
-    using parent = base_tensor<R, S, D>;
+    using parent = typename base<R, S, D>::type;
     using parent::parent;
 
     using parent::data_size;

@@ -39,6 +39,8 @@ template <typename R, typename S, typename D> class base_tensor
     static constexpr auto rank = S::rank;
 
   protected:
+    using sub_shape = typename S::template subshape_t<1>;
+
     using data_ptr = typename D::ptr_type;
     using data_ref = typename D::ref_type;
 
@@ -88,6 +90,12 @@ template <typename R, typename S, typename D> class base_tensor
     {
         return data_.get()[shape_.offset(i...)];
     }
+};
+
+template <typename R, typename S, typename D> class base
+{
+  public:
+    using type = base_tensor<R, S, D>;
 };
 
 }  // namespace internal

@@ -155,15 +155,14 @@ class basic_tensor_iterator
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
+class basic_tensor_ref : public base<R, shape_t, ref_ptr<R>>::type
 {
-    using parent = base_tensor<R, shape_t, ref_ptr<R>>;
+    using parent = typename base<R, shape_t, ref_ptr<R>>::type;
+    using sub_shape = typename parent::sub_shape;
 
     using slice_t = basic_tensor_ref<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
-    using iterator =
-        basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
+    using subspace_t = basic_tensor_ref<R, r - 1, sub_shape>;
+    using iterator = basic_tensor_iterator<R, r - 1, sub_shape, subspace_t>;
 
   public:
     template <typename... D>
@@ -204,15 +203,14 @@ class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
+class basic_tensor_view : public base<R, shape_t, view_ptr<R>>::type
 {
-    using parent = base_tensor<R, shape_t, view_ptr<R>>;
+    using parent = typename base<R, shape_t, view_ptr<R>>::type;
+    using sub_shape = typename parent::sub_shape;
 
     using slice_t = basic_tensor_view<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_t = basic_tensor_view<R, r - 1, subshape_shape_t>;
-    using iterator =
-        basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
+    using subspace_t = basic_tensor_view<R, r - 1, sub_shape>;
+    using iterator = basic_tensor_iterator<R, r - 1, sub_shape, subspace_t>;
 
   public:
     template <typename... D>
@@ -258,18 +256,17 @@ class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor : public base_tensor<R, shape_t, ref_ptr<R>>
+class basic_tensor : public base<R, shape_t, ref_ptr<R>>::type
 {
     using allocator = basic_allocator<R>;
     using Own = std::unique_ptr<R[]>;
 
-    using parent = base_tensor<R, shape_t, ref_ptr<R>>;
+    using parent = typename base<R, shape_t, ref_ptr<R>>::type;
+    using sub_shape = typename parent::sub_shape;
 
     using slice_t = basic_tensor_ref<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
-    using iterator =
-        basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
+    using subspace_t = basic_tensor_ref<R, r - 1, sub_shape>;
+    using iterator = basic_tensor_iterator<R, r - 1, sub_shape, subspace_t>;
 
     Own data_owner_;
 
