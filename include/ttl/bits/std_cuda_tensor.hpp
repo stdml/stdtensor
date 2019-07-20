@@ -53,55 +53,62 @@ template <typename R, typename shape_t> class basic_cuda_tensor<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor_ref<R, 0, shape_t>
+    : public base_scalar<R, shape_t, ref_ptr<R>>
 {
-    R *const data_;
-
-  public:
-    explicit basic_cuda_tensor_ref(R *data) : data_(data) {}
-
-    explicit basic_cuda_tensor_ref(R *data, const shape_t &) : data_(data) {}
-
-    shape_t shape() const { return shape_t(); }
-
-    R *data() const { return data_; }
-
-    R *data_end() const { return data_ + 1; }
+    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+    using parent::parent;
 };
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor_view<R, 0, shape_t>
+    : public base_scalar<R, shape_t, view_ptr<R>>
 {
-    const R *const data_;
+    using parent = base_scalar<R, shape_t, view_ptr<R>>;
+    using parent::parent;
+};
+
+template <typename R, typename S, typename D>
+class base_cuda_tensor : public base_tensor<R, S, D>
+{
+  protected:
+    using parent = base_tensor<R, S, D>;
+    using parent::parent;
+
+    using parent::data_size;
 
   public:
-    explicit basic_cuda_tensor_view(const R *data) : data_(data) {}
+    using parent::data;
 
-    explicit basic_cuda_tensor_view(const R *data, const shape_t &)
-        : data_(data)
+    void from_host(const void *buffer) const
     {
+        cudaMemcpy(data(), buffer, data_size(), cudaMemcpyHostToDevice);
     }
 
-    shape_t shape() const { return shape_t(); }
-
-    const R *data() const { return data_; }
-
-    const R *data_end() const { return data_ + 1; }
+    void to_host(void *buffer) const
+    {
+        cudaMemcpy(buffer, data(), data_size(), cudaMemcpyDeviceToHost);
+    }
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_cuda_tensor
-// : public base_tensor<R, shape_t, std::unique_ptr<R[], cuda_mem_deleter>>
+class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
 {
     using allocator = cuda_mem_allocator<R>;
+    using Own = std::unique_ptr<R[], cuda_mem_deleter>;
 
-    using D = std::unique_ptr<R[], cuda_mem_deleter>;
-    using parent = base_tensor<R, shape_t, D>;
+    using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
 
     using self_t = basic_cuda_tensor<R, r, shape_t>;
     using ref_t = basic_cuda_tensor_ref<R, r, shape_t>;
+    using subshape_shape_t = typename shape_t::template subshape_t<1>;
+    using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
 
-    const shape_t shape_;
-    D data_;
+    Own data_owner_;
+
+    explicit basic_cuda_tensor(R *data, const shape_t &shape)
+        : parent(data, shape)
+    {
+    }
 
   public:
     template <typename... D>
@@ -110,47 +117,28 @@ class basic_cuda_tensor
     }
 
     explicit basic_cuda_tensor(const shape_t &shape)
-        : shape_(shape), data_(allocator()(shape.size()))
+        : basic_cuda_tensor(allocator()(shape.size()), shape)
     {
     }
 
-    R *data() const { return data_.get(); }
-
-    R *data_end() const { return data_.get() + shape().size(); }
-
-    shape_t shape() const { return shape_; }
-
-    void from_host(const void *buffer) const
+    subspace_t operator[](int i) const
     {
-        cudaMemcpy(data_.get(), buffer, shape_.size() * sizeof(R),
-                   cudaMemcpyHostToDevice);
+        return this->template _bracket<subspace_t>(i);
     }
 
-    void to_host(void *buffer) const
+    ref_t slice(int i, int j) const
     {
-        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
-                   cudaMemcpyDeviceToHost);
-    }
-
-    ref_t slice(typename shape_t::dimension_type i,
-                typename shape_t::dimension_type j) const
-    {
-        const auto sub_shape = shape_.subshape();
-        return ref_t(data_.get() + i * sub_shape.size(),
-                     batch(j - i, sub_shape));
+        return this->template _slice<ref_t>(i, j);
     }
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
+class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
 {
-    using parent = base_tensor<R, shape_t, ref_ptr<R>>;
+    using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
     using self_t = basic_cuda_tensor_ref<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
-
-    using parent::data_;
-    using parent::shape_;
 
   public:
     template <typename... D>
@@ -162,18 +150,6 @@ class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
     constexpr explicit basic_cuda_tensor_ref(R *data, const shape_t &shape)
         : parent(data, shape)
     {
-    }
-
-    void from_host(const void *buffer) const
-    {
-        cudaMemcpy(data_.get(), buffer, shape_.size() * sizeof(R),
-                   cudaMemcpyHostToDevice);
-    }
-
-    void to_host(void *buffer) const
-    {
-        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
-                   cudaMemcpyDeviceToHost);
     }
 
     subspace_t operator[](int i) const
@@ -188,16 +164,16 @@ class basic_cuda_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_cuda_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
+class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
 {
-    using parent = base_tensor<R, shape_t, view_ptr<R>>;
+    using parent = base_cuda_tensor<R, shape_t, view_ptr<R>>;
     using self_t = basic_cuda_tensor_view<R, r, shape_t>;
-
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_cuda_tensor_view<R, r - 1, subshape_shape_t>;
+    // using iter_t =
+    //     basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
 
-    using parent::data_;
-    using parent::shape_;
+    using parent::from_host;  // disable
 
   public:
     template <typename... D>
@@ -212,11 +188,13 @@ class basic_cuda_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
     {
     }
 
-    void to_host(void *buffer) const
-    {
-        cudaMemcpy(buffer, data_.get(), shape_.size() * sizeof(R),
-                   cudaMemcpyDeviceToHost);
-    }
+    // iter_t begin() const { return this->template _iter<iter_t>(this->data());
+    // }
+
+    // iter_t end() const
+    // {
+    //     return this->template _iter<iter_t>(this->data_end());
+    // }
 
     subspace_t operator[](int i) const
     {
