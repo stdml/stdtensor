@@ -24,7 +24,11 @@ template <typename R> struct cuda_mem_allocator {
 };
 
 struct cuda_mem_deleter {
-    void operator()(void *ptr) { cudaFree(ptr); }
+    void operator()(void *ptr)
+    {
+        const cudaError_t err = cudaFree(ptr);
+        if (err != cudaSuccess) { throw std::runtime_error("cudaFree failed"); }
+    }
 };
 
 }  // namespace internal
