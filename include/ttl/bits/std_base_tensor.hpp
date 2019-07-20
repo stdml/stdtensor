@@ -56,7 +56,11 @@ class base_tensor_iterator
     T operator*() const { return T(pos_, shape_); }
 };
 
-template <typename R, typename S, typename D> class base_tensor
+using rank_t = uint8_t;
+
+template <typename R, typename S, typename D,
+          template <typename, rank_t, typename> class T>
+class base_tensor
 {
   public:
     using value_type = R;
@@ -66,6 +70,9 @@ template <typename R, typename S, typename D> class base_tensor
 
   protected:
     using sub_shape = typename S::template subshape_t<1>;
+    using slice_t = T<R, rank, S>;
+    using element_t = T<R, rank - 1, sub_shape>;
+    using iterator = base_tensor_iterator<R, sub_shape, D, element_t>;
 
     using data_ptr = typename D::ptr_type;
     using data_ref = typename D::ref_type;
@@ -77,23 +84,9 @@ template <typename R, typename S, typename D> class base_tensor
 
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
-    template <typename element_t> element_t _bracket(index_type i) const
+    iterator _iter(data_ptr pos) const
     {
-        return element_t(data_.get() + i * shape_.subspace_size(),
-                         shape_.subshape());
-    }
-
-    template <typename slice_t> slice_t _slice(index_type i, index_type j) const
-    {
-        const auto sub_shape = shape_.subshape();
-        return slice_t(data_.get() + i * sub_shape.size(),
-                       batch(j - i, sub_shape));
-    }
-
-    template <typename element_t> auto _iter(data_ptr pos) const
-    {
-        using iter_t = base_tensor_iterator<R, sub_shape, D, element_t>;
-        return iter_t(pos, shape_.subshape());
+        return iterator(pos, shape_.subshape());
     }
 
   public:
@@ -116,6 +109,23 @@ template <typename R, typename S, typename D> class base_tensor
     template <typename... I> data_ref at(I... i) const
     {
         return data_.get()[shape_.offset(i...)];
+    }
+
+    iterator begin() const { return _iter(data()); }
+
+    iterator end() const { return _iter(data_end()); }
+
+    element_t operator[](index_type i) const
+    {
+        return element_t(data_.get() + i * shape_.subspace_size(),
+                         shape_.subshape());
+    }
+
+    slice_t slice(index_type i, index_type j) const
+    {
+        const auto sub_shape = shape_.subshape();
+        return slice_t(data_.get() + i * sub_shape.size(),
+                       batch(j - i, sub_shape));
     }
 };
 

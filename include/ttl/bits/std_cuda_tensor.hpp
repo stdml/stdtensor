@@ -67,11 +67,12 @@ class basic_cuda_tensor_view<R, 0, shape_t>
     using parent::parent;
 };
 
-template <typename R, typename S, typename D>
-class base_cuda_tensor : public base_tensor<R, S, D>
+template <typename R, typename S, typename D,
+          template <typename, rank_t, typename> class T>
+class base_cuda_tensor : public base_tensor<R, S, D, T>
 {
   protected:
-    using parent = base_tensor<R, S, D>;
+    using parent = base_tensor<R, S, D, T>;
     using parent::data_size;
     using parent::parent;
 
@@ -90,15 +91,14 @@ class base_cuda_tensor : public base_tensor<R, S, D>
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
+class basic_cuda_tensor
+    : public base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>
 {
     using allocator = cuda_mem_allocator<R>;
     using owner = std::unique_ptr<R[], cuda_mem_deleter>;
 
-    using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
-    using sub_shape = typename parent::sub_shape;
-    using slice_t = basic_cuda_tensor_ref<R, r, shape_t>;
-    using element_t = basic_cuda_tensor_ref<R, r - 1, sub_shape>;
+    using parent =
+        base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
 
     owner data_owner_;
 
@@ -117,32 +117,14 @@ class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
         : basic_cuda_tensor(allocator()(shape.size()), shape)
     {
     }
-
-    auto begin() const { return this->template _iter<element_t>(this->data()); }
-
-    auto end() const
-    {
-        return this->template _iter<element_t>(this->data_end());
-    }
-
-    element_t operator[](int i) const
-    {
-        return this->template _bracket<element_t>(i);
-    }
-
-    slice_t slice(int i, int j) const
-    {
-        return this->template _slice<slice_t>(i, j);
-    }
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
+class basic_cuda_tensor_ref
+    : public base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>
 {
-    using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
-    using sub_shape = typename parent::sub_shape;
-    using slice_t = basic_cuda_tensor_ref<R, r, shape_t>;
-    using element_t = basic_cuda_tensor_ref<R, r - 1, sub_shape>;
+    using parent =
+        base_cuda_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
 
   public:
     template <typename... D>
@@ -155,33 +137,14 @@ class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
         : parent(data, shape)
     {
     }
-
-    auto begin() const { return this->template _iter<element_t>(this->data()); }
-
-    auto end() const
-    {
-        return this->template _iter<element_t>(this->data_end());
-    }
-
-    element_t operator[](int i) const
-    {
-        return this->template _bracket<element_t>(i);
-    }
-
-    slice_t slice(int i, int j) const
-    {
-        return this->template _slice<slice_t>(i, j);
-    }
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
+class basic_cuda_tensor_view
+    : public base_cuda_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>
 {
-    using parent = base_cuda_tensor<R, shape_t, view_ptr<R>>;
-    using sub_shape = typename parent::sub_shape;
-    using slice_t = basic_cuda_tensor_view<R, r, shape_t>;
-    using element_t = basic_cuda_tensor_view<R, r - 1, sub_shape>;
-
+    using parent =
+        base_cuda_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>;
     using parent::from_host;  // disable
 
   public:
@@ -195,23 +158,6 @@ class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
                                               const shape_t &shape)
         : parent(data, shape)
     {
-    }
-
-    auto begin() const { return this->template _iter<element_t>(this->data()); }
-
-    auto end() const
-    {
-        return this->template _iter<element_t>(this->data_end());
-    }
-
-    element_t operator[](int i) const
-    {
-        return this->template _bracket<element_t>(i);
-    }
-
-    slice_t slice(int i, int j) const
-    {
-        return this->template _slice<slice_t>(i, j);
     }
 };
 
