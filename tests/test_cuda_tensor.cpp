@@ -12,6 +12,17 @@ using ttl::cuda_tensor_ref;
 using ttl::cuda_tensor_view;
 using ttl::tensor;
 
+TEST(cuda_tensor_test, test0)
+{
+    using R = float;
+    cuda_tensor<R, 0> m0;
+
+    tensor<R, 0> x;
+
+    m0.from_host(x.data());
+    m0.to_host(x.data());
+}
+
 TEST(cuda_tensor_test, test1)
 {
     using R = float;

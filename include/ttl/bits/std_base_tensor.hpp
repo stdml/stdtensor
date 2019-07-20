@@ -23,6 +23,8 @@ template <typename R, typename S, typename D> class base_scalar
 
     base_scalar(data_ptr data, const S &) : data_(data) {}
 
+    size_t data_size() const { return sizeof(R); }
+
     data_ptr data() const { return data_.get(); }
 
     data_ptr data_end() const { return data_.get() + 1; }
