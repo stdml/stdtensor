@@ -12,14 +12,14 @@ namespace internal
 template <typename R> struct cuda_mem_allocator {
     R *operator()(int count)
     {
-        R *deviceMem;
+        void *deviceMem;
         // cudaMalloc<R>(&deviceMem, count);
         // https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY
         const cudaError_t err = cudaMalloc(&deviceMem, count * sizeof(R));
         if (err != cudaSuccess) {
             throw std::runtime_error("cudaMalloc failed");
         }
-        return deviceMem;
+        return reinterpret_cast<R *>(deviceMem);
     }
 };
 

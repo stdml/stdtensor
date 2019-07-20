@@ -159,7 +159,7 @@ class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
 {
     using parent = base_tensor<R, shape_t, ref_ptr<R>>;
 
-    using self_t = basic_tensor_ref<R, r, shape_t>;
+    using slice_t = basic_tensor_ref<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
     using iterator =
@@ -197,9 +197,9 @@ class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
         return this->template _bracket<subspace_t>(i);
     }
 
-    self_t slice(int i, int j) const
+    slice_t slice(int i, int j) const
     {
-        return this->template _slice<self_t>(i, j);
+        return this->template _slice<slice_t>(i, j);
     }
 };
 
@@ -208,7 +208,7 @@ class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
 {
     using parent = base_tensor<R, shape_t, view_ptr<R>>;
 
-    using self_t = basic_tensor_view<R, r, shape_t>;
+    using slice_t = basic_tensor_view<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_tensor_view<R, r - 1, subshape_shape_t>;
     using iterator =
@@ -251,23 +251,32 @@ class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
         return this->template _bracket<subspace_t>(i);
     }
 
-    self_t slice(int i, int j) const
+    slice_t slice(int i, int j) const
     {
-        return this->template _slice<self_t>(i, j);
+        return this->template _slice<slice_t>(i, j);
     }
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor
+class basic_tensor : public base_tensor<R, shape_t, ref_ptr<R>>
 {
-    using ref_t = basic_tensor_ref<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_ref_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
-    using iterator =
-        basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_ref_t>;
+    using allocator = basic_allocator<R>;
+    using Own = std::unique_ptr<R[]>;
 
-    const shape_t shape_;
-    std::unique_ptr<R[]> data_;
+    using parent = base_tensor<R, shape_t, ref_ptr<R>>;
+
+    using slice_t = basic_tensor_ref<R, r, shape_t>;
+    using subshape_shape_t = typename shape_t::template subshape_t<1>;
+    using subspace_t = basic_tensor_ref<R, r - 1, subshape_shape_t>;
+    using iterator =
+        basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
+
+    Own data_owner_;
+
+    explicit basic_tensor(R *data, const shape_t &shape)
+        : parent(data, shape), data_owner_(data)
+    {
+    }
 
   public:
     using value_type = R;
@@ -276,44 +285,34 @@ class basic_tensor
     static constexpr rank_t rank = r;
 
     template <typename... D>
-    constexpr explicit basic_tensor(D... d)
-        : shape_(d...), data_(new R[shape_.size()])
+    constexpr explicit basic_tensor(D... d) : basic_tensor(shape_t(d...))
     {
     }
 
     constexpr explicit basic_tensor(const shape_t &shape)
-        : shape_(shape), data_(new R[shape_.size()])
+        : basic_tensor(allocator()(shape.size()), shape)
     {
     }
 
-    R *data() const { return data_.get(); }
-
-    R *data_end() const { return data_.get() + shape().size(); }
-
-    shape_t shape() const { return shape_; }
-
-    template <typename... I> R &at(I... i) const
+    iterator begin() const
     {
-        return data_[shape_.offset(i...)];
+        return this->template _iter<iterator>(this->data());
     }
 
-    subspace_ref_t operator[](typename shape_t::dimension_type i) const
+    iterator end() const
     {
-        return subspace_ref_t(data_.get() + i * shape_.subspace_size(),
-                              shape_.subshape());
+        return this->template _iter<iterator>(this->data_end());
     }
 
-    ref_t slice(typename shape_t::dimension_type i,
-                typename shape_t::dimension_type j) const
+    subspace_t operator[](int i) const
     {
-        const auto sub_shape = shape_.subshape();
-        return ref_t(data_.get() + i * sub_shape.size(),
-                     batch(j - i, sub_shape));
+        return this->template _bracket<subspace_t>(i);
     }
 
-    iterator begin() const { return ref(*this).begin(); }
-
-    iterator end() const { return ref(*this).end(); }
+    slice_t slice(int i, int j) const
+    {
+        return this->template _slice<slice_t>(i, j);
+    }
 };
 }  // namespace internal
 }  // namespace ttl

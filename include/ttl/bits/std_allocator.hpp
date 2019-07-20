@@ -5,6 +5,12 @@ namespace ttl
 {
 namespace internal
 {
+template <typename R> class basic_allocator
+{
+  public:
+    R *operator()(size_t count) { return new R[count]; }
+};
+
 template <typename R> using own_ptr = std::unique_ptr<R[]>;
 
 template <typename R> class ref_ptr

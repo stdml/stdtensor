@@ -98,15 +98,14 @@ class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
 
     using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
 
-    using self_t = basic_cuda_tensor<R, r, shape_t>;
-    using ref_t = basic_cuda_tensor_ref<R, r, shape_t>;
+    using slice_t = basic_cuda_tensor_ref<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
 
     Own data_owner_;
 
     explicit basic_cuda_tensor(R *data, const shape_t &shape)
-        : parent(data, shape)
+        : parent(data, shape), data_owner_(data)
     {
     }
 
@@ -126,9 +125,9 @@ class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
         return this->template _bracket<subspace_t>(i);
     }
 
-    ref_t slice(int i, int j) const
+    slice_t slice(int i, int j) const
     {
-        return this->template _slice<ref_t>(i, j);
+        return this->template _slice<slice_t>(i, j);
     }
 };
 
@@ -136,7 +135,7 @@ template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
 {
     using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
-    using self_t = basic_cuda_tensor_ref<R, r, shape_t>;
+    using slice_t = basic_cuda_tensor_ref<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
 
@@ -157,9 +156,9 @@ class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
         return this->template _bracket<subspace_t>(i);
     }
 
-    self_t slice(int i, int j) const
+    slice_t slice(int i, int j) const
     {
-        return this->template _slice<self_t>(i, j);
+        return this->template _slice<slice_t>(i, j);
     }
 };
 
@@ -167,7 +166,7 @@ template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
 {
     using parent = base_cuda_tensor<R, shape_t, view_ptr<R>>;
-    using self_t = basic_cuda_tensor_view<R, r, shape_t>;
+    using slice_t = basic_cuda_tensor_view<R, r, shape_t>;
     using subshape_shape_t = typename shape_t::template subshape_t<1>;
     using subspace_t = basic_cuda_tensor_view<R, r - 1, subshape_shape_t>;
     // using iter_t =
@@ -201,9 +200,9 @@ class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
         return this->template _bracket<subspace_t>(i);
     }
 
-    self_t slice(int i, int j) const
+    slice_t slice(int i, int j) const
     {
-        return this->template _slice<self_t>(i, j);
+        return this->template _slice<slice_t>(i, j);
     }
 };
 

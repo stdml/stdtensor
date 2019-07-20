@@ -66,9 +66,9 @@ class fake_device
 
 fake_device fake_cuda;
 
-template <typename T> cudaError_t cudaMalloc(T **ptr, int count)
+cudaError_t cudaMalloc(void **ptr, int count)
 {
-    *ptr = (T *)fake_cuda.alloc(sizeof(T) * count);
+    *ptr = fake_cuda.alloc(count);
     return cudaSuccess;
 }
 
