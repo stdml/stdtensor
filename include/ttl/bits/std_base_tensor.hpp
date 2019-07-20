@@ -4,15 +4,13 @@ namespace ttl
 {
 namespace internal
 {
-using rank_t = uint8_t;
-
 template <typename R, typename S, typename D> class base_scalar
 {
   public:
     using value_type = R;
     using shape_type = S;
 
-    static constexpr rank_t rank = 0;
+    static constexpr auto rank = S::rank;
 
   protected:
     using data_ptr = typename D::ptr_type;
@@ -21,7 +19,7 @@ template <typename R, typename S, typename D> class base_scalar
     D data_;
 
   public:
-    base_scalar(data_ptr data) : data_(data) {}
+    base_scalar(data_ptr data) : data_(data) { static_assert(rank == 0, ""); }
 
     base_scalar(data_ptr data, const S &) : data_(data) {}
 
@@ -38,7 +36,7 @@ template <typename R, typename S, typename D> class base_tensor
     using value_type = R;
     using shape_type = S;
 
-    static constexpr rank_t rank = S::rank;
+    static constexpr auto rank = S::rank;
 
   protected:
     using data_ptr = typename D::ptr_type;
@@ -70,7 +68,10 @@ template <typename R, typename S, typename D> class base_tensor
     }
 
   public:
-    base_tensor(data_ptr data, const S &shape) : shape_(shape), data_(data) {}
+    base_tensor(data_ptr data, const S &shape) : shape_(shape), data_(data)
+    {
+        static_assert(rank > 0, "");
+    }
 
     S shape() const { return shape_; }
 
