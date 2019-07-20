@@ -113,7 +113,7 @@ class basic_tensor_ref : public base<R, shape_t, ref_ptr<R>>::type
   public:
     template <typename... D>
     constexpr explicit basic_tensor_ref(R *data, D... d)
-        : basic_tensor_ref(data, shape_(d...))
+        : basic_tensor_ref(data, shape_t(d...))
     {
     }
 
@@ -157,7 +157,7 @@ class basic_tensor_view : public base<R, shape_t, view_ptr<R>>::type
   public:
     template <typename... D>
     constexpr explicit basic_tensor_view(const R *data, D... d)
-        : basic_tensor_view(data, shape_(d...))
+        : basic_tensor_view(data, shape_t(d...))
     {
     }
 
