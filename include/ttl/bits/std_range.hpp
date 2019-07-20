@@ -4,7 +4,7 @@ namespace ttl
 {
 namespace internal
 {
-template <typename N> class range_t
+template <typename N> class basic_integer_range
 {
     const N from_;
     const N to_;
@@ -24,26 +24,24 @@ template <typename N> class range_t
     };
 
   public:
-    explicit range_t(N n) : from_(0), to_(n) {}
+    explicit basic_integer_range(N n) : from_(0), to_(n) {}
 
-    explicit range_t(N m, N n) : from_(m), to_(n) {}
+    explicit basic_integer_range(N m, N n) : from_(m), to_(n) {}
 
     iterator begin() const { return iterator(from_); }
 
     iterator end() const { return iterator(to_); }
 };
 
-template <typename N> range_t<N> range(N n) { return range_t<N>(n); }
-
-template <typename N> range_t<N> range(N m, N n) { return range_t<N>(m, n); }
-
-// TODO:
-/*
-template <ttl::rank_t r, typename T> auto range(const T &t)
+template <typename N> basic_integer_range<N> range(N n)
 {
-    return range(std::get<r>(t.shape().dims()));
+    return basic_integer_range<N>(n);
 }
-*/
+
+template <typename N> basic_integer_range<N> range(N m, N n)
+{
+    return basic_integer_range<N>(m, n);
+}
 
 }  // namespace internal
 }  // namespace ttl
