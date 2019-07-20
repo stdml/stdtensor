@@ -128,32 +128,6 @@ basic_tensor_view<R, r, shape_t> view(const T<R, r, shape_t> &t)
 
 /* rank > 0 */
 
-template <typename R, rank_t r, typename shape_t, typename elem_t>
-class basic_tensor_iterator
-{
-    const shape_t shape;
-    const size_t step;
-
-    const R *pos;
-
-  public:
-    basic_tensor_iterator(const R *pos, const shape_t &s)
-        : shape(s), step(s.size()), pos(pos)
-    {
-    }
-
-    bool operator!=(const basic_tensor_iterator &it) const
-    {
-        return pos != it.pos;
-    }
-
-    void operator++() { pos += step; }
-
-    void _advance(size_t k) { pos += k * step; }
-
-    elem_t operator*() const { return elem_t((R *)/* FIXME */ pos, shape); }
-};
-
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_tensor_ref : public base<R, shape_t, ref_ptr<R>>::type
 {
@@ -162,7 +136,7 @@ class basic_tensor_ref : public base<R, shape_t, ref_ptr<R>>::type
 
     using slice_t = basic_tensor_ref<R, r, shape_t>;
     using subspace_t = basic_tensor_ref<R, r - 1, sub_shape>;
-    using iterator = basic_tensor_iterator<R, r - 1, sub_shape, subspace_t>;
+    using iterator = base_tensor_iterator<R, sub_shape, ref_ptr<R>, subspace_t>;
 
   public:
     template <typename... D>
@@ -210,7 +184,8 @@ class basic_tensor_view : public base<R, shape_t, view_ptr<R>>::type
 
     using slice_t = basic_tensor_view<R, r, shape_t>;
     using subspace_t = basic_tensor_view<R, r - 1, sub_shape>;
-    using iterator = basic_tensor_iterator<R, r - 1, sub_shape, subspace_t>;
+    using iterator =
+        base_tensor_iterator<R, sub_shape, view_ptr<R>, subspace_t>;
 
   public:
     template <typename... D>
@@ -266,7 +241,7 @@ class basic_tensor : public base<R, shape_t, ref_ptr<R>>::type
 
     using slice_t = basic_tensor_ref<R, r, shape_t>;
     using subspace_t = basic_tensor_ref<R, r - 1, sub_shape>;
-    using iterator = basic_tensor_iterator<R, r - 1, sub_shape, subspace_t>;
+    using iterator = base_tensor_iterator<R, sub_shape, ref_ptr<R>, subspace_t>;
 
     Own data_owner_;
 

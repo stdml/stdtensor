@@ -30,6 +30,32 @@ template <typename R, typename S, typename D> class base_scalar
     S shape() const { return S(); }
 };
 
+template <typename R, typename S, typename D, typename T>
+class base_tensor_iterator
+{
+    using data_ptr = typename D::ptr_type;
+
+    const S shape_;
+    const size_t step_;
+
+    data_ptr pos_;
+
+  public:
+    base_tensor_iterator(data_ptr pos, const S &shape)
+        : shape_(shape), step_(shape.size()), pos_(pos)
+    {
+    }
+
+    bool operator!=(const base_tensor_iterator &it) const
+    {
+        return pos_ != it.pos_;
+    }
+
+    void operator++() { pos_ += step_; }
+
+    T operator*() const { return T(pos_, shape_); }
+};
+
 template <typename R, typename S, typename D> class base_tensor
 {
   public:
