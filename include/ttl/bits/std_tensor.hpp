@@ -12,38 +12,11 @@ namespace internal
 
 /* forward declarations */
 
-template <typename R, rank_t r, typename shape_t, typename elem_t>
-class basic_tensor_iterator;
-
 template <typename R, rank_t r, typename shape_t> class basic_tensor;
 template <typename R, rank_t r, typename shape_t> class basic_tensor_ref;
 template <typename R, rank_t r, typename shape_t> class basic_tensor_view;
 
 /* specialization for rank 0 */
-
-template <typename R, typename shape_t, typename elem_t>
-class basic_tensor_iterator<R, 0, shape_t, elem_t>
-{
-    const R *pos;
-
-  public:
-    basic_tensor_iterator(const R *pos, const shape_t & /* shape */) : pos(pos)
-    {
-    }
-
-    bool operator!=(const basic_tensor_iterator &it) const
-    {
-        return pos != it.pos;
-    }
-
-    void operator++() { ++pos; }
-
-    void _advance(size_t k) { pos += k; }
-
-    elem_t operator*() const { return elem_t((R *)/* FIXME */ pos, shape_t()); }
-    // TODO: return elem_t::value_type instead of elem_t
-    // typename elem_t::value_type operator*() const { *pos; }
-};
 
 template <typename R, typename shape_t>
 class basic_tensor_ref<R, 0, shape_t>
