@@ -38,6 +38,8 @@ template <typename R, typename S, typename D> class base_tensor
     using value_type = R;
     using shape_type = S;
 
+    static constexpr rank_t rank = S::rank;
+
   protected:
     using data_ptr = typename D::ptr_type;
     using data_ref = typename D::ref_type;
@@ -64,7 +66,7 @@ template <typename R, typename S, typename D> class base_tensor
 
     template <typename iter_t> iter_t _iter(data_ptr pos) const
     {
-        return iterator(pos, shape_.subshape());
+        return iter_t(pos, shape_.subshape());
     }
 
   public:

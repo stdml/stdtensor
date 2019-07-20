@@ -165,12 +165,7 @@ class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
     using iterator =
         basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
 
-    using parent::data_;
-    using parent::shape_;
-
   public:
-    static constexpr rank_t rank = r;
-
     template <typename... D>
     constexpr explicit basic_tensor_ref(R *data, D... d)
         : basic_tensor_ref(data, shape_(d...))
@@ -187,11 +182,14 @@ class basic_tensor_ref : public base_tensor<R, shape_t, ref_ptr<R>>
     {
     }
 
-    iterator begin() const { return iterator(this->data(), shape_.subshape()); }
+    iterator begin() const
+    {
+        return this->template _iter<iterator>(this->data());
+    }
 
     iterator end() const
     {
-        return iterator(this->data_end(), shape_.subshape());
+        return this->template _iter<iterator>(this->data_end());
     }
 
     subspace_t operator[](int i) const
@@ -216,12 +214,7 @@ class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
     using iterator =
         basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
 
-    using parent::data_;
-    using parent::shape_;
-
   public:
-    static constexpr rank_t rank = r;
-
     template <typename... D>
     constexpr explicit basic_tensor_view(const R *data, D... d)
         : basic_tensor_view(data, shape_(d...))
@@ -243,11 +236,14 @@ class basic_tensor_view : public base_tensor<R, shape_t, view_ptr<R>>
     {
     }
 
-    iterator begin() const { return iterator(data_.get(), shape_.subshape()); }
+    iterator begin() const
+    {
+        return this->template _iter<iterator>(this->data());
+    }
 
     iterator end() const
     {
-        return iterator(data_.get() + shape_.size(), shape_.subshape());
+        return this->template _iter<iterator>(this->data_end());
     }
 
     subspace_t operator[](int i) const
