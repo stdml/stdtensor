@@ -77,10 +77,10 @@ template <typename R, typename S, typename D> class base_tensor
 
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
-    template <typename subspace_t> subspace_t _bracket(index_type i) const
+    template <typename element_t> element_t _bracket(index_type i) const
     {
-        return subspace_t(data_.get() + i * shape_.subspace_size(),
-                          shape_.subshape());
+        return element_t(data_.get() + i * shape_.subspace_size(),
+                         shape_.subshape());
     }
 
     template <typename slice_t> slice_t _slice(index_type i, index_type j) const
@@ -90,8 +90,9 @@ template <typename R, typename S, typename D> class base_tensor
                        batch(j - i, sub_shape));
     }
 
-    template <typename iter_t> iter_t _iter(data_ptr pos) const
+    template <typename element_t> auto _iter(data_ptr pos) const
     {
+        using iter_t = base_tensor_iterator<R, sub_shape, D, element_t>;
         return iter_t(pos, shape_.subshape());
     }
 
