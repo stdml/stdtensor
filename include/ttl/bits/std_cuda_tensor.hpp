@@ -97,10 +97,11 @@ class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
     using Own = std::unique_ptr<R[], cuda_mem_deleter>;
 
     using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
+    using sub_shape = typename parent::sub_shape;
 
     using slice_t = basic_cuda_tensor_ref<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
+    using subspace_t = basic_cuda_tensor_ref<R, r - 1, sub_shape>;
+    using iterator = base_tensor_iterator<R, sub_shape, ref_ptr<R>, subspace_t>;
 
     Own data_owner_;
 
@@ -120,6 +121,16 @@ class basic_cuda_tensor : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
     {
     }
 
+    iterator begin() const
+    {
+        return this->template _iter<iterator>(this->data());
+    }
+
+    iterator end() const
+    {
+        return this->template _iter<iterator>(this->data_end());
+    }
+
     subspace_t operator[](int i) const
     {
         return this->template _bracket<subspace_t>(i);
@@ -135,9 +146,10 @@ template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
 {
     using parent = base_cuda_tensor<R, shape_t, ref_ptr<R>>;
+    using sub_shape = typename parent::sub_shape;
     using slice_t = basic_cuda_tensor_ref<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_t = basic_cuda_tensor_ref<R, r - 1, subshape_shape_t>;
+    using subspace_t = basic_cuda_tensor_ref<R, r - 1, sub_shape>;
+    using iterator = base_tensor_iterator<R, sub_shape, ref_ptr<R>, subspace_t>;
 
   public:
     template <typename... D>
@@ -149,6 +161,16 @@ class basic_cuda_tensor_ref : public base_cuda_tensor<R, shape_t, ref_ptr<R>>
     constexpr explicit basic_cuda_tensor_ref(R *data, const shape_t &shape)
         : parent(data, shape)
     {
+    }
+
+    iterator begin() const
+    {
+        return this->template _iter<iterator>(this->data());
+    }
+
+    iterator end() const
+    {
+        return this->template _iter<iterator>(this->data_end());
     }
 
     subspace_t operator[](int i) const
@@ -166,11 +188,11 @@ template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
 {
     using parent = base_cuda_tensor<R, shape_t, view_ptr<R>>;
+    using sub_shape = typename parent::sub_shape;
     using slice_t = basic_cuda_tensor_view<R, r, shape_t>;
-    using subshape_shape_t = typename shape_t::template subshape_t<1>;
-    using subspace_t = basic_cuda_tensor_view<R, r - 1, subshape_shape_t>;
-    // using iter_t =
-    //     basic_tensor_iterator<R, r - 1, subshape_shape_t, subspace_t>;
+    using subspace_t = basic_cuda_tensor_view<R, r - 1, sub_shape>;
+    using iterator =
+        base_tensor_iterator<R, sub_shape, view_ptr<R>, subspace_t>;
 
     using parent::from_host;  // disable
 
@@ -187,13 +209,15 @@ class basic_cuda_tensor_view : public base_cuda_tensor<R, shape_t, view_ptr<R>>
     {
     }
 
-    // iter_t begin() const { return this->template _iter<iter_t>(this->data());
-    // }
+    iterator begin() const
+    {
+        return this->template _iter<iterator>(this->data());
+    }
 
-    // iter_t end() const
-    // {
-    //     return this->template _iter<iter_t>(this->data_end());
-    // }
+    iterator end() const
+    {
+        return this->template _iter<iterator>(this->data_end());
+    }
 
     subspace_t operator[](int i) const
     {
