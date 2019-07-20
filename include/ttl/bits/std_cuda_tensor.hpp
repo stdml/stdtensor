@@ -37,24 +37,22 @@ template <typename T> class base_cuda_tensor
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor<R, 0, shape_t>
-    : public base_cuda_tensor<basic_cuda_tensor<R, 0, shape_t>>
+    : public base_scalar<R, shape_t, ref_ptr<R>>,
+      public base_cuda_tensor<basic_cuda_tensor<R, 0, shape_t>>
 {
     using allocator = cuda_mem_allocator<R>;
-    using owner = std::unique_ptr<R[], cuda_mem_deleter>;
+    using owner = std::unique_ptr<R, cuda_mem_deleter>;
 
-    const shape_t shape_;
-    owner data_;
+    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+
+    owner data_owner_;
+
+    basic_cuda_tensor(R *data) : parent(data), data_owner_(data) {}
 
   public:
     explicit basic_cuda_tensor(const shape_t &_) : basic_cuda_tensor() {}
 
-    explicit basic_cuda_tensor() : data_(allocator()(shape_.size())) {}
-
-    R *data() const { return data_.get(); }
-
-    R *data_end() const { return data_.get() + shape().size(); }
-
-    shape_t shape() const { return shape_; }
+    explicit basic_cuda_tensor() : basic_cuda_tensor(allocator()(1)) {}
 };
 
 template <typename R, typename shape_t>

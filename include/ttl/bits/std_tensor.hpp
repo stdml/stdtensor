@@ -51,26 +51,23 @@ class basic_tensor_view<R, 0, shape_t>
     }
 };
 
-template <typename R, typename shape_t> class basic_tensor<R, 0, shape_t>
+template <typename R, typename shape_t>
+class basic_tensor<R, 0, shape_t> : public base_scalar<R, shape_t, ref_ptr<R>>
 {
-    std::unique_ptr<R> data_;
+    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+
+    std::unique_ptr<R> data_owner_;
+
+    basic_tensor(R *data) : parent(data), data_owner_(data) {}
 
   public:
-    using value_type = R;
+    using parent::data;
 
-    static constexpr rank_t rank = 0;
+    basic_tensor() : basic_tensor(new R) {}
 
-    basic_tensor() : data_(new R) {}
+    explicit basic_tensor(const shape_t &_) : basic_tensor(new R) {}
 
-    explicit basic_tensor(const shape_t &_) : data_(new R) {}
-
-    R operator=(const R &val) const { return *data_ = val; }
-
-    shape_t shape() const { return shape_t(); }
-
-    R *data() const { return data_.get(); }
-
-    R *data_end() const { return data_.get() + 1; }
+    R operator=(const R &val) const { return *data() = val; }
 };
 
 template <typename R, typename shape_t>
