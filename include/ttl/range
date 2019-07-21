@@ -1,5 +1,7 @@
 // # -*- mode: c++ -*-
 #pragma once
+#include <array>
+#include <cstdint>
 
 #include <ttl/bits/std_range.hpp>
 
