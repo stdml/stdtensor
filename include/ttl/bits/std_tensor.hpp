@@ -82,20 +82,6 @@ R scalar(const basic_tensor_view<R, 0, shape_t> &t)
     return t.data()[0];
 }
 
-template <template <typename, rank_t, typename> class T, typename R, rank_t r,
-          typename shape_t>
-basic_tensor_ref<R, r, shape_t> ref(const T<R, r, shape_t> &t)
-{
-    return basic_tensor_ref<R, r, shape_t>(t.data(), t.shape());
-}
-
-template <template <typename, rank_t, typename> class T, typename R, rank_t r,
-          typename shape_t>
-basic_tensor_view<R, r, shape_t> view(const T<R, r, shape_t> &t)
-{
-    return basic_tensor_view<R, r, shape_t>(t.data(), t.shape());
-}
-
 /* rank > 0 */
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>

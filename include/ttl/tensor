@@ -18,6 +18,28 @@ using tensor_ref = internal::basic_tensor_ref<R, r>;
 
 template <typename R, rank_t r>
 using tensor_view = internal::basic_tensor_view<R, r>;
+
+namespace internal
+{
+template <typename R, rank_t r, typename S>
+basic_tensor_ref<R, r, S> ref(const basic_tensor<R, r, S> &t)
+{
+    return basic_tensor_ref<R, r, S>(t);
+}
+
+template <typename R, rank_t r, typename S>
+basic_tensor_view<R, r, S> view(const basic_tensor<R, r, S> &t)
+{
+    return basic_tensor_view<R, r, S>(t);
+}
+
+template <typename R, rank_t r, typename S>
+basic_tensor_view<R, r, S> view(const basic_tensor_ref<R, r, S> &t)
+{
+    return basic_tensor_view<R, r, S>(t);
+}
+
+}  // namespace internal
 }  // namespace ttl
 
 namespace ttl
@@ -67,12 +89,16 @@ using raw_tensor_view = internal::basic_raw_tensor_view<
 
 template <typename T> raw_tensor_ref raw_ref(const T &t)
 {
-    return raw_tensor_ref(ref(t));
+    using ref_t = internal::basic_tensor_ref<typename T::value_type, T::rank,
+                                             typename T::shape_type>;
+    return raw_tensor_ref(ref_t(t));
 }
 
 template <typename T> raw_tensor_view raw_view(const T &t)
 {
-    return raw_tensor_view(view(t));
+    using view_t = internal::basic_tensor_view<typename T::value_type, T::rank,
+                                               typename T::shape_type>;
+    return raw_tensor_view(view_t(t));
 }
 }  // namespace experimental
 }  // namespace ttl
