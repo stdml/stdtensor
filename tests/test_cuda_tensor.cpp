@@ -12,6 +12,16 @@ using ttl::cuda_tensor_ref;
 using ttl::cuda_tensor_view;
 using ttl::tensor;
 
+TEST(cuda_tensor_test, test_size)
+{
+    using T0 = ttl::cuda_tensor<uint8_t, 0>;
+    using R0 = ttl::cuda_tensor_ref<uint8_t, 0>;
+    using V0 = ttl::cuda_tensor_view<uint8_t, 0>;
+    static_assert(sizeof(T0) == 2 * sizeof(void *), "");  // FIXME:
+    static_assert(sizeof(R0) == sizeof(void *), "");
+    static_assert(sizeof(V0) == sizeof(void *), "");
+}
+
 TEST(cuda_tensor_test, test0)
 {
     using R = float;

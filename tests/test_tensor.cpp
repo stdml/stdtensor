@@ -9,6 +9,16 @@ using ttl::tensor;
 using ttl::tensor_ref;
 using ttl::tensor_view;
 
+TEST(tensor_test, test_size)
+{
+    using T0 = ttl::tensor<uint8_t, 0>;
+    using R0 = ttl::tensor_ref<uint8_t, 0>;
+    using V0 = ttl::tensor_view<uint8_t, 0>;
+    static_assert(sizeof(T0) == 2 * sizeof(void *), "");  // FIXME:
+    static_assert(sizeof(R0) == sizeof(void *), "");
+    static_assert(sizeof(V0) == sizeof(void *), "");
+}
+
 TEST(tensor_test, test1)
 {
     int h = 2;
