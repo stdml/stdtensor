@@ -22,16 +22,16 @@ template <typename T> class base_cuda_tensor
   public:
     void from_host(const void *buffer) const
     {
-        void *data = static_cast<const T *>(this)->data();
-        const auto size = static_cast<const T *>(this)->data_size();
-        cudaMemcpy(data, buffer, size, cudaMemcpyHostToDevice);
+        cuda_copier::copy<cuda_copier::h2d>(
+            static_cast<const T *>(this)->data(), buffer,
+            static_cast<const T *>(this)->data_size());
     }
 
     void to_host(void *buffer) const
     {
-        const void *data = static_cast<const T *>(this)->data();
-        const auto size = static_cast<const T *>(this)->data_size();
-        cudaMemcpy(buffer, data, size, cudaMemcpyDeviceToHost);
+        cuda_copier::copy<cuda_copier::d2h>(
+            buffer, static_cast<const T *>(this)->data(),
+            static_cast<const T *>(this)->data_size());
     }
 };
 

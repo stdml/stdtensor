@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 using cudaError_t = int;
+using cudaMemcpyKind = int;
 
 constexpr const cudaError_t cudaSuccess = 0;
 
@@ -78,10 +79,11 @@ cudaError_t cudaFree(void *ptr)
     return cudaSuccess;
 }
 
-constexpr int cudaMemcpyHostToDevice = fake_device::h2d;
-constexpr int cudaMemcpyDeviceToHost = fake_device::d2h;
+constexpr cudaMemcpyKind cudaMemcpyHostToDevice = fake_device::h2d;
+constexpr cudaMemcpyKind cudaMemcpyDeviceToHost = fake_device::d2h;
 
-void cudaMemcpy(void *dst, const void *src, int size, int direction)
+cudaError_t cudaMemcpy(void *dst, const void *src, int size, int direction)
 {
     fake_cuda.memcpy(dst, src, size, direction);
+    return cudaSuccess;
 }

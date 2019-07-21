@@ -9,6 +9,21 @@ namespace ttl
 {
 namespace internal
 {
+
+struct cuda_copier {
+    static constexpr auto h2d = cudaMemcpyHostToDevice;
+    static constexpr auto d2h = cudaMemcpyDeviceToHost;
+
+    template <cudaMemcpyKind dir>
+    static void copy(void *dst, const void *src, size_t size)
+    {
+        const cudaError_t err = cudaMemcpy(dst, src, size, dir);
+        if (err != cudaSuccess) {
+            throw std::runtime_error("cudaMemcpy failed");
+        }
+    }
+};
+
 template <typename R> struct cuda_mem_allocator {
     R *operator()(int count)
     {
