@@ -3,6 +3,8 @@
 #include <numeric>
 #include <type_traits>
 
+#include <ttl/experimental/flat_tensor>
+#include <ttl/experimental/raw_tensor>
 #include <ttl/tensor>
 
 using ttl::tensor;

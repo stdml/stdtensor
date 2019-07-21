@@ -1,0 +1,17 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/std_flat_tensor.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
+
+template <typename R>
+using flat_tensor_ref = internal::basic_flat_tensor_ref<R>;
+
+template <typename R>
+using flat_tensor_view = internal::basic_flat_tensor_view<R>;
+}  // namespace experimental
+}  // namespace ttl

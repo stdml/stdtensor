@@ -1,7 +1,7 @@
 #include "testing.hpp"
 
 #include <tensor.h>
-#include <ttl/tensor>
+#include <ttl/experimental/raw_tensor>
 
 using ttl::experimental::raw_tensor;
 

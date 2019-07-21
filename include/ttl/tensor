@@ -1,6 +1,5 @@
 // # -*- mode: c++ -*-
 #pragma once
-
 #include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
@@ -52,53 +51,4 @@ template <typename R> using vector_view = tensor_view<R, 1>;
 template <typename R> using matrix = tensor<R, 2>;
 template <typename R> using matrix_ref = tensor_ref<R, 2>;
 template <typename R> using matrix_view = tensor_view<R, 2>;
-}  // namespace ttl
-
-#include <ttl/bits/std_flat_tensor.hpp>
-
-namespace ttl
-{
-namespace experimental
-{
-template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
-
-template <typename R>
-using flat_tensor_ref = internal::basic_flat_tensor_ref<R>;
-
-template <typename R>
-using flat_tensor_view = internal::basic_flat_tensor_view<R>;
-}  // namespace experimental
-}  // namespace ttl
-
-#include <experimental/type_encoder>
-#include <ttl/bits/std_raw_tensor.hpp>
-#include <ttl/bits/std_scalar_type_encoding.hpp>
-
-namespace ttl
-{
-namespace experimental
-{
-using raw_tensor = internal::basic_raw_tensor<
-    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
-
-using raw_tensor_ref = internal::basic_raw_tensor_ref<
-    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
-
-using raw_tensor_view = internal::basic_raw_tensor_view<
-    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
-
-template <typename T> raw_tensor_ref raw_ref(const T &t)
-{
-    using ref_t = internal::basic_tensor_ref<typename T::value_type, T::rank,
-                                             typename T::shape_type>;
-    return raw_tensor_ref(ref_t(t));
-}
-
-template <typename T> raw_tensor_view raw_view(const T &t)
-{
-    using view_t = internal::basic_tensor_view<typename T::value_type, T::rank,
-                                               typename T::shape_type>;
-    return raw_tensor_view(view_t(t));
-}
-}  // namespace experimental
 }  // namespace ttl
