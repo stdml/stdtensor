@@ -1,5 +1,6 @@
 #include "testing.hpp"
 
+#include <ttl/experimental/raw_tensor>
 #include <ttl/tensor>
 
 TEST(raw_tensor_test, test1)

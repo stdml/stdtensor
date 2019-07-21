@@ -5,6 +5,7 @@ PREFIX=$(pwd)/local
 USE_OPENCV=0
 BUILD_TESTS=0
 BUILD_BENCHMARKS=0
+BUILD_EXAMPLES=1
 HAVE_CUDA=0
 VERBOSE=0
 
@@ -78,6 +79,7 @@ add_cmake_flags() {
     add_cmake_flag USE_OPENCV ${USE_OPENCV}
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
     add_cmake_flag BUILD_BENCHMARKS ${BUILD_BENCHMARKS}
+    add_cmake_flag BUILD_EXAMPLES ${BUILD_EXAMPLES}
     add_cmake_flag HAVE_CUDA ${HAVE_CUDA}
 
     add_cmake_flag CMAKE_RUNTIME_OUTPUT_DIRECTORY $(pwd)/bin

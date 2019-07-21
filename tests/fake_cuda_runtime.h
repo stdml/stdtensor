@@ -3,6 +3,10 @@
 #include <map>
 #include <stdexcept>
 
+using cudaError_t = int;
+
+constexpr const cudaError_t cudaSuccess = 0;
+
 class fake_device
 {
     std::map<const void *, size_t> _allocs;
@@ -62,12 +66,17 @@ class fake_device
 
 fake_device fake_cuda;
 
-template <typename T> void cudaMalloc(T **ptr, int count)
+cudaError_t cudaMalloc(void **ptr, int count)
 {
-    *ptr = (T *)fake_cuda.alloc(sizeof(T) * count);
+    *ptr = fake_cuda.alloc(count);
+    return cudaSuccess;
 }
 
-void cudaFree(void *ptr) { fake_cuda.free(ptr); }
+cudaError_t cudaFree(void *ptr)
+{
+    fake_cuda.free(ptr);
+    return cudaSuccess;
+}
 
 constexpr int cudaMemcpyHostToDevice = fake_device::h2d;
 constexpr int cudaMemcpyDeviceToHost = fake_device::d2h;

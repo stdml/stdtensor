@@ -13,8 +13,8 @@ template <typename R, int n> struct bench_cuda_tensor {
         ttl::tensor<R, 1> m2(n);
 
         for (auto _ : state) {
-            m1.fromHost(m2.data());
-            m1.toHost(m2.data());
+            m1.from_host(m2.data());
+            m1.to_host(m2.data());
         }
     }
 };
