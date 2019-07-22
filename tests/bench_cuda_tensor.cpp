@@ -1,9 +1,5 @@
 #include "benchmark.hpp"
 
-#ifdef USE_FAKE_CUDA_RUNTIME
-#include "fake_cuda_runtime.h"
-#endif
-
 #include <ttl/cuda_tensor>
 
 template <typename R, int n> struct bench_cuda_tensor {

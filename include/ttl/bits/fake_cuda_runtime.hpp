@@ -8,6 +8,9 @@ using cudaMemcpyKind = int;
 
 constexpr const cudaError_t cudaSuccess = 0;
 
+constexpr const cudaMemcpyKind cudaMemcpyHostToDevice = 1;
+constexpr const cudaMemcpyKind cudaMemcpyDeviceToHost = 2;
+
 class fake_device
 {
     std::map<const void *, size_t> _allocs;
@@ -46,16 +49,13 @@ class fake_device
         _allocs.erase(data);
     }
 
-    static constexpr int h2d = 1;
-    static constexpr int d2h = 2;
-
-    void memcpy(void *dst, const void *src, int size, int direction) const
+    void memcpy(void *dst, const void *src, int size, cudaMemcpyKind dir) const
     {
-        switch (direction) {
-        case h2d:
+        switch (dir) {
+        case cudaMemcpyHostToDevice:
             check_alloc(dst, size);
             break;
-        case d2h:
+        case cudaMemcpyDeviceToHost:
             check_alloc(src, size);
             break;
         default:
@@ -79,11 +79,9 @@ cudaError_t cudaFree(void *ptr)
     return cudaSuccess;
 }
 
-constexpr cudaMemcpyKind cudaMemcpyHostToDevice = fake_device::h2d;
-constexpr cudaMemcpyKind cudaMemcpyDeviceToHost = fake_device::d2h;
-
-cudaError_t cudaMemcpy(void *dst, const void *src, int size, int direction)
+cudaError_t cudaMemcpy(void *dst, const void *src, size_t size,
+                       cudaMemcpyKind dir)
 {
-    fake_cuda.memcpy(dst, src, size, direction);
+    fake_cuda.memcpy(dst, src, size, dir);
     return cudaSuccess;
 }
