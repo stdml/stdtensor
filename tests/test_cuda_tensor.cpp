@@ -1,6 +1,7 @@
 #include "testing.hpp"
 
 #include <ttl/cuda_tensor>
+#include <ttl/range>
 #include <ttl/tensor>
 
 using ttl::cuda_tensor;
@@ -57,21 +58,21 @@ TEST(cuda_tensor_test, test_3)
     cuda_tensor<R, 2> m1(ttl::make_shape(10, 100));
 }
 
-template <typename T, uint8_t r> void test_auto_ref()
+template <typename R, uint8_t r> void test_auto_ref()
 {
     static_assert(
-        std::is_convertible<cuda_tensor<T, r>, cuda_tensor_ref<T, r>>::value,
+        std::is_convertible<cuda_tensor<R, r>, cuda_tensor_ref<R, r>>::value,
         "can't convert to ref");
 }
 
-template <typename T, uint8_t r> void test_auto_view()
+template <typename R, uint8_t r> void test_auto_view()
 {
     static_assert(
-        std::is_convertible<cuda_tensor<T, r>, cuda_tensor_view<T, r>>::value,
+        std::is_convertible<cuda_tensor<R, r>, cuda_tensor_view<R, r>>::value,
         "can't convert to view");
 
-    static_assert(std::is_convertible<cuda_tensor_ref<T, r>,
-                                      cuda_tensor_view<T, r>>::value,
+    static_assert(std::is_convertible<cuda_tensor_ref<R, r>,
+                                      cuda_tensor_view<R, r>>::value,
                   "can't convert to view");
 }
 
@@ -84,4 +85,27 @@ TEST(cuda_tensor_test, test_convert)
     test_auto_view<int, 0>();
     test_auto_view<int, 1>();
     test_auto_view<int, 2>();
+}
+
+template <typename R, uint8_t r> void test_copy(const ttl::shape<r> &shape)
+{
+    tensor<R, r> x(shape);
+    cuda_tensor<R, r> y(shape);
+    tensor<R, r> z(shape);
+
+    std::iota(x.data(), x.data_end(), 1);
+    y.from_host(x.data());
+    y.to_host(z.data());
+
+    for (auto i : ttl::range(shape.size())) {
+        ASSERT_EQ(x.data()[i], z.data()[i]);
+    }
+}
+
+TEST(cuda_tensor_test, test_copy)
+{
+    test_copy<int, 0>(ttl::make_shape());
+    test_copy<int, 1>(ttl::make_shape(10));
+    test_copy<int, 2>(ttl::make_shape(4, 5));
+    test_copy<int, 3>(ttl::make_shape(2, 3, 4));
 }

@@ -118,11 +118,11 @@ TEST(tensor_test, test3)
     test_5d_array<decltype(v), false>()(v);
 }
 
-template <typename T, uint8_t r> void ref_func(const tensor_ref<T, r> &x) {}
+template <typename R, uint8_t r> void ref_func(const tensor_ref<R, r> &x) {}
 
-template <typename T, uint8_t r> void test_auto_ref()
+template <typename R, uint8_t r> void test_auto_ref()
 {
-    static_assert(std::is_convertible<tensor<T, r>, tensor_ref<T, r>>::value,
+    static_assert(std::is_convertible<tensor<R, r>, tensor_ref<R, r>>::value,
                   "can't convert to ref");
 }
 
@@ -142,14 +142,14 @@ TEST(tensor_test, auto_ref)
     // f(t);  // NOT possible
 }
 
-template <typename T, uint8_t r> void view_func(const tensor_view<T, r> &x) {}
+template <typename R, uint8_t r> void view_func(const tensor_view<R, r> &x) {}
 
-template <typename T, uint8_t r> void test_auto_view()
+template <typename R, uint8_t r> void test_auto_view()
 {
-    static_assert(std::is_convertible<tensor<T, r>, tensor_view<T, r>>::value,
+    static_assert(std::is_convertible<tensor<R, r>, tensor_view<R, r>>::value,
                   "can't convert to view");
     static_assert(
-        std::is_convertible<tensor_ref<T, r>, tensor_view<T, r>>::value,
+        std::is_convertible<tensor_ref<R, r>, tensor_view<R, r>>::value,
         "can't convert to view");
 }
 
