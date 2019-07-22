@@ -257,7 +257,8 @@ void test_static_properties(const T<R, r, shape_type> &x)
     static_assert(std::is_same<typename t::value_type, R>::value,
                   "invalid value_type");
     static_assert(t::rank == r, "invalid rank");
-    static_assert(decltype(x.shape())::rank == r, "invalid rank of shape");
+    auto x_shape = x.shape();
+    static_assert(decltype(x_shape)::rank == r, "invalid rank of shape");
     static_assert(
         std::is_same<typename std::remove_const<typename std::remove_pointer<
                          decltype(x.data())>::type>::type,
