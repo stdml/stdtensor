@@ -97,7 +97,7 @@ class base_tensor
 
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
-    S shape() const { return shape_; }
+    const S &shape() const { return shape_; }
 
     data_ptr data() const { return data_.get(); }
 
