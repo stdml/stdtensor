@@ -60,6 +60,14 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         return off;
     }
 
+    template <rank_t p> dim_t coord(dim_t off) const
+    {
+        static_assert(p < rank, "invalid coordinate");
+        for (rank_t i = p + 1; i < rank; ++i) { off /= dims_[i]; }
+        off %= std::get<p>(dims_);
+        return off;
+    }
+
     dim_t size() const
     {
         return std::accumulate(dims_.begin(), dims_.end(),

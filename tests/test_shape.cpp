@@ -80,3 +80,27 @@ TEST(shape_test, accessors_test)
     ASSERT_EQ(dims[1], static_cast<dim_t>(3));
     ASSERT_EQ(dims[2], static_cast<dim_t>(4));
 }
+
+void test_coord_3(dim_t l, dim_t m, dim_t n)
+{
+    ttl::shape<3> s(l, m, n);
+
+    for (dim_t i = 0; i < l; ++i) {
+        for (dim_t j = 0; j < m; ++j) {
+            for (dim_t k = 0; k < n; ++k) {
+                const dim_t idx = s.offset(i, j, k);
+                ASSERT_EQ(i, s.coord<0>(idx));
+                ASSERT_EQ(j, s.coord<1>(idx));
+                ASSERT_EQ(k, s.coord<2>(idx));
+            }
+        }
+    }
+}
+
+TEST(shape_test, test_coord)
+{
+    for_all_permutations(test_coord_3, 2, 2, 2);
+    for_all_permutations(test_coord_3, 3, 3, 3);
+    for_all_permutations(test_coord_3, 2, 3, 4);
+    for_all_permutations(test_coord_3, 2, 4, 8);
+}
