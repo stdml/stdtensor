@@ -1,15 +1,10 @@
 // # -*- mode: c++ -*-
 #pragma once
 #include <ttl/bits/std_tensor.hpp>
+#include <ttl/shape>
 
 namespace ttl
 {
-using internal::rank_t;
-
-template <rank_t r> using shape = ttl::internal::basic_shape<r>;
-
-using internal::make_shape;
-
 template <typename R, rank_t r> using tensor = internal::basic_tensor<R, r>;
 
 template <typename R, rank_t r>
@@ -38,6 +33,17 @@ basic_tensor_view<R, r, S> view(const basic_tensor_ref<R, r, S> &t)
     return basic_tensor_view<R, r, S>(t);
 }
 
+template <typename R, rank_t r, typename S>
+basic_tensor_ref<R, 1> flatten(const basic_tensor_ref<R, r, S> &t)
+{
+    return basic_tensor_ref<R, 1>(t.data(), t.shape().size());
+}
+
+template <typename R, rank_t r, typename S>
+basic_tensor_view<R, 1> flatten(const basic_tensor_view<R, r, S> &t)
+{
+    return basic_tensor_view<R, 1>(t.data(), t.shape().size());
+}
 }  // namespace internal
 }  // namespace ttl
 

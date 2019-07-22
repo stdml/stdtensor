@@ -61,6 +61,12 @@ class basic_cuda_tensor_ref<R, 0, shape_t>
 {
     using parent = base_scalar<R, shape_t, ref_ptr<R>>;
     using parent::parent;
+
+  public:
+    basic_cuda_tensor_ref(const basic_cuda_tensor<R, 0, shape_t> &t)
+        : parent(t.data())
+    {
+    }
 };
 
 template <typename R, typename shape_t>
@@ -69,6 +75,17 @@ class basic_cuda_tensor_view<R, 0, shape_t>
 {
     using parent = base_scalar<R, shape_t, view_ptr<R>>;
     using parent::parent;
+
+  public:
+    basic_cuda_tensor_view(const basic_cuda_tensor<R, 0, shape_t> &t)
+        : parent(t.data())
+    {
+    }
+
+    basic_cuda_tensor_view(const basic_cuda_tensor_ref<R, 0, shape_t> &t)
+        : parent(t.data())
+    {
+    }
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
@@ -114,6 +131,11 @@ class basic_cuda_tensor_ref
     {
     }
 
+    basic_cuda_tensor_ref(const basic_cuda_tensor<R, r, shape_t> &t)
+        : basic_cuda_tensor_ref(t.data(), t.shape())
+    {
+    }
+
     constexpr explicit basic_cuda_tensor_ref(R *data, const shape_t &shape)
         : parent(data, shape)
     {
@@ -133,6 +155,16 @@ class basic_cuda_tensor_view
     template <typename... D>
     constexpr explicit basic_cuda_tensor_view(const R *data, D... d)
         : basic_cuda_tensor_view(data, shape_t(d...))
+    {
+    }
+
+    basic_cuda_tensor_view(const basic_cuda_tensor<R, r, shape_t> &t)
+        : basic_cuda_tensor_view(t.data(), t.shape())
+    {
+    }
+
+    basic_cuda_tensor_view(const basic_cuda_tensor_ref<R, r, shape_t> &t)
+        : basic_cuda_tensor_view(t.data(), t.shape())
     {
     }
 
