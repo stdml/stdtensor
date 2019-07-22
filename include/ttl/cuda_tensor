@@ -8,13 +8,19 @@ namespace internal
 template <typename R, rank_t r, typename S>
 basic_cuda_tensor_ref<R, r, S> ref(const basic_cuda_tensor<R, r, S> &t)
 {
-    return basic_cuda_tensor_ref<R, r, S>(t.data(), t.shape());
+    return basic_cuda_tensor_ref<R, r, S>(t);
 }
 
 template <typename R, rank_t r, typename S>
 basic_cuda_tensor_view<R, r, S> view(const basic_cuda_tensor<R, r, S> &t)
 {
-    return basic_cuda_tensor_view<R, r, S>(t.data(), t.shape());
+    return basic_cuda_tensor_view<R, r, S>(t);
+}
+
+template <typename R, rank_t r, typename S>
+basic_cuda_tensor_view<R, r, S> view(const basic_cuda_tensor_ref<R, r, S> &t)
+{
+    return basic_cuda_tensor_view<R, r, S>(t);
 }
 
 template <typename R, rank_t r, typename S>

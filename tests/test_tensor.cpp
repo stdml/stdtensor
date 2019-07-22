@@ -147,10 +147,10 @@ template <typename T, uint8_t r> void view_func(const tensor_view<T, r> &x) {}
 template <typename T, uint8_t r> void test_auto_view()
 {
     static_assert(std::is_convertible<tensor<T, r>, tensor_view<T, r>>::value,
-                  "can't convert to ref");
+                  "can't convert to view");
     static_assert(
         std::is_convertible<tensor_ref<T, r>, tensor_view<T, r>>::value,
-        "can't convert to ref");
+        "can't convert to view");
 }
 
 TEST(tensor_test, auto_view)

@@ -60,3 +60,32 @@ TEST(cuda_tensor_test, test_3)
     using R = float;
     cuda_tensor<R, 2> m1(ttl::make_shape(10, 100));
 }
+
+template <typename T, uint8_t r> void test_auto_ref()
+{
+    static_assert(
+        std::is_convertible<cuda_tensor<T, r>, cuda_tensor_ref<T, r>>::value,
+        "can't convert to ref");
+}
+
+template <typename T, uint8_t r> void test_auto_view()
+{
+    static_assert(
+        std::is_convertible<cuda_tensor<T, r>, cuda_tensor_view<T, r>>::value,
+        "can't convert to view");
+
+    static_assert(std::is_convertible<cuda_tensor_ref<T, r>,
+                                      cuda_tensor_view<T, r>>::value,
+                  "can't convert to view");
+}
+
+TEST(cuda_tensor_test, test_convert)
+{
+    test_auto_ref<int, 0>();
+    test_auto_ref<int, 1>();
+    test_auto_ref<int, 2>();
+
+    test_auto_view<int, 0>();
+    test_auto_view<int, 1>();
+    test_auto_view<int, 2>();
+}
