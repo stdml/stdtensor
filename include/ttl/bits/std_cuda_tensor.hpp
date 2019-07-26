@@ -57,7 +57,8 @@ class basic_cuda_tensor<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor_ref<R, 0, shape_t>
-    : public base_scalar<R, shape_t, ref_ptr<R>>
+    : public base_scalar<R, shape_t, ref_ptr<R>>,
+      public base_cuda_tensor<basic_cuda_tensor_ref<R, 0, shape_t>>
 {
     using parent = base_scalar<R, shape_t, ref_ptr<R>>;
     using parent::parent;
@@ -71,10 +72,14 @@ class basic_cuda_tensor_ref<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor_view<R, 0, shape_t>
-    : public base_scalar<R, shape_t, view_ptr<R>>
+    : public base_scalar<R, shape_t, view_ptr<R>>,
+      public base_cuda_tensor<basic_cuda_tensor_view<R, 0, shape_t>>
 {
     using parent = base_scalar<R, shape_t, view_ptr<R>>;
     using parent::parent;
+
+    using mixin = base_cuda_tensor<basic_cuda_tensor_view<R, 0, shape_t>>;
+    using mixin::from_host;  // disable
 
   public:
     basic_cuda_tensor_view(const basic_cuda_tensor<R, 0, shape_t> &t)
