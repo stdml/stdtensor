@@ -11,6 +11,7 @@ namespace internal
 struct cuda_copier {
     static constexpr auto h2d = cudaMemcpyHostToDevice;
     static constexpr auto d2h = cudaMemcpyDeviceToHost;
+    static constexpr auto d2d = cudaMemcpyDeviceToDevice;
 
     template <cudaMemcpyKind dir>
     static void copy(void *dst, const void *src, size_t size)
