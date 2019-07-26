@@ -100,6 +100,16 @@ template <typename R, uint8_t r> void test_copy(const ttl::shape<r> &shape)
     for (auto i : ttl::range(shape.size())) {
         ASSERT_EQ(x.data()[i], z.data()[i]);
     }
+
+    {
+        cuda_tensor_ref<R, r> ry = ref(y);
+        ry.from_host(x.data());
+        ry.to_host(x.data());
+    }
+    {
+        cuda_tensor_view<R, r> vy = view(y);
+        vy.to_host(x.data());
+    }
 }
 
 TEST(cuda_tensor_test, test_copy)

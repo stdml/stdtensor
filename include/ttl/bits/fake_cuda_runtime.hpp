@@ -10,6 +10,7 @@ constexpr const cudaError_t cudaSuccess = 0;
 
 constexpr const cudaMemcpyKind cudaMemcpyHostToDevice = 1;
 constexpr const cudaMemcpyKind cudaMemcpyDeviceToHost = 2;
+constexpr const cudaMemcpyKind cudaMemcpyDeviceToDevice = 3;
 
 class fake_device
 {
