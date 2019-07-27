@@ -16,12 +16,6 @@ using tensor_view = internal::basic_tensor_view<R, r>;
 namespace internal
 {
 template <typename R, rank_t r, typename S>
-basic_tensor_ref<R, r, S> ref(const basic_tensor<R, r, S> &t)
-{
-    return basic_tensor_ref<R, r, S>(t);
-}
-
-template <typename R, rank_t r, typename S>
 basic_tensor_view<R, r, S> view(const basic_tensor<R, r, S> &t)
 {
     return basic_tensor_view<R, r, S>(t);

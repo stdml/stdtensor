@@ -16,6 +16,7 @@ template <typename R> struct basic_tensor_traits<R, owner> {
     using ref_type = R &;
 
     using D = ref_ptr<R>;
+    using IterA = readwrite;
 };
 
 template <typename R> struct basic_tensor_traits<R, readwrite> {
@@ -23,6 +24,7 @@ template <typename R> struct basic_tensor_traits<R, readwrite> {
     using ref_type = R &;
 
     using D = ref_ptr<R>;
+    using IterA = readwrite;
 };
 
 template <typename R> struct basic_tensor_traits<R, readonly> {
@@ -30,6 +32,7 @@ template <typename R> struct basic_tensor_traits<R, readonly> {
     using ref_type = const R &;
 
     using D = view_ptr<R>;
+    using IterA = readonly;
 };
 }  // namespace internal
 }  // namespace ttl

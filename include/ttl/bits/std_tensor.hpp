@@ -20,9 +20,9 @@ template <typename R, rank_t r, typename shape_t> class basic_tensor_view;
 
 template <typename R, typename shape_t>
 class basic_tensor_ref<R, 0, shape_t>
-    : public base_scalar<R, shape_t, readwrite>
+    : public base_scalar<R, shape_t, readwrite, basic_tensor_ref>
 {
-    using parent = base_scalar<R, shape_t, readwrite>;
+    using parent = base_scalar<R, shape_t, readwrite, basic_tensor_ref>;
     using parent::parent;
 
   public:
@@ -35,9 +35,9 @@ class basic_tensor_ref<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_tensor_view<R, 0, shape_t>
-    : public base_scalar<R, shape_t, readonly>
+    : public base_scalar<R, shape_t, readonly, basic_tensor_view>
 {
-    using parent = base_scalar<R, shape_t, readonly>;
+    using parent = base_scalar<R, shape_t, readonly, basic_tensor_view>;
     using parent::parent;
 
   public:
@@ -52,9 +52,10 @@ class basic_tensor_view<R, 0, shape_t>
 };
 
 template <typename R, typename shape_t>
-class basic_tensor<R, 0, shape_t> : public base_scalar<R, shape_t, owner>
+class basic_tensor<R, 0, shape_t>
+    : public base_scalar<R, shape_t, owner, basic_tensor_ref>
 {
-    using parent = base_scalar<R, shape_t, owner>;
+    using parent = base_scalar<R, shape_t, owner, basic_tensor_ref>;
 
     std::unique_ptr<R> data_owner_;
 
@@ -138,14 +139,14 @@ class basic_tensor_view
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor : public base_tensor<R, shape_t, readwrite, basic_tensor_ref>
+class basic_tensor : public base_tensor<R, shape_t, owner, basic_tensor_ref>
 {
+    using parent = base_tensor<R, shape_t, owner, basic_tensor_ref>;
+
     using allocator = basic_allocator<R>;
-    using owner = std::unique_ptr<R[]>;
+    using data_owner_t = std::unique_ptr<R[]>;
 
-    using parent = base_tensor<R, shape_t, readwrite, basic_tensor_ref>;
-
-    owner data_owner_;
+    data_owner_t data_owner_;
 
     explicit basic_tensor(R *data, const shape_t &shape)
         : parent(data, shape), data_owner_(data)

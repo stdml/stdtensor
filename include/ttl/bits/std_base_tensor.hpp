@@ -5,7 +5,11 @@ namespace ttl
 {
 namespace internal
 {
-template <typename R, typename S, typename A> class base_scalar
+using rank_t = uint8_t;
+
+template <typename R, typename S, typename A,
+          template <typename, rank_t, typename> class T>
+class base_scalar
 {
     using trait = basic_tensor_traits<R, A>;
     using data_ptr = typename trait::ptr_type;
@@ -19,6 +23,7 @@ template <typename R, typename S, typename A> class base_scalar
     using shape_type = S;
 
     static constexpr auto rank = S::rank;
+    using slice_type = T<R, rank, S>;
 
     base_scalar(data_ptr data) : data_(data) { static_assert(rank == 0, ""); }
 
@@ -60,8 +65,6 @@ class base_tensor_iterator
     T operator*() const { return T(pos_, shape_); }
 };
 
-using rank_t = uint8_t;
-
 template <typename R, typename S, typename A,
           template <typename, rank_t, typename> class T>
 class base_tensor
@@ -73,7 +76,8 @@ class base_tensor
 
     using sub_shape = typename S::template subshape_t<1>;
     using element_t = T<R, S::rank - 1, sub_shape>;
-    using iterator = base_tensor_iterator<R, sub_shape, A, element_t>;
+    using iterator =
+        base_tensor_iterator<R, sub_shape, typename trait::IterA, element_t>;
 
     const S shape_;
     D data_;
@@ -132,5 +136,19 @@ class base_tensor
                           batch(j - i, sub_shape));
     }
 };
+
+template <typename R, typename S, template <typename, rank_t, typename> class T>
+auto ref(const base_scalar<R, S, owner, T> &t)
+{
+    using B = base_scalar<R, S, owner, T>;
+    return typename B::slice_type(t.data(), t.shape());
+}
+
+template <typename R, typename S, template <typename, rank_t, typename> class T>
+auto ref(const base_tensor<R, S, owner, T> &t)
+{
+    using B = base_tensor<R, S, owner, T>;
+    return typename B::slice_type(t.data(), t.shape());
+}
 }  // namespace internal
 }  // namespace ttl
