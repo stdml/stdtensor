@@ -1,3 +1,4 @@
+// # -*- mode: c++ -*-
 #pragma once
 #include <ttl/bits/std_cuda_tensor.hpp>
 #include <ttl/shape>
