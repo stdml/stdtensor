@@ -69,15 +69,15 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor
     }
 
     template <typename R, rank_t r, typename shape_type = basic_shape<r>>
-    basic_tensor_ref<R, r, shape_type> ref_as() const
+    basic_host_tensor_ref<R, r, shape_type> ref_as() const
     {
-        return ranked_as<basic_tensor_ref<R, r, shape_type>>();
+        return ranked_as<basic_host_tensor_ref<R, r, shape_type>>();
     }
 
     template <typename R, rank_t r, typename shape_type = basic_shape<r>>
-    basic_tensor_view<R, r, shape_type> view_as() const
+    basic_host_tensor_view<R, r, shape_type> view_as() const
     {
-        return ranked_as<basic_tensor_view<R, r, shape_type>>();
+        return ranked_as<basic_host_tensor_view<R, r, shape_type>>();
     }
 
     template <typename R> basic_flat_tensor_ref<R, shape_t> typed_as() const
@@ -129,16 +129,17 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
     }
 
     template <typename R, rank_t r, typename S>
-    explicit basic_raw_tensor_ref(const basic_tensor_ref<R, r, S> &t)
+    explicit basic_raw_tensor_ref(const basic_host_tensor_ref<R, r, S> &t)
         : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
           data_(t.data())
     {
     }
 
-    template <typename R, rank_t r> basic_tensor_ref<R, r> ranked_as() const
+    template <typename R, rank_t r>
+    basic_host_tensor_ref<R, r> ranked_as() const
     {
-        return basic_tensor_ref<R, r>(data<R>(),
-                                      shape_.template as_ranked<r>());
+        return basic_host_tensor_ref<R, r>(data<R>(),
+                                           shape_.template as_ranked<r>());
     }
 
     value_type_t value_type() const { return value_type_; }
@@ -191,16 +192,17 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     }
 
     template <typename R, rank_t r, typename S>
-    explicit basic_raw_tensor_view(const basic_tensor_view<R, r, S> &t)
+    explicit basic_raw_tensor_view(const basic_host_tensor_view<R, r, S> &t)
         : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
           data_(t.data())
     {
     }
 
-    template <typename R, rank_t r> basic_tensor_view<R, r> ranked_as() const
+    template <typename R, rank_t r>
+    basic_host_tensor_view<R, r> ranked_as() const
     {
-        return basic_tensor_view<R, r>(data<R>(),
-                                       shape_.template as_ranked<r>());
+        return basic_host_tensor_view<R, r>(data<R>(),
+                                            shape_.template as_ranked<r>());
     }
 
     value_type_t value_type() const { return value_type_; }

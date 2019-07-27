@@ -37,15 +37,15 @@ template <typename T> class base_cuda_tensor
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor<R, 0, shape_t>
-    : public base_scalar<R, shape_t, ref_ptr<R>>,
+    : public base_scalar<R, shape_t, owner, basic_cuda_tensor_ref>,
       public base_cuda_tensor<basic_cuda_tensor<R, 0, shape_t>>
 {
+    using parent = base_scalar<R, shape_t, owner, basic_cuda_tensor_ref>;
+
     using allocator = cuda_mem_allocator<R>;
-    using owner = std::unique_ptr<R, cuda_mem_deleter>;
+    using data_owner_t = std::unique_ptr<R, cuda_mem_deleter>;
 
-    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
-
-    owner data_owner_;
+    data_owner_t data_owner_;
 
     basic_cuda_tensor(R *data) : parent(data), data_owner_(data) {}
 
@@ -57,10 +57,10 @@ class basic_cuda_tensor<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor_ref<R, 0, shape_t>
-    : public base_scalar<R, shape_t, ref_ptr<R>>,
+    : public base_scalar<R, shape_t, readwrite, basic_cuda_tensor_ref>,
       public base_cuda_tensor<basic_cuda_tensor_ref<R, 0, shape_t>>
 {
-    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+    using parent = base_scalar<R, shape_t, readwrite, basic_cuda_tensor_ref>;
     using parent::parent;
 
   public:
@@ -72,10 +72,10 @@ class basic_cuda_tensor_ref<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_cuda_tensor_view<R, 0, shape_t>
-    : public base_scalar<R, shape_t, view_ptr<R>>,
+    : public base_scalar<R, shape_t, readonly, basic_cuda_tensor_view>,
       public base_cuda_tensor<basic_cuda_tensor_view<R, 0, shape_t>>
 {
-    using parent = base_scalar<R, shape_t, view_ptr<R>>;
+    using parent = base_scalar<R, shape_t, readonly, basic_cuda_tensor_view>;
     using parent::parent;
 
     using mixin = base_cuda_tensor<basic_cuda_tensor_view<R, 0, shape_t>>;
@@ -95,15 +95,14 @@ class basic_cuda_tensor_view<R, 0, shape_t>
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor
-    : public base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>,
+    : public base_tensor<R, shape_t, owner, basic_cuda_tensor_ref>,
       public base_cuda_tensor<basic_cuda_tensor<R, r, shape_t>>
 {
+    using parent = base_tensor<R, shape_t, owner, basic_cuda_tensor_ref>;
     using allocator = cuda_mem_allocator<R>;
-    using owner = std::unique_ptr<R[], cuda_mem_deleter>;
+    using data_owner_t = std::unique_ptr<R[], cuda_mem_deleter>;
 
-    using parent = base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
-
-    owner data_owner_;
+    data_owner_t data_owner_;
 
     explicit basic_cuda_tensor(R *data, const shape_t &shape)
         : parent(data, shape), data_owner_(data)
@@ -124,10 +123,10 @@ class basic_cuda_tensor
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_ref
-    : public base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>,
+    : public base_tensor<R, shape_t, readwrite, basic_cuda_tensor_ref>,
       public base_cuda_tensor<basic_cuda_tensor_ref<R, r, shape_t>>
 {
-    using parent = base_tensor<R, shape_t, ref_ptr<R>, basic_cuda_tensor_ref>;
+    using parent = base_tensor<R, shape_t, readwrite, basic_cuda_tensor_ref>;
 
   public:
     template <typename... D>
@@ -149,10 +148,10 @@ class basic_cuda_tensor_ref
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_cuda_tensor_view
-    : public base_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>,
+    : public base_tensor<R, shape_t, readonly, basic_cuda_tensor_view>,
       public base_cuda_tensor<basic_cuda_tensor_view<R, r, shape_t>>
 {
-    using parent = base_tensor<R, shape_t, view_ptr<R>, basic_cuda_tensor_view>;
+    using parent = base_tensor<R, shape_t, readonly, basic_cuda_tensor_view>;
     using mixin = base_cuda_tensor<basic_cuda_tensor_view<R, r, shape_t>>;
     using mixin::from_host;  // disable
 
@@ -179,6 +178,5 @@ class basic_cuda_tensor_view
     {
     }
 };
-
 }  // namespace internal
 }  // namespace ttl

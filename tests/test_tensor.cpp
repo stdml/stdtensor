@@ -427,3 +427,33 @@ TEST(tensor_test, test_data_end)
         test_data_end_raw<R>(t2);
     }
 }
+
+template <typename R, ttl::rank_t r>
+void test_flatten(const ttl::shape<r> &shape)
+{
+    using ttl::internal::flatten;
+    ttl::tensor<R, r> t(shape);
+
+    using vector_ref = ttl::tensor_ref<R, 1>;
+    using vector_view = ttl::tensor_view<R, 1>;
+    {
+        auto v = flatten(t);
+        static_assert(std::is_same<decltype(v), vector_ref>::value, "");
+    }
+    {
+        auto v = flatten(ref(t));
+        static_assert(std::is_same<decltype(v), vector_ref>::value, "");
+    }
+    {
+        auto v = flatten(view(t));
+        static_assert(std::is_same<decltype(v), vector_view>::value, "");
+    }
+}
+
+TEST(tensor_test, test_flatten)
+{
+    // test_flatten<int, 0>(ttl::make_shape());
+    test_flatten<int, 1>(ttl::make_shape(10));
+    test_flatten<int, 2>(ttl::make_shape(2, 3));
+    test_flatten<float, 3>(ttl::make_shape(2, 3, 4));
+}

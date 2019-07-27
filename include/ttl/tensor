@@ -5,44 +5,27 @@
 
 namespace ttl
 {
-template <typename R, rank_t r> using tensor = internal::basic_tensor<R, r>;
+template <typename R, rank_t r>
+using tensor = internal::basic_host_tensor<R, r>;
 
 template <typename R, rank_t r>
-using tensor_ref = internal::basic_tensor_ref<R, r>;
+using tensor_ref = internal::basic_host_tensor_ref<R, r>;
 
 template <typename R, rank_t r>
-using tensor_view = internal::basic_tensor_view<R, r>;
+using tensor_view = internal::basic_host_tensor_view<R, r>;
 
 namespace internal
 {
 template <typename R, rank_t r, typename S>
-basic_tensor_ref<R, r, S> ref(const basic_tensor<R, r, S> &t)
+basic_host_tensor_view<R, r, S> view(const basic_host_tensor<R, r, S> &t)
 {
-    return basic_tensor_ref<R, r, S>(t);
+    return basic_host_tensor_view<R, r, S>(t);
 }
 
 template <typename R, rank_t r, typename S>
-basic_tensor_view<R, r, S> view(const basic_tensor<R, r, S> &t)
+basic_host_tensor_view<R, r, S> view(const basic_host_tensor_ref<R, r, S> &t)
 {
-    return basic_tensor_view<R, r, S>(t);
-}
-
-template <typename R, rank_t r, typename S>
-basic_tensor_view<R, r, S> view(const basic_tensor_ref<R, r, S> &t)
-{
-    return basic_tensor_view<R, r, S>(t);
-}
-
-template <typename R, rank_t r, typename S>
-basic_tensor_ref<R, 1> flatten(const basic_tensor_ref<R, r, S> &t)
-{
-    return basic_tensor_ref<R, 1>(t.data(), t.shape().size());
-}
-
-template <typename R, rank_t r, typename S>
-basic_tensor_view<R, 1> flatten(const basic_tensor_view<R, r, S> &t)
-{
-    return basic_tensor_view<R, 1>(t.data(), t.shape().size());
+    return basic_host_tensor_view<R, r, S>(t);
 }
 }  // namespace internal
 }  // namespace ttl

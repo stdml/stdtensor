@@ -1,24 +1,30 @@
 #pragma once
+#include <ttl/bits/std_tensor_traits.hpp>
 
 namespace ttl
 {
 namespace internal
 {
-template <typename R, typename S, typename D> class base_scalar
+using rank_t = uint8_t;
+
+template <typename R, typename S, typename A,
+          template <typename, rank_t, typename> class T>
+class base_scalar
 {
+    using trait = basic_tensor_traits<R, A>;
+    using data_ptr = typename trait::ptr_type;
+    using data_ref = typename trait::ref_type;
+    using D = typename trait::D;
+
+    D data_;
+
   public:
     using value_type = R;
     using shape_type = S;
 
     static constexpr auto rank = S::rank;
+    using slice_type = T<R, rank, S>;
 
-  protected:
-    using data_ptr = typename D::ptr_type;
-    using data_ref = typename D::ref_type;
-
-    D data_;
-
-  public:
     base_scalar(data_ptr data) : data_(data) { static_assert(rank == 0, ""); }
 
     base_scalar(data_ptr data, const S &) : data_(data) {}
@@ -32,10 +38,11 @@ template <typename R, typename S, typename D> class base_scalar
     S shape() const { return S(); }
 };
 
-template <typename R, typename S, typename D, typename T>
+template <typename R, typename S, typename A, typename T>
 class base_tensor_iterator
 {
-    using data_ptr = typename D::ptr_type;
+    using trait = basic_tensor_traits<R, A>;
+    using data_ptr = typename trait::ptr_type;
 
     const S shape_;
     const size_t step_;
@@ -58,26 +65,19 @@ class base_tensor_iterator
     T operator*() const { return T(pos_, shape_); }
 };
 
-using rank_t = uint8_t;
-
-template <typename R, typename S, typename D,
+template <typename R, typename S, typename A,
           template <typename, rank_t, typename> class T>
 class base_tensor
 {
-  public:
-    using value_type = R;
-    using shape_type = S;
+    using trait = basic_tensor_traits<R, A>;
+    using data_ptr = typename trait::ptr_type;
+    using data_ref = typename trait::ref_type;
+    using D = typename trait::D;
 
-    static constexpr auto rank = S::rank;
-
-  protected:
     using sub_shape = typename S::template subshape_t<1>;
-    using slice_t = T<R, rank, S>;
-    using element_t = T<R, rank - 1, sub_shape>;
-    using iterator = base_tensor_iterator<R, sub_shape, D, element_t>;
-
-    using data_ptr = typename D::ptr_type;
-    using data_ref = typename D::ref_type;
+    using element_t = T<R, S::rank - 1, sub_shape>;
+    using iterator =
+        base_tensor_iterator<R, sub_shape, typename trait::IterA, element_t>;
 
     const S shape_;
     D data_;
@@ -90,6 +90,12 @@ class base_tensor
     }
 
   public:
+    using value_type = R;
+    using shape_type = S;
+    static constexpr auto rank = S::rank;
+    using slice_type = T<R, rank, S>;
+    // using view_type = V<R, rank, S>;
+
     base_tensor(data_ptr data, const S &shape) : shape_(shape), data_(data)
     {
         static_assert(rank > 0, "");
@@ -123,13 +129,35 @@ class base_tensor
                          shape_.subshape());
     }
 
-    slice_t slice(index_type i, index_type j) const
+    slice_type slice(index_type i, index_type j) const
     {
         const auto sub_shape = shape_.subshape();
-        return slice_t(data_.get() + i * sub_shape.size(),
-                       batch(j - i, sub_shape));
+        return slice_type(data_.get() + i * sub_shape.size(),
+                          batch(j - i, sub_shape));
     }
 };
 
+template <typename R, typename S, template <typename, rank_t, typename> class T>
+auto ref(const base_scalar<R, S, owner, T> &t)
+{
+    using B = base_scalar<R, S, owner, T>;
+    return typename B::slice_type(t.data(), t.shape());
+}
+
+template <typename R, typename S, template <typename, rank_t, typename> class T>
+auto ref(const base_tensor<R, S, owner, T> &t)
+{
+    using B = base_tensor<R, S, owner, T>;
+    return typename B::slice_type(t.data(), t.shape());
+}
+
+template <typename R, typename S, typename A,
+          template <typename, rank_t, typename> class T>
+auto flatten(const base_tensor<R, S, A, T> &t)
+{
+    using S1 = typename S::template subshape_t<S::rank - 1>;
+    using vector = typename T<R, 1, S1>::slice_type;
+    return vector(t.data(), t.shape().size());
+}
 }  // namespace internal
 }  // namespace ttl
