@@ -20,9 +20,9 @@ template <typename R, rank_t r, typename shape_t> class basic_tensor_view;
 
 template <typename R, typename shape_t>
 class basic_tensor_ref<R, 0, shape_t>
-    : public base_scalar<R, shape_t, ref_ptr<R>>
+    : public base_scalar<R, shape_t, readwrite>
 {
-    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+    using parent = base_scalar<R, shape_t, readwrite>;
     using parent::parent;
 
   public:
@@ -35,9 +35,9 @@ class basic_tensor_ref<R, 0, shape_t>
 
 template <typename R, typename shape_t>
 class basic_tensor_view<R, 0, shape_t>
-    : public base_scalar<R, shape_t, view_ptr<R>>
+    : public base_scalar<R, shape_t, readonly>
 {
-    using parent = base_scalar<R, shape_t, view_ptr<R>>;
+    using parent = base_scalar<R, shape_t, readonly>;
     using parent::parent;
 
   public:
@@ -52,9 +52,9 @@ class basic_tensor_view<R, 0, shape_t>
 };
 
 template <typename R, typename shape_t>
-class basic_tensor<R, 0, shape_t> : public base_scalar<R, shape_t, ref_ptr<R>>
+class basic_tensor<R, 0, shape_t> : public base_scalar<R, shape_t, owner>
 {
-    using parent = base_scalar<R, shape_t, ref_ptr<R>>;
+    using parent = base_scalar<R, shape_t, owner>;
 
     std::unique_ptr<R> data_owner_;
 
@@ -86,9 +86,9 @@ R scalar(const basic_tensor_view<R, 0, shape_t> &t)
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_tensor_ref
-    : public base_tensor<R, shape_t, ref_ptr<R>, basic_tensor_ref>
+    : public base_tensor<R, shape_t, readwrite, basic_tensor_ref>
 {
-    using parent = base_tensor<R, shape_t, ref_ptr<R>, basic_tensor_ref>;
+    using parent = base_tensor<R, shape_t, readwrite, basic_tensor_ref>;
 
   public:
     template <typename... D>
@@ -110,9 +110,9 @@ class basic_tensor_ref
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
 class basic_tensor_view
-    : public base_tensor<R, shape_t, view_ptr<R>, basic_tensor_view>
+    : public base_tensor<R, shape_t, readonly, basic_tensor_view>
 {
-    using parent = base_tensor<R, shape_t, view_ptr<R>, basic_tensor_view>;
+    using parent = base_tensor<R, shape_t, readonly, basic_tensor_view>;
 
   public:
     template <typename... D>
@@ -138,13 +138,12 @@ class basic_tensor_view
 };
 
 template <typename R, rank_t r, typename shape_t = basic_shape<r>>
-class basic_tensor
-    : public base_tensor<R, shape_t, ref_ptr<R>, basic_tensor_ref>
+class basic_tensor : public base_tensor<R, shape_t, readwrite, basic_tensor_ref>
 {
     using allocator = basic_allocator<R>;
     using owner = std::unique_ptr<R[]>;
 
-    using parent = base_tensor<R, shape_t, ref_ptr<R>, basic_tensor_ref>;
+    using parent = base_tensor<R, shape_t, readwrite, basic_tensor_ref>;
 
     owner data_owner_;
 
