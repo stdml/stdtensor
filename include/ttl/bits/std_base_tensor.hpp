@@ -150,5 +150,14 @@ auto ref(const base_tensor<R, S, owner, T> &t)
     using B = base_tensor<R, S, owner, T>;
     return typename B::slice_type(t.data(), t.shape());
 }
+
+template <typename R, typename S, typename A,
+          template <typename, rank_t, typename> class T>
+auto flatten(const base_tensor<R, S, A, T> &t)
+{
+    using S1 = typename S::template subshape_t<S::rank - 1>;
+    using vector = typename T<R, 1, S1>::slice_type;
+    return vector(t.data(), t.shape().size());
+}
 }  // namespace internal
 }  // namespace ttl
