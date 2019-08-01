@@ -5,7 +5,7 @@ PREFIX=$(pwd)/local
 USE_OPENCV=0
 BUILD_TESTS=0
 BUILD_BENCHMARKS=0
-BUILD_EXAMPLES=1
+BUILD_EXAMPLES=0
 HAVE_CUDA=0
 VERBOSE=0
 
@@ -21,6 +21,9 @@ parse_args() {
             ;;
         --use-opencv)
             USE_OPENCV=1
+            ;;
+        --examples)
+            BUILD_EXAMPLES=1
             ;;
         --tests)
             BUILD_TESTS=1
