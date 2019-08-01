@@ -45,7 +45,7 @@ template <bool write, typename T> struct test_assign_ {
 };
 
 template <typename T> struct test_assign_<false, T> {
-    void operator()(T &x, int v) { x = v; }
+    void operator()(T &x, int v) {}
 };
 
 template <bool write, typename T> void test_assign(T &&x, int v)
@@ -56,6 +56,7 @@ template <bool write, typename T> void test_assign(T &&x, int v)
 template <typename T, bool write = true> struct test_5d_array {
     void operator()(const T &t)
     {
+        using R = typename T::value_type;
         t[1];
         t[1][2];
         t[1][2][3];
@@ -69,8 +70,7 @@ template <typename T, bool write = true> struct test_5d_array {
                     for (int k = 0; k < 5; ++k) {
                         for (int l = 0; l < 6; ++l) {
                             for (int m = 0; m < 7; ++m) {
-                                test_assign<write>(scalar(t[i][j][k][l][m]),
-                                                   ++idx);
+                                test_assign<write>(t[i][j][k][l][m], ++idx);
                             }
                         }
                     }
@@ -89,7 +89,7 @@ template <typename T, bool write = true> struct test_5d_array {
                         for (const auto &&t4 : t3) {
                             for (auto &&t5 : t4) {
                                 ++idx;
-                                auto v = scalar(t5);
+                                R v = t5;
                                 ASSERT_EQ(v, idx);
                             }
                         }
@@ -201,13 +201,13 @@ TEST(tensor_test, test_read_access)
 {
     tensor<int, 2> t(2, 2);
 
-    scalar(t[0][0]) = 1;
+    t[0][0] = 1;
     ASSERT_EQ(1, read_tensor_func(t, 0, 0));
 
-    scalar(t[0][0]) = 2;
+    t[0][0] = 2;
     ASSERT_EQ(2, read_tensor_ref_func(ref(t), 0, 0));
 
-    scalar(t[0][0]) = 3;
+    t[0][0] = 3;
     ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
 
     {
@@ -456,4 +456,23 @@ TEST(tensor_test, test_flatten)
     test_flatten<int, 1>(ttl::make_shape(10));
     test_flatten<int, 2>(ttl::make_shape(2, 3));
     test_flatten<float, 3>(ttl::make_shape(2, 3, 4));
+}
+
+TEST(tensor_test, test_scalar_convert)
+{
+    using R = int;
+    tensor<R, 0> x;
+    tensor_ref<R, 0> r = x;
+    tensor_view<R, 0> v = x;
+
+    {
+        r = 1;
+        R value = x;
+        ASSERT_EQ(value, static_cast<R>(1));
+    }
+    {
+        x = 2;
+        R value = v;
+        ASSERT_EQ(value, static_cast<R>(2));
+    }
 }

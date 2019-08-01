@@ -25,7 +25,9 @@ void example_1()
     {
         tensor_ref<int, 3> r(t.data(), t.shape());
         printf("%d\n", r.shape().offset(2, 3, 4));
-        scalar(r[2][3][4]) = 0;
+        // r[2][3][4] = 0; // FIXME: make it work
+        r[2][3][4] = static_cast<int>(0);
+        r[2][3][4] = 1;
     }
 
     {
@@ -33,7 +35,7 @@ void example_1()
         int tot = 0;
         for (int i = 0; i < h; ++i) {
             for (int j = 0; j < w; ++j) {
-                for (int k = 0; k < c; ++k) { tot += scalar(v[i][j][k]); }
+                for (int k = 0; k < c; ++k) { tot += v[i][j][k]; }
             }
         }
 

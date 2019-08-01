@@ -34,6 +34,8 @@ class basic_host_tensor_ref<R, 0, shape_t>
     }
 
     R operator=(const R &val) const { return *data() = val; }
+
+    operator R &() const { return *data(); }
 };
 
 template <typename R, typename shape_t>
@@ -44,6 +46,8 @@ class basic_host_tensor_view<R, 0, shape_t>
     using parent::parent;
 
   public:
+    using parent::data;
+
     basic_host_tensor_view(const basic_host_tensor<R, 0, shape_t> &t)
         : parent(t.data())
     {
@@ -53,6 +57,8 @@ class basic_host_tensor_view<R, 0, shape_t>
         : parent(t.data())
     {
     }
+
+    operator const R &() const { return *data(); }
 };
 
 template <typename R, typename shape_t>
@@ -73,19 +79,9 @@ class basic_host_tensor<R, 0, shape_t>
     explicit basic_host_tensor(const shape_t &_) : basic_host_tensor(new R) {}
 
     R operator=(const R &val) const { return *data() = val; }
+
+    operator R &() const { return *data(); }
 };
-
-template <typename R, typename shape_t>
-R &scalar(const basic_host_tensor_ref<R, 0, shape_t> &t)
-{
-    return (t.data())[0];
-}
-
-template <typename R, typename shape_t>
-R scalar(const basic_host_tensor_view<R, 0, shape_t> &t)
-{
-    return t.data()[0];
-}
 
 /* rank > 0 */
 
