@@ -35,7 +35,7 @@ class basic_host_tensor_ref<R, 0, shape_t>
 
     R operator=(const R &val) const { return *data() = val; }
 
-    operator const R &() const { return *data(); }
+    operator R &() const { return *data(); }
 };
 
 template <typename R, typename shape_t>
@@ -79,6 +79,8 @@ class basic_host_tensor<R, 0, shape_t>
     explicit basic_host_tensor(const shape_t &_) : basic_host_tensor(new R) {}
 
     R operator=(const R &val) const { return *data() = val; }
+
+    operator R &() const { return *data(); }
 };
 
 /* rank > 0 */

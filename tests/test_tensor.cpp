@@ -457,3 +457,22 @@ TEST(tensor_test, test_flatten)
     test_flatten<int, 2>(ttl::make_shape(2, 3));
     test_flatten<float, 3>(ttl::make_shape(2, 3, 4));
 }
+
+TEST(tensor_test, test_scalar_convert)
+{
+    using R = int;
+    tensor<R, 0> x;
+    tensor_ref<R, 0> r = x;
+    tensor_view<R, 0> v = x;
+
+    {
+        r = 1;
+        R value = x;
+        ASSERT_EQ(value, static_cast<R>(1));
+    }
+    {
+        x = 2;
+        R value = v;
+        ASSERT_EQ(value, static_cast<R>(2));
+    }
+}
