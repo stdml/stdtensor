@@ -4,18 +4,12 @@
 #include <ttl/bits/std_allocator.hpp>
 #include <ttl/bits/std_base_tensor.hpp>
 #include <ttl/bits/std_shape.hpp>
+#include <ttl/bits/std_tensor_fwd.hpp>
 
 namespace ttl
 {
 namespace internal
 {
-
-/* forward declarations */
-
-template <typename R, rank_t r, typename shape_t> class basic_host_tensor;
-template <typename R, rank_t r, typename shape_t> class basic_host_tensor_ref;
-template <typename R, rank_t r, typename shape_t> class basic_host_tensor_view;
-
 /* specialization for rank 0 */
 
 template <typename R, typename shape_t>

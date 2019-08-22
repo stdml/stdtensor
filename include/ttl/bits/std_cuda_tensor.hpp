@@ -7,16 +7,12 @@
 #include <ttl/bits/std_base_tensor.hpp>
 #include <ttl/bits/std_cuda_allocator.hpp>
 #include <ttl/bits/std_shape.hpp>
+#include <ttl/bits/std_tensor_fwd.hpp>
 
 namespace ttl
 {
 namespace internal
 {
-
-template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor;
-template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor_ref;
-template <typename R, rank_t r, typename shape_t> class basic_cuda_tensor_view;
-
 template <typename T> class base_cuda_tensor
 {
   public:
