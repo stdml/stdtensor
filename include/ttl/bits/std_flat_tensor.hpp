@@ -5,8 +5,8 @@
 #include <stdexcept>
 
 #include <ttl/bits/std_allocator.hpp>
+#include <ttl/bits/std_host_tensor.hpp>
 #include <ttl/bits/std_raw_shape.hpp>
-#include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
 {
