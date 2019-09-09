@@ -43,11 +43,7 @@ template <typename Dim = uint32_t> class basic_raw_shape
 
     rank_t rank() const { return dims_.size(); }
 
-    dim_t size() const
-    {
-        return std::accumulate(dims_.begin(), dims_.end(),
-                               static_cast<dim_t>(1), std::multiplies<dim_t>());
-    }
+    dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }
 
     template <rank_t r> basic_shape<r, dim_t> as_ranked() const
     {
