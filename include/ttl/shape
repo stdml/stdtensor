@@ -1,5 +1,7 @@
+// # -*- mode: c++ -*-
 #pragma once
 #include <ttl/bits/std_shape.hpp>
+#include <ttl/bits/std_shape_algo.hpp>
 
 namespace ttl
 {
@@ -8,5 +10,4 @@ using internal::rank_t;
 template <rank_t r> using shape = ttl::internal::basic_shape<r>;
 
 using internal::make_shape;
-
 }  // namespace ttl

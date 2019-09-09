@@ -1,6 +1,6 @@
 #include "testing.hpp"
 
-#include <ttl/tensor>
+#include <ttl/shape>
 
 using dim_t = uint32_t;
 
@@ -103,4 +103,60 @@ TEST(shape_test, test_coord)
     for_all_permutations(test_coord_3, 3, 3, 3);
     for_all_permutations(test_coord_3, 2, 3, 4);
     for_all_permutations(test_coord_3, 2, 4, 8);
+}
+
+TEST(shape_test, test_join)
+{
+    using ttl::make_shape;
+    using ttl::internal::join_shape;
+
+    const auto s0 = ttl::make_shape(1, 2, 3, 4);
+    ASSERT_EQ(s0, join_shape(make_shape(1, 2), make_shape(3, 4)));
+    ASSERT_EQ(s0, join_shape(make_shape(1, 2, 3), make_shape(4)));
+    ASSERT_EQ(s0, join_shape(make_shape(1, 2, 3, 4), make_shape()));
+    ASSERT_EQ(s0, join_shape(make_shape(), make_shape(1, 2, 3, 4)));
+
+    ASSERT_EQ(make_shape(), join_shape(make_shape(), make_shape()));
+}
+
+TEST(shape_test, test_batch)
+{
+    using ttl::make_shape;
+    using ttl::internal::batch;
+
+    ASSERT_EQ(make_shape(1), batch(1, make_shape()));
+    ASSERT_EQ(make_shape(2, 3), batch(2, make_shape(3)));
+}
+
+TEST(shape_test, test_flatten)
+{
+    using ttl::internal::flatten_shape;
+    const ttl::shape<6> s(1, 2, 3, 4, 5, 6);
+
+    const auto s0 = flatten_shape<0, 6>()(s);
+    ASSERT_EQ(s0, ttl::shape<2>(1, 720));
+
+    const auto s1 = flatten_shape<1, 5>()(s);
+    ASSERT_EQ(s1, ttl::shape<2>(1, 720));
+
+    const auto s2 = flatten_shape<2, 4>()(s);
+    ASSERT_EQ(s2, ttl::shape<2>(2, 360));
+
+    const auto s3 = flatten_shape<3, 3>()(s);
+    ASSERT_EQ(s3, ttl::shape<2>(6, 120));
+
+    const auto s4 = flatten_shape<4, 2>()(s);
+    ASSERT_EQ(s4, ttl::shape<2>(24, 30));
+
+    const auto s5 = flatten_shape<5, 1>()(s);
+    ASSERT_EQ(s5, ttl::shape<2>(120, 6));
+
+    const auto s6 = flatten_shape<6, 0>()(s);
+    ASSERT_EQ(s6, ttl::shape<2>(720, 1));
+
+    const auto s7 = flatten_shape<6>()(s);
+    ASSERT_EQ(s7, ttl::shape<1>(720));
+
+    const auto s8 = flatten_shape<>()(s);
+    ASSERT_EQ(s8, ttl::shape<1>(720));
 }

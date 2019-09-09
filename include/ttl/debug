@@ -1,3 +1,4 @@
+// # -*- mode: c++ -*-
 #pragma once
 
 #include <ttl/bits/std_shape_debug.hpp>
