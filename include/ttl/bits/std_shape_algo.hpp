@@ -37,8 +37,8 @@ constexpr basic_shape<p + q, dim_t> join_shape(const basic_shape<p, dim_t> &s,
                       t.dims(), std::make_index_sequence<q>()));
 }
 
-template <rank_t r, typename dim_t>
-basic_shape<r + 1, dim_t> batch(const dim_t n, const basic_shape<r, dim_t> &s)
+template <rank_t r, typename dim_t, typename N = dim_t>
+basic_shape<r + 1, dim_t> batch(const N n, const basic_shape<r, dim_t> &s)
 {
     return join_shape(basic_shape<1, dim_t>(n), s);
 }
