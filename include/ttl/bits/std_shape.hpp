@@ -10,19 +10,16 @@ namespace ttl
 {
 namespace internal
 {
+template <typename N, typename Iterator> N product(Iterator begin, Iterator end)
+{
+    return std::accumulate(begin, end, static_cast<N>(1), std::multiplies<N>());
+};
+
 template <size_t off, typename T, size_t r, size_t... Is>
 constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
                                          std::index_sequence<Is...>)
 {
     return std::array<T, r - 1>({std::get<Is + off>(a)...});
-}
-
-template <typename T, size_t p, size_t q, size_t... Is, size_t... Js>
-constexpr std::array<T, p + q>
-merge_indexed(const std::array<T, p> &a, std::index_sequence<Is...>,
-              const std::array<T, q> &b, std::index_sequence<Js...>)
-{
-    return std::array<T, p + q>({std::get<Is>(a)..., std::get<Js>(b)...});
 }
 
 using rank_t = uint8_t;
@@ -68,16 +65,11 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         return off;
     }
 
-    dim_t size() const
-    {
-        return std::accumulate(dims_.begin(), dims_.end(),
-                               static_cast<dim_t>(1), std::multiplies<dim_t>());
-    }
+    dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }
 
     dim_t subspace_size() const
     {
-        return std::accumulate(dims_.begin() + 1, dims_.end(),
-                               static_cast<dim_t>(1), std::multiplies<dim_t>());
+        return product<dim_t>(dims_.begin() + 1, dims_.end());
     }
 
     template <rank_t corank = 1>
@@ -100,28 +92,5 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
 
     const std::array<dim_t, r> &dims() const { return dims_; }
 };
-
-template <typename... D> basic_shape<sizeof...(D)> make_shape(const D... d)
-{
-    return basic_shape<sizeof...(D)>(d...);
-}
-
-template <rank_t p, rank_t q, typename dim_t>
-constexpr basic_shape<p + q, dim_t> join_shape(const basic_shape<p, dim_t> &s,
-                                               const basic_shape<q, dim_t> &t)
-{
-    return basic_shape<p + q, dim_t>(
-        merge_indexed(s.dims(), std::make_index_sequence<p>(),  //
-                      t.dims(), std::make_index_sequence<q>()));
-}
-
-template <rank_t r, typename dim_t>
-basic_shape<r + 1, dim_t>
-batch(typename basic_shape<r, dim_t>::dimension_type n,
-      const basic_shape<r, dim_t> &s)
-{
-    return internal::join_shape(basic_shape<1, dim_t>(n), s);
-}
-
 }  // namespace internal
 }  // namespace ttl
