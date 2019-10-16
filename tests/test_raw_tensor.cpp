@@ -98,6 +98,8 @@ template <typename R, typename T> void test_raw_accessors(const T &t)
     t.shape();
     t.value_type();
     test_data_end_raw<R>(t);
+
+    t.data_size();
 }
 
 TEST(raw_tensor_test, test_data)

@@ -51,6 +51,11 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor
 
     shape_t shape() const { return shape_; }
 
+    size_t data_size() const
+    {
+        return encoder_type::size(value_type_) * shape_.size();
+    }
+
     template <typename R> R *data() const
     {
         // TODO: use contracts of c++20
@@ -152,6 +157,11 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
 
     shape_t shape() const { return shape_; }
 
+    size_t data_size() const
+    {
+        return encoder_type::size(value_type_) * shape_.size();
+    }
+
     void *data() const { return data_; }
 
     void *data_end() const
@@ -227,6 +237,11 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
 
     shape_t shape() const { return shape_; }
 
+    size_t data_size() const
+    {
+        return encoder_type::size(value_type_) * shape_.size();
+    }
+
     const void *data() const { return data_; }
 
     const void *data_end() const
@@ -235,6 +250,5 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
                shape().size() * DataEncoder::size(value_type_);
     }
 };
-
 }  // namespace internal
 }  // namespace ttl
