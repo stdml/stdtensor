@@ -51,6 +51,11 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor
 
     shape_t shape() const { return shape_; }
 
+    size_t data_size() const
+    {
+        return encoder_type::size(value_type_) * shape_.size();
+    }
+
     template <typename R> R *data() const
     {
         // TODO: use contracts of c++20
@@ -128,6 +133,12 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
     {
     }
 
+    explicit basic_raw_tensor_ref(
+        const basic_raw_tensor<DataEncoder, shape_t> &t)
+        : value_type_(t.value_type()), shape_(t.shape()), data_(t.data())
+    {
+    }
+
     template <typename R, rank_t r, typename S>
     explicit basic_raw_tensor_ref(const basic_host_tensor_ref<R, r, S> &t)
         : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
@@ -145,6 +156,11 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
     value_type_t value_type() const { return value_type_; }
 
     shape_t shape() const { return shape_; }
+
+    size_t data_size() const
+    {
+        return encoder_type::size(value_type_) * shape_.size();
+    }
 
     void *data() const { return data_; }
 
@@ -191,6 +207,18 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
     {
     }
 
+    explicit basic_raw_tensor_view(
+        const basic_raw_tensor<DataEncoder, shape_t> &t)
+        : value_type_(t.value_type()), shape_(t.shape()), data_(t.data())
+    {
+    }
+
+    explicit basic_raw_tensor_view(
+        const basic_raw_tensor_ref<DataEncoder, shape_t> &t)
+        : value_type_(t.value_type()), shape_(t.shape()), data_(t.data())
+    {
+    }
+
     template <typename R, rank_t r, typename S>
     explicit basic_raw_tensor_view(const basic_host_tensor_view<R, r, S> &t)
         : value_type_(DataEncoder::template value<R>()), shape_(t.shape()),
@@ -209,6 +237,11 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
 
     shape_t shape() const { return shape_; }
 
+    size_t data_size() const
+    {
+        return encoder_type::size(value_type_) * shape_.size();
+    }
+
     const void *data() const { return data_; }
 
     const void *data_end() const
@@ -217,6 +250,5 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
                shape().size() * DataEncoder::size(value_type_);
     }
 };
-
 }  // namespace internal
 }  // namespace ttl
