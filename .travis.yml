@@ -1,20 +1,34 @@
 language: cpp
 
+dist: bionic
+
+sudo: required
+
 addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
     - g++-7
-    - libgtest-dev # FIXME: make it work with cmake
+    - libgtest-dev
+    - libbenchmark-dev
     - cloc
 
 before_install:
 - export CC=gcc-7
 - export CXX=g++-7
 
+before_script:
+- nproc
+- which cmake
+
+- mkdir /tmp/gtest
+- env -C /tmp/gtest cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
+- env -C /tmp/gtest make -j $(nproc)
+- env -C /tmp/gtest sudo make install
+
 script:
 - ./configure --examples --tests --benchmarks
-- make
+- make -j $(nproc)
 - make test
 - cloc include
