@@ -1,5 +1,7 @@
 language: cpp
 
+dist: bionic
+
 addons:
   apt:
     sources:
@@ -14,7 +16,7 @@ before_install:
 - export CXX=g++-7
 
 script:
-- ./configure --examples --tests --benchmarks --build-gtest
+- ./configure --examples --tests --benchmarks
 - make
 - make test
 - cloc include
