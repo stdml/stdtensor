@@ -101,6 +101,7 @@ add_cmake_flags() {
     add_cmake_flag CMAKE_EXPORT_COMPILE_COMMANDS ${VERBOSE}
 
     # add_cmake_flag BUILD_DOCS 1
+    add_cmake_flag CMAKE_FIND_DEBUG_MODE 1
 }
 
 main() {
