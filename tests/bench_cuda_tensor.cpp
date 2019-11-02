@@ -34,3 +34,5 @@ static void bench_cuda_tensor_100Mi(benchmark::State &state)
     bench_cuda_tensor<char, 100 * Mi>::run(state);
 }
 BENCHMARK(bench_cuda_tensor_100Mi)->Unit(benchmark::kMillisecond);
+
+BENCHMARK_MAIN();
