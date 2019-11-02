@@ -17,13 +17,18 @@ before_install:
 - export CC=gcc-7
 - export CXX=g++-7
 
-before_script:
+# before_script:
+# - |
+#   cd /usr/src/googletest && \
+#   sudo cmake . -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1 && \
+#   sudo make install
+
+script:
 - |
   cd /usr/src/googletest && \
   sudo cmake . -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1 && \
   sudo make install
 
-script:
 - ./configure --examples --tests --benchmarks
 - make
 - make test
