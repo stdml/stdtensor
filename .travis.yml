@@ -16,8 +16,8 @@ before_install:
 - export CXX=g++-7
 - |
   cd /usr/src/googletest && \
-  cmake . -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1 && \
-  make install
+  sudo cmake . -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1 && \
+  sudo make install
 
 script:
 - ./configure --examples --tests --benchmarks
