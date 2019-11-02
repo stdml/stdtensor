@@ -21,12 +21,13 @@ before_script:
 - nproc
 - which cmake
 
-script:
 - mkdir /tmp/gtest
 - env -C /tmp/gtest cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
+- env -C /tmp/gtest make -j $(nproc)
 - env -C /tmp/gtest sudo make install
 
+script:
 - ./configure --examples --tests --benchmarks
-- make
+- make -j $(nproc)
 - make test
 - cloc include
