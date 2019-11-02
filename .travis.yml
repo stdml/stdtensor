@@ -24,7 +24,7 @@ before_script:
 script:
 - mkdir /tmp/gtest
 - env -C /tmp/gtest cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
-- env -C /tmp/gtest make install
+- env -C /tmp/gtest sudo make install
 
 - ./configure --examples --tests --benchmarks
 - make
