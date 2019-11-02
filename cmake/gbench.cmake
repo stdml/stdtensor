@@ -20,18 +20,13 @@ IF(BUILD_GBENCH)
 
     FUNCTION(TARGET_USE_GBENCH target)
         TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${PREFIX}/include)
-        TARGET_LINK_LIBRARIES(${target}
-                              benchmark
-                              benchmark_main
-                              Threads::Threads)
+        TARGET_LINK_LIBRARIES(${target} benchmark benchmark_main)
         ADD_DEPENDENCIES(${target} gbench-repo)
     ENDFUNCTION()
 ELSE()
     FIND_PACKAGE(benchmark REQUIRED)
     FUNCTION(TARGET_USE_GBENCH target)
-        TARGET_LINK_LIBRARIES(${target}
-                              benchmark::benchmark
-                              benchmark::benchmark_main
-                              Threads::Threads)
+        TARGET_LINK_LIBRARIES(${target} benchmark::benchmark
+                              benchmark::benchmark_main)
     ENDFUNCTION()
 ENDIF()

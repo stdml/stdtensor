@@ -2,7 +2,6 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/gbench.cmake)
 
 ADD_CUSTOM_TARGET(benchmarks)
 
-FIND_PACKAGE(Threads REQUIRED)
 FUNCTION(ADD_BENCH target)
     ADD_EXECUTABLE(${target} ${ARGN})
     TARGET_USE_GBENCH(${target})
