@@ -27,5 +27,11 @@ IF(BUILD_GBENCH)
         ADD_DEPENDENCIES(${target} gbench-repo)
     ENDFUNCTION()
 ELSE()
-    # TODO: find benchmark
+    FIND_PACKAGE(benchmark REQUIRED)
+    FUNCTION(TARGET_USE_GBENCH target)
+        TARGET_LINK_LIBRARIES(${target}
+                              benchmark::benchmark
+                              benchmark::benchmark_main
+                              Threads::Threads)
+    ENDFUNCTION()
 ENDIF()

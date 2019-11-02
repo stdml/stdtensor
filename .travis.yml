@@ -10,7 +10,8 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-7
-    - libgtest-dev # FIXME: make it work with cmake
+    - libgtest-dev
+    - libbenchmark-dev
     - cloc
 
 before_install:
