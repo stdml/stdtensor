@@ -1,3 +1,10 @@
 // # -*- mode: c++ -*-
 #pragma once
 #include <ttl/host_tensor>
+
+namespace ttl
+{
+template <typename R, rank_t r> using tensor = host_tensor<R, r>;
+template <typename R, rank_t r> using tensor_ref = host_tensor_ref<R, r>;
+template <typename R, rank_t r> using tensor_view = host_tensor_view<R, r>;
+}  // namespace ttl
