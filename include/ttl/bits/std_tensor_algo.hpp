@@ -2,8 +2,8 @@
 #include <algorithm>
 #include <functional>
 
+#include <ttl/bits/std_host_tensor.hpp>
 #include <ttl/bits/std_shape.hpp>
-#include <ttl/bits/std_tensor.hpp>
 
 namespace ttl
 {
