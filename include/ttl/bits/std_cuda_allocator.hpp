@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 
+#include <ttl/bits/std_allocator.hpp>
 #include <ttl/bits/std_cuda_runtime.hpp>
 
 namespace ttl
@@ -23,7 +24,9 @@ struct cuda_copier {
     }
 };
 
-template <typename R> struct cuda_mem_allocator {
+template <typename R> class basic_allocator<R, cuda_memory>
+{
+  public:
     R *operator()(int count)
     {
         void *deviceMem;
@@ -37,6 +40,9 @@ template <typename R> struct cuda_mem_allocator {
     }
 };
 
+template <typename R>
+using cuda_mem_allocator = basic_allocator<R, cuda_memory>;
+
 struct cuda_mem_deleter {
     void operator()(void *ptr)
     {
@@ -44,6 +50,5 @@ struct cuda_mem_deleter {
         if (err != cudaSuccess) { throw std::runtime_error("cudaFree failed"); }
     }
 };
-
 }  // namespace internal
 }  // namespace ttl
