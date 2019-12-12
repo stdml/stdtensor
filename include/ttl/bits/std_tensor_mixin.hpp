@@ -94,9 +94,9 @@ class basic_tensor_mixin
     using allocator = basic_allocator<R, D>;
 
     using sub_shape = typename S::template subshape_t<1>;
-    using element_t = basic_tensor<R, sub_shape, D, typename trait::IterA>;
+    using element_t = basic_tensor<R, sub_shape, D, typename trait::Access>;
     using iterator =
-        basic_tensor_iterator<R, sub_shape, D, typename trait::IterA>;
+        basic_tensor_iterator<R, sub_shape, D, typename trait::Access>;
 
     const S shape_;
     data_t data_;
@@ -118,7 +118,7 @@ class basic_tensor_mixin
     using value_type = R;
     using shape_type = S;
 
-    using slice_type = basic_tensor<R, S, D, typename trait::IterA>;
+    using slice_type = basic_tensor<R, S, D, typename trait::Access>;
 
     static constexpr auto rank = S::rank;
 
