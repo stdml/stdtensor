@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <stdexcept>
 
 #include <ttl/bits/std_cuda_runtime.hpp>

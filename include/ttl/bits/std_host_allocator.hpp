@@ -1,4 +1,6 @@
 #pragma once
+#include <cstddef>
+
 #include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 
