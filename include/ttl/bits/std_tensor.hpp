@@ -13,15 +13,16 @@ class basic_tensor<R, basic_shape<0, Dim>, D, owner>
     : public basic_scalar_mixin<R, basic_shape<0, Dim>, D, owner>
 {
     using mixin = basic_scalar_mixin<R, basic_shape<0, Dim>, D, owner>;
+    using allocator = basic_allocator<R, D>;
 
-    std::unique_ptr<R> data_owner_;
+    own_ptr<R, D> data_owner_;
 
     basic_tensor(R *data) : mixin(data), data_owner_(data) {}
 
   public:
-    basic_tensor() : basic_tensor(new R) {}
+    basic_tensor() : basic_tensor(allocator()(1)) {}
 
-    basic_tensor(const basic_shape<0, Dim> &) : basic_tensor(new R) {}
+    basic_tensor(const basic_shape<0, Dim> &) : basic_tensor() {}
 
     R operator=(const R &val) const { return *this->data() = val; }
 
@@ -73,9 +74,8 @@ class basic_tensor<R, S, D, owner> : public basic_tensor_mixin<R, S, D, owner>
 {
     using mixin = basic_tensor_mixin<R, S, D, owner>;
     using allocator = basic_allocator<R, D>;
-    using data_owner_t = std::unique_ptr<R[]>;
 
-    data_owner_t data_owner_;
+    own_ptr<R, D> data_owner_;
 
     constexpr explicit basic_tensor(R *data, const S &shape)
         : mixin(data, shape), data_owner_(data)
@@ -146,5 +146,41 @@ class basic_tensor<R, S, D, readonly>
     {
     }
 };
+
+template <typename R, typename S, typename D>
+basic_tensor<R, S, D, readwrite> ref(const basic_tensor<R, S, D, owner> &t)
+{
+    return basic_tensor<R, S, D, readwrite>(t);
+}
+
+template <typename R, typename S, typename D>
+basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, owner> &t)
+{
+    return basic_tensor<R, S, D, readwrite>(t);
+}
+
+template <typename R, typename S, typename D>
+basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, readwrite> &t)
+{
+    return basic_tensor<R, S, D, readonly>(t);
+}
+
+template <typename R, typename S, typename D, typename A> struct flattener {
+    using S1 = typename S::template subshape_t<S::rank - 1>;
+    using vector =
+        basic_tensor<R, S1, D, typename basic_tensor_traits<R, A>::IterA>;
+
+    vector operator()(const basic_tensor<R, S, D, A> &t) const
+    {
+        return vector(t.data(), t.shape().size());
+    }
+};
+
+template <typename R, typename S, typename D, typename A>
+typename flattener<R, S, D, A>::vector
+flatten(const basic_tensor<R, S, D, A> &t)
+{
+    return flattener<R, S, D, A>()(t);
+}
 }  // namespace internal
 }  // namespace ttl

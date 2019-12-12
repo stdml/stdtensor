@@ -23,8 +23,6 @@ class basic_scalar_mixin
         static_assert(rank == 0, "");
     }
 
-    // basic_scalar_mixin(data_ptr data, const S &) : data_(data) {}
-
   public:
     using value_type = R;
     using shape_type = S;
@@ -33,11 +31,27 @@ class basic_scalar_mixin
 
     basic_scalar_mixin(data_ptr data, const S &) : data_(data) {}
 
+    constexpr size_t data_size() const { return sizeof(R); }
+
     data_ptr data() const { return data_.get(); }
 
     data_ptr data_end() const { return data_.get() + 1; }
 
     S shape() const { return S(); }
+
+    template <typename D1> void copy_from(const void *data) const
+    {
+        basic_copier<D, D1>()(data_.get(), data, data_size());
+    }
+
+    template <typename D1> void copy_to(void *data) const
+    {
+        basic_copier<D1, D>()(data, data_.get(), data_size());
+    }
+
+    void from_host(const void *data) const { copy_from<host_memory>(data); }
+
+    void to_host(void *data) const { copy_to<host_memory>(data); }
 };
 
 template <typename R, typename S, typename D, typename A>
@@ -109,6 +123,8 @@ class basic_tensor_mixin
 
     static constexpr auto rank = S::rank;
 
+    size_t data_size() const { return shape_.size() * sizeof(R); }
+
     const S &shape() const { return shape_; }
 
     data_ptr data() const { return data_.get(); }
@@ -141,42 +157,20 @@ class basic_tensor_mixin
         return slice_type(data_.get() + i * sub_shape.size(),
                           batch(j - i, sub_shape));
     }
-};
 
-template <typename R, typename S, typename D>
-basic_tensor<R, S, D, readwrite> ref(const basic_tensor<R, S, D, owner> &t)
-{
-    return basic_tensor<R, S, D, readwrite>(t);
-}
-
-template <typename R, typename S, typename D>
-basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, owner> &t)
-{
-    return basic_tensor<R, S, D, readwrite>(t);
-}
-
-template <typename R, typename S, typename D>
-basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, readwrite> &t)
-{
-    return basic_tensor<R, S, D, readonly>(t);
-}
-
-template <typename R, typename S, typename D, typename A> struct flattener {
-    using S1 = typename S::template subshape_t<S::rank - 1>;
-    using vector =
-        basic_tensor<R, S1, D, typename basic_tensor_traits<R, A>::IterA>;
-
-    vector operator()(const basic_tensor<R, S, D, A> &t) const
+    template <typename D1> void copy_from(const void *data) const
     {
-        return vector(t.data(), t.shape().size());
+        basic_copier<D, D1>()(data_.get(), data, data_size());
     }
-};
 
-template <typename R, typename S, typename D, typename A>
-typename flattener<R, S, D, A>::vector
-flatten(const basic_tensor<R, S, D, A> &t)
-{
-    return flattener<R, S, D, A>()(t);
-}
+    template <typename D1> void copy_to(void *data) const
+    {
+        basic_copier<D1, D>()(data, data_.get(), data_size());
+    }
+
+    void from_host(const void *data) const { copy_from<host_memory>(data); }
+
+    void to_host(void *data) const { copy_to<host_memory>(data); }
+};
 }  // namespace internal
 }  // namespace ttl

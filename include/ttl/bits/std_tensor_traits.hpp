@@ -15,7 +15,7 @@ template <typename R> struct basic_tensor_traits<R, owner> {
     using ptr_type = R *;
     using ref_type = R &;
 
-    using D = ref_ptr<R>;
+    using D = ref_ptr<R>;  // FIXME: use own_ptr
     using IterA = readwrite;
 };
 

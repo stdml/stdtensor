@@ -1,10 +1,20 @@
 // # -*- mode: c++ -*-
 #pragma once
-#include <ttl/host_tensor>
+#include <ttl/bits/std_tensor.hpp>
+#include <ttl/shape>
 
 namespace ttl
 {
-using internal::tensor;
-using internal::tensor_ref;
-using internal::tensor_view;
+template <typename R, rank_t r, typename D = internal::host_memory>
+using tensor =
+    internal::basic_tensor<R, internal::basic_shape<r>, D, internal::owner>;
+
+template <typename R, rank_t r, typename D = internal::host_memory>
+using tensor_ref =
+    internal::basic_tensor<R, internal::basic_shape<r>, D, internal::readwrite>;
+
+template <typename R, rank_t r, typename D = internal::host_memory>
+using tensor_view =
+    internal::basic_tensor<R, internal::basic_shape<r>, D, internal::readonly>;
+
 }  // namespace ttl

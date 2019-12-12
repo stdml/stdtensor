@@ -1,26 +1,10 @@
 // # -*- mode: c++ -*-
 #pragma once
-#include <ttl/bits/std_tensor.hpp>
-#include <ttl/shape>
+#include <ttl/bits/std_allocator.hpp>
+#include <ttl/tensor>
 
 namespace ttl
 {
-namespace internal
-{
-using internal::rank_t;
-
-template <typename R, rank_t r, typename D = internal::host_memory>
-using tensor =
-    internal::basic_tensor<R, internal::basic_shape<r>, D, internal::owner>;
-
-template <typename R, rank_t r, typename D = internal::host_memory>
-using tensor_ref =
-    internal::basic_tensor<R, internal::basic_shape<r>, D, internal::readwrite>;
-
-template <typename R, rank_t r, typename D = internal::host_memory>
-using tensor_view =
-    internal::basic_tensor<R, internal::basic_shape<r>, D, internal::readonly>;
-
 template <typename R, rank_t r>
 using host_tensor = tensor<R, r, internal::host_memory>;
 
@@ -29,14 +13,6 @@ using host_tensor_ref = tensor_ref<R, r, internal::host_memory>;
 
 template <typename R, rank_t r>
 using host_tensor_view = tensor_view<R, r, internal::host_memory>;
-}  // namespace internal
-}  // namespace ttl
-
-namespace ttl
-{
-using internal::host_tensor;
-using internal::host_tensor_ref;
-using internal::host_tensor_view;
 }  // namespace ttl
 
 namespace ttl

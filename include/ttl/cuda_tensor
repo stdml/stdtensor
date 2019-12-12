@@ -1,31 +1,16 @@
 // # -*- mode: c++ -*-
 #pragma once
-#include <ttl/bits/std_cuda_tensor.hpp>
-#include <ttl/shape>
+#include <ttl/bits/std_cuda_allocator.hpp>
+#include <ttl/tensor>
 
 namespace ttl
 {
 template <typename R, internal::rank_t r>
-using cuda_tensor = internal::basic_cuda_tensor<R, r>;
+using cuda_tensor = tensor<R, r, internal::cuda_memory>;
 
 template <typename R, internal::rank_t r>
-using cuda_tensor_ref = internal::basic_cuda_tensor_ref<R, r>;
+using cuda_tensor_ref = tensor_ref<R, r, internal::cuda_memory>;
 
 template <typename R, internal::rank_t r>
-using cuda_tensor_view = internal::basic_cuda_tensor_view<R, r>;
-
-namespace internal
-{
-template <typename R, rank_t r, typename S>
-basic_cuda_tensor_view<R, r, S> view(const basic_cuda_tensor<R, r, S> &t)
-{
-    return basic_cuda_tensor_view<R, r, S>(t);
-}
-
-template <typename R, rank_t r, typename S>
-basic_cuda_tensor_view<R, r, S> view(const basic_cuda_tensor_ref<R, r, S> &t)
-{
-    return basic_cuda_tensor_view<R, r, S>(t);
-}
-}  // namespace internal
+using cuda_tensor_view = tensor_view<R, r, internal::cuda_memory>;
 }  // namespace ttl

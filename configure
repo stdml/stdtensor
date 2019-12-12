@@ -78,6 +78,19 @@ pass_cmake_flag_from_env() {
     fi
 }
 
+CMAKE_PREFIX_PATH=
+
+add_cmake_prefix() {
+    echo "adding to CMAKE_PREFIX_PATH with $1"
+    CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH;$1"
+}
+
+add_cmake_prefixes() {
+    add_cmake_prefix $HOME/local
+    add_cmake_prefix $HOME/local/gtest
+    add_cmake_prefix $HOME/local/openblas
+}
+
 add_cmake_flags() {
     add_cmake_flag CMAKE_INSTALL_PREFIX ${PREFIX}
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
@@ -99,6 +112,7 @@ add_cmake_flags() {
 
     add_cmake_flag CMAKE_RUNTIME_OUTPUT_DIRECTORY $(pwd)/bin
     add_cmake_flag LIBRARY_OUTPUT_PATH $(pwd)/lib # TODO: upgrade to CMAKE_LIBRARY_OUTPUT_DIRECTORY
+    add_cmake_flag CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}
 
     add_cmake_flag CMAKE_EXPORT_COMPILE_COMMANDS ${VERBOSE}
 
@@ -108,6 +122,7 @@ add_cmake_flags() {
 
 main() {
     parse_args $@
+    add_cmake_prefixes
     add_cmake_flags
 
     echo "Using CMAKE_FLAGS=${CMAKE_FLAGS}"

@@ -12,7 +12,6 @@ namespace ttl
 {
 namespace internal
 {
-
 template <typename R, typename shape_t, typename data_holder_t>
 class abstract_flat_tensor
 {
@@ -56,7 +55,8 @@ class abstract_flat_tensor
 };
 
 template <typename R, typename shape_t = basic_raw_shape<>>
-class basic_flat_tensor : public abstract_flat_tensor<R, shape_t, own_ptr<R>>
+class basic_flat_tensor
+    : public abstract_flat_tensor<R, shape_t, own_ptr<R, host_memory>>
 {
   public:
     template <typename... D>
@@ -65,8 +65,8 @@ class basic_flat_tensor : public abstract_flat_tensor<R, shape_t, own_ptr<R>>
     }
 
     explicit basic_flat_tensor(const shape_t &shape)
-        : abstract_flat_tensor<R, shape_t, own_ptr<R>>(shape,
-                                                       new R[shape.size()])
+        : abstract_flat_tensor<R, shape_t, own_ptr<R, host_memory>>(
+              shape, new R[shape.size()])
     {
     }
 };
@@ -110,6 +110,5 @@ class basic_flat_tensor_view
     {
     }
 };
-
 }  // namespace internal
 }  // namespace ttl
