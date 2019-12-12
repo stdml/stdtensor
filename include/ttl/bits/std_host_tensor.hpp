@@ -8,17 +8,14 @@ namespace internal
 {
 template <typename R, rank_t r, typename Dim>
 using basic_host_tensor =
-    internal::basic_tensor<R, internal::basic_shape<r, Dim>, host_memory,
-                           internal::owner>;
+    basic_tensor<R, basic_shape<r, Dim>, host_memory, owner>;
 
 template <typename R, rank_t r, typename Dim>
 using basic_host_tensor_ref =
-    internal::basic_tensor<R, internal::basic_shape<r, Dim>, host_memory,
-                           internal::readwrite>;
+    basic_tensor<R, basic_shape<r, Dim>, host_memory, readwrite>;
 
 template <typename R, rank_t r, typename Dim>
 using basic_host_tensor_view =
-    internal::basic_tensor<R, internal::basic_shape<r, Dim>, host_memory,
-                           internal::readonly>;
+    basic_tensor<R, basic_shape<r, Dim>, host_memory, readonly>;
 }  // namespace internal
 }  // namespace ttl

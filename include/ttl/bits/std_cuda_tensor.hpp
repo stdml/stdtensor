@@ -8,17 +8,14 @@ namespace internal
 {
 template <typename R, rank_t r, typename Dim>
 using basic_cuda_tensor =
-    internal::basic_tensor<R, internal::basic_shape<r, Dim>, cuda_memory,
-                           internal::owner>;
+    basic_tensor<R, basic_shape<r, Dim>, cuda_memory, owner>;
 
 template <typename R, rank_t r, typename Dim>
 using basic_cuda_tensor_ref =
-    internal::basic_tensor<R, internal::basic_shape<r, Dim>, cuda_memory,
-                           internal::readwrite>;
+    basic_tensor<R, basic_shape<r, Dim>, cuda_memory, readwrite>;
 
 template <typename R, rank_t r, typename Dim>
 using basic_cuda_tensor_view =
-    internal::basic_tensor<R, internal::basic_shape<r, Dim>, cuda_memory,
-                           internal::readonly>;
+    basic_tensor<R, basic_shape<r, Dim>, cuda_memory, readonly>;
 }  // namespace internal
 }  // namespace ttl
