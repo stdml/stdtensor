@@ -96,17 +96,17 @@ add_cmake_flags() {
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
     add_cmake_flag BUILD_BENCHMARKS ${BUILD_BENCHMARKS}
     add_cmake_flag BUILD_EXAMPLES ${BUILD_EXAMPLES}
-    add_cmake_flag BUILD_GTEST ${BUILD_GTEST}
-    add_cmake_flag BUILD_GBENCH ${BUILD_GBENCH}
     add_cmake_flag HAVE_CUDA ${HAVE_CUDA}
 
     if [ ${BUILD_EXAMPLES} -eq 1 ]; then
         add_cmake_flag USE_OPENCV ${USE_OPENCV}
     fi
     if [ ${BUILD_TESTS} -eq 1 ] && [ ${BUILD_GTEST} -eq 1 ]; then
+        add_cmake_flag BUILD_GTEST ${BUILD_GTEST}
         pass_cmake_flag_from_env GTEST_GIT_URL
     fi
     if [ ${BUILD_BENCHMARKS} -eq 1 ] && [ ${BUILD_GBENCH} -eq 1 ]; then
+        add_cmake_flag BUILD_GBENCH ${BUILD_GBENCH}
         pass_cmake_flag_from_env GBENCH_GIT_URL
     fi
 

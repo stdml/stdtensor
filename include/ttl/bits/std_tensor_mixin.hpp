@@ -38,19 +38,15 @@ class basic_scalar_mixin
 
     S shape() const { return S(); }
 
-    template <typename D1> void copy_from(const void *data) const
+    void from_host(const void *data) const
     {
-        basic_copier<D, D1>()(data_.get(), data, data_size());
+        basic_copier<D, host_memory>()(data_.get(), data, data_size());
     }
 
-    template <typename D1> void copy_to(void *data) const
+    void to_host(void *data) const
     {
-        basic_copier<D1, D>()(data, data_.get(), data_size());
+        basic_copier<host_memory, D>()(data, data_.get(), data_size());
     }
-
-    void from_host(const void *data) const { copy_from<host_memory>(data); }
-
-    void to_host(void *data) const { copy_to<host_memory>(data); }
 };
 
 template <typename R, typename S, typename D, typename A>
@@ -157,19 +153,15 @@ class basic_tensor_mixin
                           batch(j - i, sub_shape));
     }
 
-    template <typename D1> void copy_from(const void *data) const
+    void from_host(const void *data) const
     {
-        basic_copier<D, D1>()(data_.get(), data, data_size());
+        basic_copier<D, host_memory>()(data_.get(), data, data_size());
     }
 
-    template <typename D1> void copy_to(void *data) const
+    void to_host(void *data) const
     {
-        basic_copier<D1, D>()(data, data_.get(), data_size());
+        basic_copier<host_memory, D>()(data, data_.get(), data_size());
     }
-
-    void from_host(const void *data) const { copy_from<host_memory>(data); }
-
-    void to_host(void *data) const { copy_to<host_memory>(data); }
 };
 }  // namespace internal
 }  // namespace ttl
