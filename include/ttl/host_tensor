@@ -14,15 +14,3 @@ using host_tensor_ref = tensor_ref<R, r, internal::host_memory>;
 template <typename R, rank_t r>
 using host_tensor_view = tensor_view<R, r, internal::host_memory>;
 }  // namespace ttl
-
-namespace ttl
-{
-// Don't be confused with std::vector
-template <typename R> using vector = host_tensor<R, 1>;
-template <typename R> using vector_ref = host_tensor_ref<R, 1>;
-template <typename R> using vector_view = host_tensor_view<R, 1>;
-
-template <typename R> using matrix = host_tensor<R, 2>;
-template <typename R> using matrix_ref = host_tensor_ref<R, 2>;
-template <typename R> using matrix_view = host_tensor_view<R, 2>;
-}  // namespace ttl
