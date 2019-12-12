@@ -12,7 +12,7 @@ class basic_scalar_mixin
     using trait = basic_tensor_traits<R, A>;
     using data_ptr = typename trait::ptr_type;
     using data_ref = typename trait::ref_type;
-    using data_t = typename trait::D;
+    using data_t = typename trait::Data;
 
     data_t data_;
 
@@ -89,7 +89,7 @@ class basic_tensor_mixin
     using trait = basic_tensor_traits<R, A>;
     using data_ptr = typename trait::ptr_type;
     using data_ref = typename trait::ref_type;
-    using data_t = typename trait::D;
+    using data_t = typename trait::Data;
 
     using allocator = basic_allocator<R, D>;
 
