@@ -1,7 +1,6 @@
 #pragma once
 #include <stdexcept>
 
-#include <ttl/bits/std_allocator.hpp>
 #include <ttl/bits/std_cuda_runtime.hpp>
 #include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>

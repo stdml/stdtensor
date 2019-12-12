@@ -1,5 +1,5 @@
 #pragma once
-#include <ttl/bits/std_allocator.hpp>
+#include <ttl/bits/std_host_allocator.hpp>
 #include <ttl/bits/std_tensor.hpp>
 
 namespace ttl

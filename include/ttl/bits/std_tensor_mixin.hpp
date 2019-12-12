@@ -1,5 +1,4 @@
 #pragma once
-#include <ttl/bits/std_allocator.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 

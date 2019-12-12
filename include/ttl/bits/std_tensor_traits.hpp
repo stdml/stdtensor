@@ -1,5 +1,6 @@
 #pragma once
-#include <ttl/bits/std_allocator.hpp>
+#include <memory>
+#include <ttl/bits/std_tensor_fwd.hpp>
 
 namespace ttl
 {
@@ -9,7 +10,34 @@ struct owner;
 struct readwrite;
 struct readonly;
 
-template <typename R, typename A> struct basic_tensor_traits;
+template <typename R, typename D>
+using own_ptr = std::unique_ptr<R[], basic_deallocator<R, D>>;
+
+template <typename R> class ref_ptr
+{
+    R *ptr_;
+
+  public:
+    using ptr_type = R *;
+    using ref_type = R &;
+
+    ref_ptr(ptr_type ptr) : ptr_(ptr) {}
+
+    R *get() const { return ptr_; }
+};
+
+template <typename R> class view_ptr
+{
+    const R *ptr_;
+
+  public:
+    using ptr_type = const R *;
+    using ref_type = const R &;
+
+    view_ptr(ptr_type ptr) : ptr_(ptr) {}
+
+    const R *get() const { return ptr_; }
+};
 
 template <typename R> struct basic_tensor_traits<R, owner> {
     using ptr_type = R *;
