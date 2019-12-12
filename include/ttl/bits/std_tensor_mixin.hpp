@@ -1,0 +1,182 @@
+#pragma once
+#include <ttl/bits/std_allocator.hpp>
+#include <ttl/bits/std_tensor_fwd.hpp>
+#include <ttl/bits/std_tensor_traits.hpp>
+
+namespace ttl
+{
+namespace internal
+{
+template <typename R, typename S, typename D, typename A>
+class basic_scalar_mixin
+{
+    using trait = basic_tensor_traits<R, A>;
+    using data_ptr = typename trait::ptr_type;
+    using data_ref = typename trait::ref_type;
+    using data_t = typename trait::D;
+
+    data_t data_;
+
+  protected:
+    basic_scalar_mixin(data_ptr data) : data_(data)
+    {
+        static_assert(rank == 0, "");
+    }
+
+    // basic_scalar_mixin(data_ptr data, const S &) : data_(data) {}
+
+  public:
+    using value_type = R;
+    using shape_type = S;
+
+    static constexpr auto rank = S::rank;  // == 0
+
+    basic_scalar_mixin(data_ptr data, const S &) : data_(data) {}
+
+    data_ptr data() const { return data_.get(); }
+
+    data_ptr data_end() const { return data_.get() + 1; }
+
+    S shape() const { return S(); }
+};
+
+template <typename R, typename S, typename D, typename A>
+class basic_tensor_iterator
+{
+    using trait = basic_tensor_traits<R, A>;
+    using data_ptr = typename trait::ptr_type;
+
+    const S shape_;
+    const size_t step_;
+
+    data_ptr pos_;
+
+    using T = basic_tensor<R, S, D, A>;
+
+  public:
+    basic_tensor_iterator(data_ptr pos, const S &shape)
+        : shape_(shape), step_(shape.size()), pos_(pos)
+    {
+    }
+
+    bool operator!=(const basic_tensor_iterator &it) const
+    {
+        return pos_ != it.pos_;
+    }
+
+    void operator++() { pos_ += step_; }
+
+    T operator*() const { return T(pos_, shape_); }
+};
+
+template <typename R, typename S, typename D, typename A>
+class basic_tensor_mixin
+{
+  protected:
+    using trait = basic_tensor_traits<R, A>;
+    using data_ptr = typename trait::ptr_type;
+    using data_ref = typename trait::ref_type;
+    using data_t = typename trait::D;
+
+    using allocator = basic_allocator<R, D>;
+
+    using sub_shape = typename S::template subshape_t<1>;
+    using element_t = basic_tensor<R, sub_shape, D, typename trait::IterA>;
+    using iterator =
+        basic_tensor_iterator<R, sub_shape, D, typename trait::IterA>;
+
+    const S shape_;
+    data_t data_;
+
+    using index_type = typename S::dimension_type;
+
+    iterator _iter(data_ptr pos) const
+    {
+        return iterator(pos, shape_.subshape());
+    }
+
+    explicit basic_tensor_mixin(data_ptr data, const S &shape)
+        : shape_(shape), data_(data)
+    {
+        static_assert(rank > 0, "");
+    }
+
+  public:
+    using value_type = R;
+    using shape_type = S;
+
+    using slice_type = basic_tensor<R, S, D, typename trait::IterA>;
+
+    static constexpr auto rank = S::rank;
+
+    const S &shape() const { return shape_; }
+
+    data_ptr data() const { return data_.get(); }
+
+    data_ptr data_end() const { return data_.get() + shape_.size(); }
+
+    template <typename... I> data_ptr data(I... i) const
+    {
+        return data_.get() + shape_.offset(i...);
+    }
+
+    template <typename... I> data_ref at(I... i) const
+    {
+        return data_.get()[shape_.offset(i...)];
+    }
+
+    iterator begin() const { return _iter(data()); }
+
+    iterator end() const { return _iter(data_end()); }
+
+    element_t operator[](index_type i) const
+    {
+        return element_t(data_.get() + i * shape_.subspace_size(),
+                         shape_.subshape());
+    }
+
+    slice_type slice(index_type i, index_type j) const
+    {
+        const auto sub_shape = shape_.subshape();
+        return slice_type(data_.get() + i * sub_shape.size(),
+                          batch(j - i, sub_shape));
+    }
+};
+
+template <typename R, typename S, typename D>
+basic_tensor<R, S, D, readwrite> ref(const basic_tensor<R, S, D, owner> &t)
+{
+    return basic_tensor<R, S, D, readwrite>(t);
+}
+
+template <typename R, typename S, typename D>
+basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, owner> &t)
+{
+    return basic_tensor<R, S, D, readwrite>(t);
+}
+
+template <typename R, typename S, typename D>
+basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, readwrite> &t)
+{
+    return basic_tensor<R, S, D, readonly>(t);
+}
+
+template <typename R, typename S, typename D, typename A> struct flattener {
+    using S1 = typename S::template subshape_t<S::rank - 1>;
+    using vector =
+        basic_tensor<R, S1, D, typename basic_tensor_traits<R, A>::IterA>;
+
+    vector operator()(const basic_tensor<R, S, D, A> &t) const
+    {
+        return vector(t.data(), t.shape().size());
+    }
+};
+
+template <typename R, typename S, typename D, typename A>
+typename flattener<R, S, D, A>::vector
+flatten(const basic_tensor<R, S, D, A> &t)
+{
+    return flattener<R, S, D, A>()(t);
+}
+}  // namespace internal
+}  // namespace ttl

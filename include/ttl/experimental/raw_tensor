@@ -21,15 +21,15 @@ template <typename T> raw_tensor_ref raw_ref(const T &t)
 {
     using ref_t =
         internal::basic_host_tensor_ref<typename T::value_type, T::rank,
-                                        typename T::shape_type>;
+                                        typename T::shape_type::dimension_type>;
     return raw_tensor_ref(ref_t(t));
 }
 
 template <typename T> raw_tensor_view raw_view(const T &t)
 {
-    using view_t =
-        internal::basic_host_tensor_view<typename T::value_type, T::rank,
-                                         typename T::shape_type>;
+    using view_t = internal::basic_host_tensor_view<
+        typename T::value_type, T::rank,
+        typename T::shape_type::dimension_type>;
     return raw_tensor_view(view_t(t));
 }
 }  // namespace experimental
