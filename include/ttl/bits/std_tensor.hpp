@@ -15,9 +15,7 @@ class basic_tensor<R, basic_shape<0, Dim>, D, owner>
     using mixin = basic_scalar_mixin<R, basic_shape<0, Dim>, D, owner>;
     using allocator = basic_allocator<R, D>;
 
-    own_ptr<R, D> data_owner_;
-
-    basic_tensor(R *data) : mixin(data), data_owner_(data) {}
+    basic_tensor(R *data) : mixin(data) {}
 
   public:
     basic_tensor() : basic_tensor(allocator()(1)) {}
@@ -75,10 +73,8 @@ class basic_tensor<R, S, D, owner> : public basic_tensor_mixin<R, S, D, owner>
     using mixin = basic_tensor_mixin<R, S, D, owner>;
     using allocator = basic_allocator<R, D>;
 
-    own_ptr<R, D> data_owner_;
-
     constexpr explicit basic_tensor(R *data, const S &shape)
-        : mixin(data, shape), data_owner_(data)
+        : mixin(data, shape)
     {
     }
 
@@ -147,6 +143,7 @@ class basic_tensor<R, S, D, readonly>
     }
 };
 
+//
 template <typename R, typename S, typename D>
 basic_tensor<R, S, D, readwrite> ref(const basic_tensor<R, S, D, owner> &t)
 {
@@ -168,7 +165,7 @@ basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, readwrite> &t)
 template <typename R, typename S, typename D, typename A> struct flattener {
     using S1 = typename S::template subshape_t<S::rank - 1>;
     using vector =
-        basic_tensor<R, S1, D, typename basic_tensor_traits<R, A>::Access>;
+        basic_tensor<R, S1, D, typename basic_tensor_traits<R, A, D>::Access>;
 
     vector operator()(const basic_tensor<R, S, D, A> &t) const
     {

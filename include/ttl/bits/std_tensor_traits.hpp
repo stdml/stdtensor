@@ -39,15 +39,15 @@ template <typename R> class view_ptr
     const R *get() const { return ptr_; }
 };
 
-template <typename R> struct basic_tensor_traits<R, owner> {
+template <typename R, typename D> struct basic_tensor_traits<R, owner, D> {
     using ptr_type = R *;
     using ref_type = R &;
 
-    using Data = ref_ptr<R>;  // FIXME: use own_ptr
+    using Data = own_ptr<R, D>;
     using Access = readwrite;
 };
 
-template <typename R> struct basic_tensor_traits<R, readwrite> {
+template <typename R, typename D> struct basic_tensor_traits<R, readwrite, D> {
     using ptr_type = R *;
     using ref_type = R &;
 
@@ -55,7 +55,7 @@ template <typename R> struct basic_tensor_traits<R, readwrite> {
     using Access = readwrite;
 };
 
-template <typename R> struct basic_tensor_traits<R, readonly> {
+template <typename R, typename D> struct basic_tensor_traits<R, readonly, D> {
     using ptr_type = const R *;
     using ref_type = const R &;
 

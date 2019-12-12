@@ -9,7 +9,7 @@ namespace internal
 template <typename R, typename S, typename D, typename A>
 class basic_scalar_mixin
 {
-    using trait = basic_tensor_traits<R, A>;
+    using trait = basic_tensor_traits<R, A, D>;
     using data_ptr = typename trait::ptr_type;
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
@@ -52,7 +52,7 @@ class basic_scalar_mixin
 template <typename R, typename S, typename D, typename A>
 class basic_tensor_iterator
 {
-    using trait = basic_tensor_traits<R, A>;
+    using trait = basic_tensor_traits<R, A, D>;
     using data_ptr = typename trait::ptr_type;
 
     const S shape_;
@@ -82,7 +82,7 @@ template <typename R, typename S, typename D, typename A>
 class basic_tensor_mixin
 {
   protected:
-    using trait = basic_tensor_traits<R, A>;
+    using trait = basic_tensor_traits<R, A, D>;
     using data_ptr = typename trait::ptr_type;
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
