@@ -37,7 +37,7 @@ class fake_device
 
     void *alloc(size_t size)
     {
-        void *ptr = malloc(size);
+        void *ptr = std::malloc(size);
         _allocs[ptr] = size;
         return ptr;
     }
@@ -47,6 +47,7 @@ class fake_device
         if (_allocs.count(data) == 0) {
             throw std::runtime_error("invalid free");
         }
+        std::free(data);
         _allocs.erase(data);
     }
 

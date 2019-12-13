@@ -1,7 +1,6 @@
 // # -*- mode: c++ -*-
 #pragma once
-
-#include <ttl/bits/std_tensor_algo.hpp>
+#include <ttl/bits/std_host_tensor_algo.hpp>
 
 namespace ttl
 {

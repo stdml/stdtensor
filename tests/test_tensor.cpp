@@ -16,7 +16,7 @@ TEST(tensor_test, test_size)
     using T0 = ttl::tensor<uint8_t, 0>;
     using R0 = ttl::tensor_ref<uint8_t, 0>;
     using V0 = ttl::tensor_view<uint8_t, 0>;
-    static_assert(sizeof(T0) == 2 * sizeof(void *), "");  // FIXME:
+    static_assert(sizeof(T0) == sizeof(void *), "");
     static_assert(sizeof(R0) == sizeof(void *), "");
     static_assert(sizeof(V0) == sizeof(void *), "");
 }
@@ -249,14 +249,14 @@ TEST(tensor_test, test_scalar_assignment)
     ASSERT_EQ(2, x);
 }
 
-template <template <typename, ttl::internal::rank_t, typename> class T,
-          typename R, ttl::internal::rank_t r, typename shape_type>
-void test_static_properties(const T<R, r, shape_type> &x)
+template <typename R, typename S, typename D, typename A>
+void test_static_properties(const ttl::internal::basic_tensor<R, S, D, A> &x)
 {
-    using t = T<R, r, shape_type>;
-    static_assert(std::is_same<typename t::value_type, R>::value,
+    constexpr auto r = S::rank;
+    using T = ttl::internal::basic_tensor<R, S, D, A>;
+    static_assert(std::is_same<typename T::value_type, R>::value,
                   "invalid value_type");
-    static_assert(t::rank == r, "invalid rank");
+    static_assert(T::rank == r, "invalid rank");
     auto x_shape = x.shape();
     static_assert(decltype(x_shape)::rank == r, "invalid rank of shape");
     static_assert(

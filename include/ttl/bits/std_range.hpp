@@ -4,7 +4,8 @@ namespace ttl
 {
 namespace internal
 {
-template <typename N> class basic_integer_range
+template <typename N>
+class basic_integer_range
 {
     const N from_;
     const N to_;
@@ -33,12 +34,14 @@ template <typename N> class basic_integer_range
     iterator end() const { return iterator(to_); }
 };
 
-template <typename N> basic_integer_range<N> range(N n)
+template <typename N>
+basic_integer_range<N> range(N n)
 {
     return basic_integer_range<N>(n);
 }
 
-template <typename N> basic_integer_range<N> range(N m, N n)
+template <typename N>
+basic_integer_range<N> range(N m, N n)
 {
     return basic_integer_range<N>(m, n);
 }
