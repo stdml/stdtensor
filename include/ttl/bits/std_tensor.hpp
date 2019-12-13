@@ -155,7 +155,8 @@ basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, readwrite> &t)
     return basic_tensor<R, S, D, readonly>(t);
 }
 
-template <typename R, typename S, typename D, typename A> struct flattener {
+template <typename R, typename S, typename D, typename A>
+struct flattener {
     using S1 = typename S::template subshape_t<S::rank - 1>;
     using vector =
         basic_tensor<R, S1, D, typename basic_tensor_traits<R, A, D>::Access>;

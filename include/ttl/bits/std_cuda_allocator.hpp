@@ -25,7 +25,8 @@ struct cuda_copier {
     }
 };
 
-template <> class basic_copier<host_memory, cuda_memory>
+template <>
+class basic_copier<host_memory, cuda_memory>
 {
   public:
     void operator()(void *dst, const void *src, size_t size)
@@ -34,7 +35,8 @@ template <> class basic_copier<host_memory, cuda_memory>
     }
 };
 
-template <> class basic_copier<cuda_memory, host_memory>
+template <>
+class basic_copier<cuda_memory, host_memory>
 {
   public:
     void operator()(void *dst, const void *src, size_t size)
@@ -43,7 +45,8 @@ template <> class basic_copier<cuda_memory, host_memory>
     }
 };
 
-template <typename R> class basic_allocator<R, cuda_memory>
+template <typename R>
+class basic_allocator<R, cuda_memory>
 {
   public:
     R *operator()(int count)
@@ -59,7 +62,8 @@ template <typename R> class basic_allocator<R, cuda_memory>
     }
 };
 
-template <typename R> class basic_deallocator<R, cuda_memory>
+template <typename R>
+class basic_deallocator<R, cuda_memory>
 {
   public:
     void operator()(R *data)

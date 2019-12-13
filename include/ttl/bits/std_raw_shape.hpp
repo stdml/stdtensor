@@ -19,7 +19,8 @@ std::vector<D_out> arr2vec(const std::array<D_in, r> &a)
     return v;
 }
 
-template <typename Dim = uint32_t> class basic_raw_shape
+template <typename Dim = uint32_t>
+class basic_raw_shape
 {
     using dim_t = Dim;
     const std::vector<dim_t> dims_;
@@ -45,7 +46,8 @@ template <typename Dim = uint32_t> class basic_raw_shape
 
     dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }
 
-    template <rank_t r> basic_shape<r, dim_t> as_ranked() const
+    template <rank_t r>
+    basic_shape<r, dim_t> as_ranked() const
     {
         // TODO: use contracts of c++20
         if (r != rank()) { throw std::invalid_argument("invalid rank"); }

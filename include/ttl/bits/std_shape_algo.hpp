@@ -5,13 +5,16 @@ namespace ttl
 {
 namespace internal
 {
-template <typename I, I...> struct int_seq_sum;
+template <typename I, I...>
+struct int_seq_sum;
 
-template <typename I> struct int_seq_sum<I> {
+template <typename I>
+struct int_seq_sum<I> {
     static constexpr I value = 0;
 };
 
-template <typename I, I i0, I... is> struct int_seq_sum<I, i0, is...> {
+template <typename I, I i0, I... is>
+struct int_seq_sum<I, i0, is...> {
     static constexpr I value = i0 + int_seq_sum<I, is...>::value;
 };
 
@@ -23,7 +26,8 @@ merge_indexed(const std::array<T, p> &a, std::index_sequence<Is...>,
     return std::array<T, p + q>({std::get<Is>(a)..., std::get<Js>(b)...});
 }
 
-template <typename... D> basic_shape<sizeof...(D)> make_shape(const D... d)
+template <typename... D>
+basic_shape<sizeof...(D)> make_shape(const D... d)
 {
     return basic_shape<sizeof...(D)>(d...);
 }
@@ -43,9 +47,11 @@ basic_shape<r + 1, dim_t> batch(const N n, const basic_shape<r, dim_t> &s)
     return join_shape(basic_shape<1, dim_t>(n), s);
 }
 
-template <rank_t... rs> class flatten_shape;
+template <rank_t... rs>
+class flatten_shape;
 
-template <> class flatten_shape<>
+template <>
+class flatten_shape<>
 {
   public:
     template <rank_t r, typename dim_t>
@@ -55,7 +61,8 @@ template <> class flatten_shape<>
     }
 };
 
-template <rank_t... rs> class flatten_shape
+template <rank_t... rs>
+class flatten_shape
 {
     static constexpr rank_t in_rank = int_seq_sum<int, rs...>::value;
     static constexpr rank_t out_rank = sizeof...(rs);

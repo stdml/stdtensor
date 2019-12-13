@@ -126,12 +126,14 @@ class basic_tensor_mixin
 
     data_ptr data_end() const { return data_.get() + shape_.size(); }
 
-    template <typename... I> data_ptr data(I... i) const
+    template <typename... I>
+    data_ptr data(I... i) const
     {
         return data_.get() + shape_.offset(i...);
     }
 
-    template <typename... I> data_ref at(I... i) const
+    template <typename... I>
+    data_ref at(I... i) const
     {
         return data_.get()[shape_.offset(i...)];
     }

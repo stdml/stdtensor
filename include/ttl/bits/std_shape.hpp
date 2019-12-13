@@ -10,7 +10,8 @@ namespace ttl
 {
 namespace internal
 {
-template <typename N, typename Iterator> N product(Iterator begin, Iterator end)
+template <typename N, typename Iterator>
+N product(Iterator begin, Iterator end)
 {
     return std::accumulate(begin, end, static_cast<N>(1), std::multiplies<N>());
 };
@@ -24,7 +25,8 @@ constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
 
 using rank_t = uint8_t;
 
-template <rank_t r, typename Dim = uint32_t> class basic_shape
+template <rank_t r, typename Dim = uint32_t>
+class basic_shape
 {
     using dim_t = Dim;
 
@@ -46,7 +48,8 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         static_assert(sizeof...(D) == r, "invalid number of dims");
     }
 
-    template <typename... I> dim_t offset(I... args) const
+    template <typename... I>
+    dim_t offset(I... args) const
     {
         static_assert(sizeof...(I) == r, "invalid number of indexes");
 
@@ -57,7 +60,8 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
         return off;
     }
 
-    template <rank_t p> dim_t coord(dim_t off) const
+    template <rank_t p>
+    dim_t coord(dim_t off) const
     {
         static_assert(p < rank, "invalid coordinate");
         for (rank_t i = p + 1; i < rank; ++i) { off /= dims_[i]; }
@@ -75,7 +79,8 @@ template <rank_t r, typename Dim = uint32_t> class basic_shape
     template <rank_t corank = 1>
     using subshape_t = basic_shape<r - corank, dim_t>;
 
-    template <rank_t corank = 1> basic_shape<r - corank, dim_t> subshape() const
+    template <rank_t corank = 1>
+    basic_shape<r - corank, dim_t> subshape() const
     {
         static_assert(0 <= corank && corank <= r, "invalid corank");
         constexpr rank_t s = r - corank;

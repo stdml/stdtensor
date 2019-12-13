@@ -20,7 +20,8 @@ std::string to_string(const basic_shape<r, D> &shape)
     return ss.str();
 }
 
-template <typename D> std::string to_string(const basic_raw_shape<D> &shape)
+template <typename D>
+std::string to_string(const basic_raw_shape<D> &shape)
 {
     std::stringstream ss;
     ss << "(";

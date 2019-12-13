@@ -46,7 +46,8 @@ class abstract_flat_tensor
     }
 
   private:
-    template <typename T> T ranked_as() const
+    template <typename T>
+    T ranked_as() const
     {
         static_assert(std::is_same<R, typename T::value_type>::value, "");
         return T(data_.get(), shape_.template as_ranked<T::rank>());

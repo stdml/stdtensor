@@ -13,7 +13,8 @@ struct readonly;
 template <typename R, typename D>
 using own_ptr = std::unique_ptr<R[], basic_deallocator<R, D>>;
 
-template <typename R> class ref_ptr
+template <typename R>
+class ref_ptr
 {
     R *ptr_;
 
@@ -26,7 +27,8 @@ template <typename R> class ref_ptr
     R *get() const { return ptr_; }
 };
 
-template <typename R> class view_ptr
+template <typename R>
+class view_ptr
 {
     const R *ptr_;
 
@@ -39,7 +41,8 @@ template <typename R> class view_ptr
     const R *get() const { return ptr_; }
 };
 
-template <typename R, typename D> struct basic_tensor_traits<R, owner, D> {
+template <typename R, typename D>
+struct basic_tensor_traits<R, owner, D> {
     using ptr_type = R *;
     using ref_type = R &;
 
@@ -47,7 +50,8 @@ template <typename R, typename D> struct basic_tensor_traits<R, owner, D> {
     using Access = readwrite;
 };
 
-template <typename R, typename D> struct basic_tensor_traits<R, readwrite, D> {
+template <typename R, typename D>
+struct basic_tensor_traits<R, readwrite, D> {
     using ptr_type = R *;
     using ref_type = R &;
 
@@ -55,7 +59,8 @@ template <typename R, typename D> struct basic_tensor_traits<R, readwrite, D> {
     using Access = readwrite;
 };
 
-template <typename R, typename D> struct basic_tensor_traits<R, readonly, D> {
+template <typename R, typename D>
+struct basic_tensor_traits<R, readonly, D> {
     using ptr_type = const R *;
     using ref_type = const R &;
 

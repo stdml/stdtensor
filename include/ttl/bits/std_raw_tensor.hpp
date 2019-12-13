@@ -22,7 +22,8 @@ class basic_raw_tensor_ref;
 template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
 class basic_raw_tensor_view;
 
-template <typename DataEncoder, typename shape_t> class basic_raw_tensor
+template <typename DataEncoder, typename shape_t>
+class basic_raw_tensor
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -56,7 +57,8 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor
         return encoder_type::size(value_type_) * shape_.size();
     }
 
-    template <typename R> R *data() const
+    template <typename R>
+    R *data() const
     {
         // TODO: use contracts of c++20
         if (DataEncoder::template value<R>() != value_type_) {
@@ -85,20 +87,23 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor
         return ranked_as<basic_host_tensor_view<R, r, D>>();
     }
 
-    template <typename R> basic_flat_tensor_ref<R, shape_t> typed_as() const
+    template <typename R>
+    basic_flat_tensor_ref<R, shape_t> typed_as() const
     {
         return basic_flat_tensor_ref<R, shape_t>(data<R>(), shape_);
     }
 
   private:
-    template <typename T> T ranked_as() const
+    template <typename T>
+    T ranked_as() const
     {
         return T(data<typename T::value_type>(),
                  shape_.template as_ranked<T::rank>());
     }
 };
 
-template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
+template <typename DataEncoder, typename shape_t>
+class basic_raw_tensor_ref
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -107,7 +112,8 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
 
     void *const data_;
 
-    template <typename R> R *data() const
+    template <typename R>
+    R *data() const
     {
         // TODO: use contracts of c++20
         if (DataEncoder::template value<R>() != value_type_) {
@@ -171,7 +177,8 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_ref
     }
 };
 
-template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
+template <typename DataEncoder, typename shape_t>
+class basic_raw_tensor_view
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -180,7 +187,8 @@ template <typename DataEncoder, typename shape_t> class basic_raw_tensor_view
 
     const void *const data_;
 
-    template <typename R> const R *data() const
+    template <typename R>
+    const R *data() const
     {
         // TODO: use contracts of c++20
         if (DataEncoder::template value<R>() != value_type_) {
