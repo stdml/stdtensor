@@ -1,4 +1,5 @@
 #pragma once
+#include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 
@@ -134,7 +135,8 @@ class basic_tensor_mixin
 
     template <typename... I>
     data_ref at(I... i) const
-    {
+    {  // FIXME: support other devices
+        static_assert(std::is_same<D, host_memory>::value, "");
         return data_.get()[shape_.offset(i...)];
     }
 
