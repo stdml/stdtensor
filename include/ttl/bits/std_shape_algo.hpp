@@ -83,5 +83,28 @@ class flatten_shape
         return basic_shape<out_rank, dim_t>(dims);
     }
 };
+
+template <typename S>
+struct super_shape;
+
+template <rank_t r, typename D>
+struct super_shape<basic_shape<r, D>> {
+    using type = basic_shape<r + 1, D>;
+};
+
+template <typename T, typename Tuple, size_t... I>
+std::array<T, std::tuple_size<Tuple>::value> tup2arr(const Tuple &t,
+                                                     std::index_sequence<I...>)
+{
+    using Array = std::array<T, std::tuple_size<Tuple>::value>;
+    return Array({static_cast<T>(std::get<I>(t))...});
+}
+
+template <typename T, typename Tuple>
+std::array<T, std::tuple_size<Tuple>::value> tup2arr(const Tuple &t)
+{
+    return tup2arr<T>(
+        t, std::make_index_sequence<std::tuple_size<Tuple>::value>());
+}
 }  // namespace internal
 }  // namespace ttl

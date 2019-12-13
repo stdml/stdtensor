@@ -3,6 +3,7 @@
 #include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_host_allocator.hpp>
 #include <ttl/bits/std_tensor.hpp>
+#include <ttl/bits/std_tensor_reshape.hpp>
 #include <ttl/shape>
 
 namespace ttl
@@ -18,6 +19,14 @@ using tensor_ref =
 template <typename R, rank_t r, typename D = internal::host_memory>
 using tensor_view =
     internal::basic_tensor<R, internal::basic_shape<r>, D, internal::readonly>;
+}  // namespace ttl
+
+namespace ttl
+{
+using internal::chunk;
+using internal::flatten;
+using internal::ref;
+using internal::view;
 }  // namespace ttl
 
 namespace ttl
