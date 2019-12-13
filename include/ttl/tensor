@@ -23,6 +23,14 @@ using tensor_view =
 
 namespace ttl
 {
+using internal::chunk;
+using internal::flatten;
+using internal::ref;
+using internal::view;
+}  // namespace ttl
+
+namespace ttl
+{
 // Don't be confused with std::vector
 template <typename R, typename D = internal::host_memory>
 using vector = tensor<R, 1, D>;
