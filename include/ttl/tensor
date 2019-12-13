@@ -3,6 +3,7 @@
 #include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_host_allocator.hpp>
 #include <ttl/bits/std_tensor.hpp>
+#include <ttl/bits/std_tensor_reshape.hpp>
 #include <ttl/shape>
 
 namespace ttl
