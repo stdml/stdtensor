@@ -1,9 +1,9 @@
 #include "testing.hpp"
 
-#include <ttl/operator>
+#include <ttl/operators>
 #include <ttl/tensor>
 
-TEST(range_test, test_1)
+TEST(operators_test, test_1)
 {
     ttl::tensor<int, 1> x(1);
     using namespace ttl::operators;
