@@ -82,13 +82,10 @@ class basic_tensor_iterator
 template <typename R, typename S, typename D, typename A>
 class basic_tensor_mixin
 {
-  protected:
     using trait = basic_tensor_traits<R, A, D>;
     using data_ptr = typename trait::ptr_type;
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
-
-    using allocator = basic_allocator<R, D>;
 
     using sub_shape = typename S::template subshape_t<1>;
     using element_t = basic_tensor<R, sub_shape, D, typename trait::Access>;
@@ -98,12 +95,15 @@ class basic_tensor_mixin
     const S shape_;
     data_t data_;
 
-    using index_type = typename S::dimension_type;
+    using Dim = typename S::dimension_type;
 
     iterator _iter(data_ptr pos) const
     {
         return iterator(pos, shape_.subshape());
     }
+
+  protected:
+    using allocator = basic_allocator<R, D>;
 
     explicit basic_tensor_mixin(data_ptr data, const S &shape)
         : shape_(shape), data_(data)
@@ -144,13 +144,13 @@ class basic_tensor_mixin
 
     iterator end() const { return _iter(data_end()); }
 
-    element_t operator[](index_type i) const
+    element_t operator[](Dim i) const
     {
         return element_t(data_.get() + i * shape_.subspace_size(),
                          shape_.subshape());
     }
 
-    slice_type slice(index_type i, index_type j) const
+    slice_type slice(Dim i, Dim j) const
     {
         const auto sub_shape = shape_.subshape();
         return slice_type(data_.get() + i * sub_shape.size(),
