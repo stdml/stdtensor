@@ -1,17 +1,20 @@
 // # -*- mode: c++ -*-
 #pragma once
-#include <ttl/bits/std_flat_tensor.hpp>
+#include <ttl/bits/flat_tensor.hpp>
+#include <ttl/bits/std_device.hpp>
+#include <ttl/bits/std_host_allocator.hpp>
 
 namespace ttl
 {
 namespace experimental
 {
-template <typename R> using flat_tensor = internal::basic_flat_tensor<R>;
+template <typename R, typename D = internal::host_memory>
+using flat_tensor = internal::basic_flat_tensor<R, D>;
 
-template <typename R>
-using flat_tensor_ref = internal::basic_flat_tensor_ref<R>;
+template <typename R, typename D = internal::host_memory>
+using flat_tensor_ref = internal::basic_flat_tensor_ref<R, D>;
 
-template <typename R>
-using flat_tensor_view = internal::basic_flat_tensor_view<R>;
+template <typename R, typename D = internal::host_memory>
+using flat_tensor_view = internal::basic_flat_tensor_view<R, D>;
 }  // namespace experimental
 }  // namespace ttl
