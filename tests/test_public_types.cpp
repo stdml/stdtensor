@@ -1,5 +1,28 @@
+#include <string>
+
 #include "testing.hpp"
 #include <ttl/tensor>
+
+template <typename F>
+void for_all_types(const F &f)
+{
+    f.template operator()<char>();
+
+    f.template operator()<uint8_t>();
+    f.template operator()<uint16_t>();
+    f.template operator()<uint32_t>();
+    f.template operator()<uint64_t>();
+
+    f.template operator()<int8_t>();
+    f.template operator()<int16_t>();
+    f.template operator()<int32_t>();
+    f.template operator()<int64_t>();
+
+    f.template operator()<float>();
+    f.template operator()<double>();
+
+    f.template operator()<std::string>();
+}
 
 template <ttl::rank_t r>
 ttl::shape<r> unit_shape()
@@ -9,55 +32,74 @@ ttl::shape<r> unit_shape()
     return ttl::shape<r>(dims);
 }
 
-template <typename R, ttl::rank_t r>
-void test_type()
+template <ttl::rank_t r>
+struct test_ranked_type {
+    template <typename R>
+    void operator()() const
+    {
+        using Tensor = ttl::tensor<R, r>;
+        using TensorRef = ttl::tensor_ref<R, r>;
+        using TensorView = ttl::tensor_view<R, r>;
+
+        // FIXME: assert size
+        // using Dim = typename ttl::shape<r>::dimension_type;
+        // constexpr size_t size = sizeof(void *) + r * sizeof(Dim);
+
+        // static_assert(sizeof(Tensor) == size, "");
+        // static_assert(sizeof(TensorRef) == size, "");
+        // static_assert(sizeof(TensorView) == size, "");
+
+        Tensor t(unit_shape<r>());
+        TensorRef tr(t);
+        TensorView tv(t);
+    }
+};
+
+TEST(public_types_test, test_ranks)
 {
-    using Tensor = ttl::tensor<R, r>;
-    using TensorRef = ttl::tensor_ref<R, r>;
-    using TensorView = ttl::tensor_view<R, r>;
-
-    // using Dim = typename ttl::shape<r>::dimension_type;
-    // constexpr size_t size = sizeof(void *) + r * sizeof(Dim);
-
-    // static_assert(sizeof(Tensor) == size, "");
-    // static_assert(sizeof(TensorRef) == size, "");
-    // static_assert(sizeof(TensorView) == size, "");
-
-    Tensor t(unit_shape<r>());
-    TensorRef tr(t);
-    TensorView tv(t);
+    for_all_types(test_ranked_type<0>());
+    for_all_types(test_ranked_type<1>());
+    for_all_types(test_ranked_type<2>());
+    for_all_types(test_ranked_type<3>());
+    for_all_types(test_ranked_type<4>());
+    for_all_types(test_ranked_type<5>());
+    for_all_types(test_ranked_type<6>());
+    for_all_types(test_ranked_type<7>());
+    for_all_types(test_ranked_type<8>());
+    for_all_types(test_ranked_type<9>());
+    for_all_types(test_ranked_type<10>());
 }
+
+#include <ttl/experimental/flat_tensor>
 
 template <ttl::rank_t r>
-void test_rank()
+struct test_flat_type {
+    template <typename R>
+    void operator()() const
+    {
+        using Tensor = ttl::experimental::flat_tensor<R>;
+        using TensorRef = ttl::experimental::flat_tensor_ref<R>;
+        using TensorView = ttl::experimental::flat_tensor_view<R>;
+
+        // FIXME: assert size
+
+        Tensor t(unit_shape<r>());
+        TensorRef tr(t);
+        TensorView tv(t);
+    }
+};
+
+TEST(public_types_test, test_flat_types)
 {
-    test_type<char, r>();
-
-    test_type<uint8_t, r>();
-    test_type<uint16_t, r>();
-    test_type<uint32_t, r>();
-    test_type<uint64_t, r>();
-
-    test_type<int8_t, r>();
-    test_type<int16_t, r>();
-    test_type<int32_t, r>();
-    test_type<int64_t, r>();
-
-    test_type<float, r>();
-    test_type<double, r>();
-}
-
-TEST(public_types_test, test_types)
-{
-    test_rank<0>();
-    test_rank<1>();
-    test_rank<2>();
-    test_rank<3>();
-    test_rank<4>();
-    test_rank<5>();
-    test_rank<6>();
-    test_rank<7>();
-    test_rank<8>();
-    test_rank<9>();
-    test_rank<10>();
+    for_all_types(test_flat_type<0>());
+    for_all_types(test_flat_type<1>());
+    for_all_types(test_flat_type<2>());
+    for_all_types(test_flat_type<3>());
+    for_all_types(test_flat_type<4>());
+    for_all_types(test_flat_type<5>());
+    for_all_types(test_flat_type<6>());
+    for_all_types(test_flat_type<7>());
+    for_all_types(test_flat_type<8>());
+    for_all_types(test_flat_type<9>());
+    for_all_types(test_flat_type<10>());
 }
