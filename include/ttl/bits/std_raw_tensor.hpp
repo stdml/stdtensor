@@ -5,8 +5,8 @@
 #include <stdexcept>
 
 #include <ttl/bits/flat_tensor.hpp>
+#include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/std_host_tensor.hpp>
-#include <ttl/bits/std_raw_shape.hpp>
 
 namespace ttl
 {

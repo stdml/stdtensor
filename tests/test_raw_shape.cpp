@@ -1,6 +1,6 @@
 #include "testing.hpp"
 
-#include <ttl/bits/std_raw_shape.hpp>
+#include <ttl/bits/raw_shape.hpp>
 
 TEST(raw_shape_test, test1)
 {
