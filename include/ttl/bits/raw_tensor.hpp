@@ -44,44 +44,6 @@ class basic_raw_tensor_own
                 value_type, shape)
     {
     }
-
-    using mixin::data;
-
-    template <typename R>
-    R *data() const
-    {
-        // TODO: use contracts of c++20
-        if (DataEncoder::template value<R>() != this->value_type_) {
-            throw std::invalid_argument("invalid scalar type");
-        }
-        return reinterpret_cast<R *>(this->data_.get());
-    }
-
-    template <typename R, rank_t r>
-    basic_host_tensor_ref<R, r, Dim> ref_as() const
-    {
-        return ranked_as<basic_host_tensor_ref<R, r, Dim>>();
-    }
-
-    template <typename R, rank_t r>
-    basic_host_tensor_view<R, r, Dim> view_as() const
-    {
-        return ranked_as<basic_host_tensor_view<R, r, Dim>>();
-    }
-
-    template <typename R>
-    basic_flat_tensor_ref<R, S> typed_as() const
-    {
-        return basic_flat_tensor_ref<R, S>(data<R>(), this->shape_);
-    }
-
-  private:
-    template <typename T>
-    T ranked_as() const
-    {
-        return T(data<typename T::value_type>(),
-                 this->shape_.template as_ranked<T::rank>());
-    }
 };
 
 template <typename DataEncoder, typename Dim>
@@ -92,16 +54,6 @@ class basic_raw_tensor_ref
     using value_type_t = typename DataEncoder::value_type;
     using S = basic_raw_shape<Dim>;
     using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, readwrite>;
-
-    template <typename R>
-    R *data() const
-    {
-        // TODO: use contracts of c++20
-        if (DataEncoder::template value<R>() != this->value_type_) {
-            throw std::invalid_argument("invalid scalar type");
-        }
-        return reinterpret_cast<R *>(this->data_.get());
-    }
 
   public:
     template <typename... Dims>
@@ -129,15 +81,6 @@ class basic_raw_tensor_ref
                                S(t.shape()))
     {
     }
-
-    using mixin::data;
-
-    template <typename R, rank_t r>
-    basic_host_tensor_ref<R, r, Dim> ranked_as() const
-    {
-        return basic_host_tensor_ref<R, r, Dim>(
-            data<R>(), this->shape_.template as_ranked<r>());
-    }
 };
 
 template <typename DataEncoder, typename Dim>
@@ -146,19 +89,8 @@ class basic_raw_tensor_view
                               readonly>
 {
     using value_type_t = typename DataEncoder::value_type;
-
     using S = basic_raw_shape<Dim>;
     using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, readonly>;
-
-    template <typename R>
-    const R *data() const
-    {
-        // TODO: use contracts of c++20
-        if (DataEncoder::template value<R>() != this->value_type_) {
-            throw std::invalid_argument("invalid scalar type");
-        }
-        return reinterpret_cast<const R *>(this->data_.get());
-    }
 
   public:
     template <typename... D>
@@ -191,15 +123,6 @@ class basic_raw_tensor_view
     explicit basic_raw_tensor_view(const basic_host_tensor_view<R, r, Dim> &t)
         : mixin(t.data(), DataEncoder::template value<R>(), S(t.shape()))
     {
-    }
-
-    using mixin::data;
-
-    template <typename R, rank_t r>
-    basic_host_tensor_view<R, r, Dim> ranked_as() const
-    {
-        return basic_host_tensor_view<R, r, Dim>(
-            data<R>(), this->shape_.template as_ranked<r>());
     }
 };
 }  // namespace internal

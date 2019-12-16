@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 #include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 
 namespace ttl
@@ -41,13 +42,15 @@ class raw_tensor_mixin
     using data_ptr = typename trait::ptr_type;
     using data_t = typename trait::Data;
 
-  protected:
     using value_type_t = typename Encoder::value_type;
 
     const value_type_t value_type_;
     const S shape_;
     data_t data_;
 
+    using Dim = typename S::dimension_type;
+
+  protected:
     raw_tensor_mixin(data_ptr data, const value_type_t value_type,
                      const S &shape)
         : value_type_(value_type), shape_(shape),
@@ -63,7 +66,7 @@ class raw_tensor_mixin
 
     size_t data_size() const
     {
-        return encoder_type::size(value_type_) * shape_.size();
+        return Encoder::size(value_type_) * shape_.size();
     }
 
     const S &shape() const { return shape_; }
@@ -71,6 +74,36 @@ class raw_tensor_mixin
     data_ptr data() const { return data_.get(); }
 
     data_ptr data_end() const { return (char *)(data_.get()) + data_size(); }
+
+    template <typename R>
+    typename basic_tensor_traits<R, A, D>::ptr_type data() const
+    {
+        // TODO: use contracts of c++20
+        if (Encoder::template value<R>() != value_type_) {
+            throw std::invalid_argument("invalid scalar type");
+        }
+        using ptr_type = typename basic_tensor_traits<R, A, D>::ptr_type;
+        return reinterpret_cast<ptr_type>(data_.get());
+    }
+
+    template <typename R, rank_t r, typename A1 = A>
+    basic_tensor<R, basic_shape<r, Dim>, D, A1> ranked_as() const
+    {
+        return basic_tensor<R, basic_shape<r, Dim>, D, A1>(
+            data<R>(), shape_.template as_ranked<r>());
+    }
+
+    template <typename R, rank_t r>
+    basic_tensor<R, basic_shape<r, Dim>, D, readwrite> ref_as() const
+    {
+        return ranked_as<R, r, readwrite>();
+    }
+
+    template <typename R, rank_t r>
+    basic_tensor<R, basic_shape<r, Dim>, D, readonly> view_as() const
+    {
+        return ranked_as<R, r, readonly>();
+    }
 };
 }  // namespace internal
 }  // namespace ttl
