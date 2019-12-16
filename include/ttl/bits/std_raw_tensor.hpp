@@ -6,15 +6,15 @@
 
 #include <ttl/bits/flat_tensor.hpp>
 #include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/raw_tensor_mixin.hpp>
 #include <ttl/bits/std_host_tensor.hpp>
 
 namespace ttl
 {
 namespace internal
 {
-
 template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
-class basic_raw_tensor;
+class basic_raw_tensor_own;
 
 template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
 class basic_raw_tensor_ref;
@@ -23,7 +23,8 @@ template <typename DataEncoder, typename shape_t = basic_raw_shape<>>
 class basic_raw_tensor_view;
 
 template <typename DataEncoder, typename shape_t>
-class basic_raw_tensor
+class basic_raw_tensor_own
+    : public raw_tensor_mixin<DataEncoder, shape_t, host_memory, owner>
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -36,13 +37,13 @@ class basic_raw_tensor
     using shape_type = shape_t;
 
     template <typename... D>
-    explicit basic_raw_tensor(const value_type_t value_type, D... d)
-        : basic_raw_tensor(value_type, shape_t(d...))
+    explicit basic_raw_tensor_own(const value_type_t value_type, D... d)
+        : basic_raw_tensor_own(value_type, shape_t(d...))
     {
     }
 
-    explicit basic_raw_tensor(const value_type_t value_type,
-                              const shape_t &shape)
+    explicit basic_raw_tensor_own(const value_type_t value_type,
+                                  const shape_t &shape)
         : value_type_(value_type), shape_(shape),
           data_(new char[shape_.size() * DataEncoder::size(value_type)])
     {
@@ -104,6 +105,7 @@ class basic_raw_tensor
 
 template <typename DataEncoder, typename shape_t>
 class basic_raw_tensor_ref
+    : public raw_tensor_mixin<DataEncoder, shape_t, host_memory, readwrite>
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -140,7 +142,7 @@ class basic_raw_tensor_ref
     }
 
     explicit basic_raw_tensor_ref(
-        const basic_raw_tensor<DataEncoder, shape_t> &t)
+        const basic_raw_tensor_own<DataEncoder, shape_t> &t)
         : value_type_(t.value_type()), shape_(t.shape()), data_(t.data())
     {
     }
@@ -179,6 +181,7 @@ class basic_raw_tensor_ref
 
 template <typename DataEncoder, typename shape_t>
 class basic_raw_tensor_view
+    : public raw_tensor_mixin<DataEncoder, shape_t, host_memory, readonly>
 {
     using value_type_t = typename DataEncoder::value_type;
 
@@ -216,7 +219,7 @@ class basic_raw_tensor_view
     }
 
     explicit basic_raw_tensor_view(
-        const basic_raw_tensor<DataEncoder, shape_t> &t)
+        const basic_raw_tensor_own<DataEncoder, shape_t> &t)
         : value_type_(t.value_type()), shape_(t.shape()), data_(t.data())
     {
     }
