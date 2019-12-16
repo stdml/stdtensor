@@ -1,6 +1,6 @@
 #pragma once
 #include <ttl/bits/flat_tensor_mixin.hpp>
-#include <ttl/bits/std_raw_shape.hpp>
+#include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/std_tensor.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 
@@ -14,7 +14,6 @@ class basic_tensor<R, basic_raw_shape<Dim>, D, owner>
 {
     using S = basic_raw_shape<Dim>;
     using mixin = flat_tensor_mixin<R, S, D, owner>;
-    using allocator = basic_allocator<R, D>;
 
   public:
     template <typename... Dims>
@@ -23,7 +22,7 @@ class basic_tensor<R, basic_raw_shape<Dim>, D, owner>
     }
 
     constexpr explicit basic_tensor(const S &shape)
-        : mixin(allocator()(shape.size()), shape)
+        : mixin(typename mixin::allocator()(shape.size()), shape)
     {
     }
 };

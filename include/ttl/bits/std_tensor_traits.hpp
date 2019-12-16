@@ -20,7 +20,6 @@ class ref_ptr
 
   public:
     using ptr_type = R *;
-    using ref_type = R &;
 
     ref_ptr(ptr_type ptr) : ptr_(ptr) {}
 
@@ -34,7 +33,6 @@ class view_ptr
 
   public:
     using ptr_type = const R *;
-    using ref_type = const R &;
 
     view_ptr(ptr_type ptr) : ptr_(ptr) {}
 
