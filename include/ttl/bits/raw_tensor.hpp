@@ -45,6 +45,8 @@ class basic_raw_tensor_own
     {
     }
 
+    using mixin::data;
+
     template <typename R>
     R *data() const
     {
@@ -53,13 +55,6 @@ class basic_raw_tensor_own
             throw std::invalid_argument("invalid scalar type");
         }
         return reinterpret_cast<R *>(this->data_.get());
-    }
-
-    void *data() const { return this->data_.get(); }
-
-    void *data_end() const
-    {
-        return static_cast<char *>(this->data_.get()) + this->data_size();
     }
 
     template <typename R, rank_t r>
@@ -135,18 +130,13 @@ class basic_raw_tensor_ref
     {
     }
 
+    using mixin::data;
+
     template <typename R, rank_t r>
     basic_host_tensor_ref<R, r, Dim> ranked_as() const
     {
         return basic_host_tensor_ref<R, r, Dim>(
             data<R>(), this->shape_.template as_ranked<r>());
-    }
-
-    void *data() const { return this->data_.get(); }
-
-    void *data_end() const
-    {
-        return static_cast<char *>(this->data_.get()) + this->data_size();
     }
 };
 
@@ -203,18 +193,13 @@ class basic_raw_tensor_view
     {
     }
 
+    using mixin::data;
+
     template <typename R, rank_t r>
     basic_host_tensor_view<R, r, Dim> ranked_as() const
     {
         return basic_host_tensor_view<R, r, Dim>(
             data<R>(), this->shape_.template as_ranked<r>());
-    }
-
-    const void *data() const { return this->data_.get(); }
-
-    const void *data_end() const
-    {
-        return static_cast<const char *>(this->data_.get()) + this->data_size();
     }
 };
 }  // namespace internal

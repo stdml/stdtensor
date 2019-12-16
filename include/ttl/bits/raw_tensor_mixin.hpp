@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 #include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 
@@ -66,6 +67,10 @@ class raw_tensor_mixin
     }
 
     const S &shape() const { return shape_; }
+
+    data_ptr data() const { return data_.get(); }
+
+    data_ptr data_end() const { return (char *)(data_.get()) + data_size(); }
 };
 }  // namespace internal
 }  // namespace ttl
