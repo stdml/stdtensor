@@ -30,8 +30,7 @@ class basic_raw_tensor_own
     using value_type_t = typename DataEncoder::value_type;
     using S = basic_raw_shape<Dim>;
     using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, owner>;
-
-    std::unique_ptr<char[]> data_;
+    using allocator = basic_allocator<char, host_memory>;
 
   public:
     template <typename... Dims>
@@ -41,8 +40,8 @@ class basic_raw_tensor_own
     }
 
     explicit basic_raw_tensor_own(const value_type_t value_type, const S &shape)
-        : mixin(value_type, shape),
-          data_(new char[shape.size() * DataEncoder::size(value_type)])
+        : mixin(allocator()(shape.size() * DataEncoder::size(value_type)),
+                value_type, shape)
     {
     }
 
@@ -53,14 +52,14 @@ class basic_raw_tensor_own
         if (DataEncoder::template value<R>() != this->value_type_) {
             throw std::invalid_argument("invalid scalar type");
         }
-        return reinterpret_cast<R *>(data_.get());
+        return reinterpret_cast<R *>(this->data_.get());
     }
 
-    void *data() const { return data_.get(); }
+    void *data() const { return this->data_.get(); }
 
     void *data_end() const
     {
-        return static_cast<char *>(data_.get()) + this->data_size();
+        return static_cast<char *>(this->data_.get()) + this->data_size();
     }
 
     template <typename R, rank_t r>
@@ -99,8 +98,6 @@ class basic_raw_tensor_ref
     using S = basic_raw_shape<Dim>;
     using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, readwrite>;
 
-    void *const data_;
-
     template <typename R>
     R *data() const
     {
@@ -108,7 +105,7 @@ class basic_raw_tensor_ref
         if (DataEncoder::template value<R>() != this->value_type_) {
             throw std::invalid_argument("invalid scalar type");
         }
-        return reinterpret_cast<R *>(data_);
+        return reinterpret_cast<R *>(this->data_.get());
     }
 
   public:
@@ -121,7 +118,7 @@ class basic_raw_tensor_ref
 
     explicit basic_raw_tensor_ref(void *data, const value_type_t value_type,
                                   const S &shape)
-        : mixin(value_type, shape), data_(data)
+        : mixin(data, value_type, shape)
     {
     }
 
@@ -145,11 +142,11 @@ class basic_raw_tensor_ref
             data<R>(), this->shape_.template as_ranked<r>());
     }
 
-    void *data() const { return data_; }
+    void *data() const { return this->data_.get(); }
 
     void *data_end() const
     {
-        return static_cast<char *>(data_) + this->data_size();
+        return static_cast<char *>(this->data_.get()) + this->data_size();
     }
 };
 
@@ -163,8 +160,6 @@ class basic_raw_tensor_view
     using S = basic_raw_shape<Dim>;
     using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, readonly>;
 
-    const void *const data_;
-
     template <typename R>
     const R *data() const
     {
@@ -172,7 +167,7 @@ class basic_raw_tensor_view
         if (DataEncoder::template value<R>() != this->value_type_) {
             throw std::invalid_argument("invalid scalar type");
         }
-        return reinterpret_cast<const R *>(data_);
+        return reinterpret_cast<const R *>(this->data_.get());
     }
 
   public:
@@ -186,25 +181,25 @@ class basic_raw_tensor_view
     explicit basic_raw_tensor_view(const void *data,
                                    const value_type_t value_type,
                                    const S &shape)
-        : mixin(value_type, shape), data_(data)
+        : mixin(data, value_type, shape)
     {
     }
 
     explicit basic_raw_tensor_view(
         const basic_raw_tensor_own<DataEncoder, Dim> &t)
-        : mixin(t.value_type(), t.shape()), data_(t.data())
+        : mixin(t.data(), t.value_type(), t.shape())
     {
     }
 
     explicit basic_raw_tensor_view(
         const basic_raw_tensor_ref<DataEncoder, Dim> &t)
-        : mixin(t.value_type(), t.shape()), data_(t.data())
+        : mixin(t.data(), t.value_type(), t.shape())
     {
     }
 
     template <typename R, rank_t r>
     explicit basic_raw_tensor_view(const basic_host_tensor_view<R, r, Dim> &t)
-        : mixin(DataEncoder::template value<R>(), S(t.shape())), data_(t.data())
+        : mixin(t.data(), DataEncoder::template value<R>(), S(t.shape()))
     {
     }
 
@@ -215,11 +210,11 @@ class basic_raw_tensor_view
             data<R>(), this->shape_.template as_ranked<r>());
     }
 
-    const void *data() const { return data_; }
+    const void *data() const { return this->data_.get(); }
 
     const void *data_end() const
     {
-        return static_cast<const char *>(data_) + this->data_size();
+        return static_cast<const char *>(this->data_.get()) + this->data_size();
     }
 };
 }  // namespace internal
