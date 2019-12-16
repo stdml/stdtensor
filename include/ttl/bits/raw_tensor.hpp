@@ -1,129 +1,117 @@
 #pragma once
-#include <cassert>
-#include <cstdint>
-#include <memory>
-#include <stdexcept>
-
 #include <ttl/bits/flat_tensor.hpp>
 #include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/raw_tensor_mixin.hpp>
-#include <ttl/bits/std_host_tensor.hpp>
+#include <ttl/bits/std_tensor_fwd.hpp>
 
 namespace ttl
 {
 namespace internal
 {
-template <typename DataEncoder, typename Dim = uint32_t>
-class basic_raw_tensor_own;
-
-template <typename DataEncoder, typename Dim = uint32_t>
-class basic_raw_tensor_ref;
-
-template <typename DataEncoder, typename Dim = uint32_t>
-class basic_raw_tensor_view;
-
-template <typename DataEncoder, typename Dim>
-class basic_raw_tensor_own
-    : public raw_tensor_mixin<DataEncoder, basic_raw_shape<Dim>, host_memory,
-                              owner>
+template <typename Encoder, typename Dim, typename D>
+class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, owner>
+    : public raw_tensor_mixin<Encoder, basic_raw_shape<Dim>, D, owner>
 {
-    using value_type_t = typename DataEncoder::value_type;
+    using value_type_t = typename Encoder::value_type;
     using S = basic_raw_shape<Dim>;
-    using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, owner>;
-    using allocator = basic_allocator<char, host_memory>;
+    using mixin = raw_tensor_mixin<Encoder, S, D, owner>;
+    using allocator = basic_allocator<char, D>;
 
   public:
     template <typename... Dims>
-    explicit basic_raw_tensor_own(const value_type_t value_type, Dims... d)
-        : basic_raw_tensor_own(value_type, S(d...))
+    explicit basic_raw_tensor(const value_type_t value_type, Dims... d)
+        : basic_raw_tensor(value_type, S(d...))
     {
     }
 
-    explicit basic_raw_tensor_own(const value_type_t value_type, const S &shape)
-        : mixin(allocator()(shape.size() * DataEncoder::size(value_type)),
+    explicit basic_raw_tensor(const value_type_t value_type, const S &shape)
+        : mixin(allocator()(shape.size() * Encoder::size(value_type)),
                 value_type, shape)
     {
     }
 };
 
-template <typename DataEncoder, typename Dim>
-class basic_raw_tensor_ref
-    : public raw_tensor_mixin<DataEncoder, basic_raw_shape<Dim>, host_memory,
-                              readwrite>
+template <typename Encoder, typename Dim, typename D>
+class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, readwrite>
+    : public raw_tensor_mixin<Encoder, basic_raw_shape<Dim>, D, readwrite>
 {
-    using value_type_t = typename DataEncoder::value_type;
+    using value_type_t = typename Encoder::value_type;
     using S = basic_raw_shape<Dim>;
-    using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, readwrite>;
+    using mixin = raw_tensor_mixin<Encoder, S, D, readwrite>;
 
   public:
     template <typename... Dims>
-    explicit basic_raw_tensor_ref(void *data, const value_type_t value_type,
-                                  Dims... d)
-        : basic_raw_tensor_ref(data, value_type, S(d...))
+    explicit basic_raw_tensor(void *data, const value_type_t value_type,
+                              Dims... d)
+        : basic_raw_tensor(data, value_type, S(d...))
     {
     }
 
-    explicit basic_raw_tensor_ref(void *data, const value_type_t value_type,
-                                  const S &shape)
+    explicit basic_raw_tensor(void *data, const value_type_t value_type,
+                              const S &shape)
         : mixin(data, value_type, shape)
     {
     }
 
-    explicit basic_raw_tensor_ref(
-        const basic_raw_tensor_own<DataEncoder, Dim> &t)
-        : basic_raw_tensor_ref(t.data(), t.value_type(), t.shape())
+    explicit basic_raw_tensor(const basic_raw_tensor<Encoder, S, D, owner> &t)
+        : basic_raw_tensor(t.data(), t.value_type(), t.shape())
     {
     }
 
-    template <typename R, rank_t r>
-    explicit basic_raw_tensor_ref(const basic_host_tensor_ref<R, r, Dim> &t)
-        : basic_raw_tensor_ref(t.data(), DataEncoder::template value<R>(),
-                               S(t.shape()))
+    template <typename R, typename S1>
+    explicit basic_raw_tensor(const basic_tensor<R, S1, D, readwrite> &t)
+        : basic_raw_tensor(t.data(), Encoder::template value<R>(), S(t.shape()))
     {
     }
 };
 
-template <typename DataEncoder, typename Dim>
-class basic_raw_tensor_view
-    : public raw_tensor_mixin<DataEncoder, basic_raw_shape<Dim>, host_memory,
-                              readonly>
+template <typename Encoder, typename Dim, typename D>
+class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, readonly>
+    : public raw_tensor_mixin<Encoder, basic_raw_shape<Dim>, D, readonly>
 {
-    using value_type_t = typename DataEncoder::value_type;
+    using value_type_t = typename Encoder::value_type;
     using S = basic_raw_shape<Dim>;
-    using mixin = raw_tensor_mixin<DataEncoder, S, host_memory, readonly>;
+    using mixin = raw_tensor_mixin<Encoder, S, D, readonly>;
 
   public:
-    template <typename... D>
-    explicit basic_raw_tensor_view(const void *data,
-                                   const value_type_t value_type, D... d)
-        : basic_raw_tensor_view(data, value_type, S(d...))
+    template <typename... Dims>
+    explicit basic_raw_tensor(const void *data, const value_type_t value_type,
+                              Dims... d)
+        : basic_raw_tensor(data, value_type, S(d...))
     {
     }
 
-    explicit basic_raw_tensor_view(const void *data,
-                                   const value_type_t value_type,
-                                   const S &shape)
+    explicit basic_raw_tensor(const void *data, const value_type_t value_type,
+                              const S &shape)
         : mixin(data, value_type, shape)
     {
     }
 
-    explicit basic_raw_tensor_view(
-        const basic_raw_tensor_own<DataEncoder, Dim> &t)
+    explicit basic_raw_tensor(const basic_raw_tensor<Encoder, S, D, owner> &t)
         : mixin(t.data(), t.value_type(), t.shape())
     {
     }
 
-    explicit basic_raw_tensor_view(
-        const basic_raw_tensor_ref<DataEncoder, Dim> &t)
+    explicit basic_raw_tensor(
+        const basic_raw_tensor<Encoder, S, D, readwrite> &t)
         : mixin(t.data(), t.value_type(), t.shape())
     {
     }
 
-    template <typename R, rank_t r>
-    explicit basic_raw_tensor_view(const basic_host_tensor_view<R, r, Dim> &t)
-        : mixin(t.data(), DataEncoder::template value<R>(), S(t.shape()))
+    template <typename R, typename S1>
+    explicit basic_raw_tensor(const basic_tensor<R, S1, D, readonly> &t)
+        : mixin(t.data(), Encoder::template value<R>(), S(t.shape()))
     {
     }
 };
+
+template <typename E, typename D>
+using raw_tensor = basic_raw_tensor<E, basic_raw_shape<>, D, owner>;
+
+template <typename E, typename D>
+using raw_tensor_ref = basic_raw_tensor<E, basic_raw_shape<>, D, readwrite>;
+
+template <typename E, typename D>
+using raw_tensor_view = basic_raw_tensor<E, basic_raw_shape<>, D, readonly>;
 }  // namespace internal
 }  // namespace ttl

@@ -24,5 +24,8 @@ class basic_tensor_mixin;
 
 template <typename R, typename S, typename D, typename A>
 class basic_tensor;
+
+template <typename Encoder, typename S, typename D, typename A>
+class basic_raw_tensor;
 }  // namespace internal
 }  // namespace ttl
