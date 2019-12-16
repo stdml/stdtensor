@@ -1,9 +1,9 @@
 // # -*- mode: c++ -*-
 #pragma once
 #include <experimental/type_encoder>
+#include <ttl/bits/idx_encoding.hpp>
 #include <ttl/bits/raw_tensor.hpp>
 #include <ttl/bits/std_host_allocator.hpp>
-#include <ttl/bits/std_scalar_type_encoding.hpp>
 
 namespace ttl
 {
