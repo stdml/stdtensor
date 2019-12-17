@@ -8,22 +8,22 @@ namespace ttl
 namespace operators
 {
 template <typename R, typename S, typename D>
-internal::basic_tensor<R, S, D, internal::readwrite>
-operator&(const internal::basic_tensor<R, S, D, internal::owner> &t)
+internal::basic_tensor<R, S, D, internal::readwrite>  //
+operator!(const internal::basic_tensor<R, S, D, internal::owner> &t)
 {
     return internal::ref(t);
 }
 
 template <typename R, typename S, typename D>
-internal::basic_tensor<R, S, D, internal::readonly>  //
-operator!(const internal::basic_tensor<R, S, D, internal::owner> &t)
+internal::basic_tensor<R, S, D, internal::readonly>
+operator&(const internal::basic_tensor<R, S, D, internal::owner> &t)
 {
     return internal::view(t);
 }
 
 template <typename R, typename S, typename D>
-internal::basic_tensor<R, S, D, internal::readonly>  //
-operator!(const internal::basic_tensor<R, S, D, internal::readwrite> &t)
+internal::basic_tensor<R, S, D, internal::readonly>
+operator&(const internal::basic_tensor<R, S, D, internal::readwrite> &t)
 {
     return internal::view(t);
 }
