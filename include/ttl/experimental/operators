@@ -1,0 +1,34 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/std_tensor_fwd.hpp>
+#include <ttl/bits/std_tensor_traits.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+namespace operators
+{
+template <typename R, typename S, typename D>
+internal::basic_tensor<R, S, D, internal::readwrite>  //
+operator!(const internal::basic_tensor<R, S, D, internal::owner> &t)
+{
+    return internal::ref(t);
+}
+
+template <typename R, typename S, typename D>
+internal::basic_tensor<R, S, D, internal::readonly>
+operator&(const internal::basic_tensor<R, S, D, internal::owner> &t)
+{
+    return internal::view(t);
+}
+
+template <typename R, typename S, typename D>
+internal::basic_tensor<R, S, D, internal::readonly>
+operator&(const internal::basic_tensor<R, S, D, internal::readwrite> &t)
+{
+    return internal::view(t);
+}
+}  // namespace operators
+}  // namespace experimental
+}  // namespace ttl
