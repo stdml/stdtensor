@@ -1,37 +1,36 @@
 // # -*- mode: c++ -*-
 #pragma once
 #include <experimental/type_encoder>
+#include <ttl/bits/idx_encoding.hpp>
 #include <ttl/bits/raw_tensor.hpp>
-#include <ttl/bits/std_scalar_type_encoding.hpp>
+#include <ttl/bits/std_host_allocator.hpp>
 
 namespace ttl
 {
 namespace experimental
 {
-using raw_tensor = internal::basic_raw_tensor_own<
-    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+using idx_encoder =
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>;
 
-using raw_tensor_ref = internal::basic_raw_tensor_ref<
-    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+using raw_tensor = internal::raw_tensor<idx_encoder, internal::host_memory>;
 
-using raw_tensor_view = internal::basic_raw_tensor_view<
-    std::experimental::basic_type_encoder<internal::idx_format::encoding>>;
+using raw_tensor_ref =
+    internal::raw_tensor_ref<idx_encoder, internal::host_memory>;
 
-template <typename T>
-raw_tensor_ref raw_ref(const T &t)
+using raw_tensor_view =
+    internal::raw_tensor_view<idx_encoder, internal::host_memory>;
+
+template <typename R, typename S, typename D, typename A>
+raw_tensor_ref raw_ref(const internal::basic_tensor<R, S, D, A> &t)
 {
-    using ref_t =
-        internal::basic_host_tensor_ref<typename T::value_type, T::rank,
-                                        typename T::shape_type::dimension_type>;
+    using ref_t = internal::basic_tensor<R, S, D, internal::readwrite>;
     return raw_tensor_ref(ref_t(t));
 }
 
-template <typename T>
-raw_tensor_view raw_view(const T &t)
+template <typename R, typename S, typename D, typename A>
+raw_tensor_view raw_view(const internal::basic_tensor<R, S, D, A> &t)
 {
-    using view_t = internal::basic_host_tensor_view<
-        typename T::value_type, T::rank,
-        typename T::shape_type::dimension_type>;
+    using view_t = internal::basic_tensor<R, S, D, internal::readonly>;
     return raw_tensor_view(view_t(t));
 }
 }  // namespace experimental
