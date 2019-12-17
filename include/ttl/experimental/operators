@@ -5,6 +5,8 @@
 
 namespace ttl
 {
+namespace experimental
+{
 namespace operators
 {
 template <typename R, typename S, typename D>
@@ -28,4 +30,5 @@ operator&(const internal::basic_tensor<R, S, D, internal::readwrite> &t)
     return internal::view(t);
 }
 }  // namespace operators
+}  // namespace experimental
 }  // namespace ttl

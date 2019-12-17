@@ -1,12 +1,12 @@
 #include "testing.hpp"
 
-#include <ttl/operators>
+#include <ttl/experimental/operators>
 #include <ttl/tensor>
 
 TEST(operators_test, test_1)
 {
     ttl::tensor<int, 1> x(1);
-    using namespace ttl::operators;
+    using namespace ttl::experimental::operators;
     auto r = !x;
     auto v1 = &x;
     auto v2 = &r;
