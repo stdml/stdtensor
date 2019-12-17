@@ -2,7 +2,7 @@
 #include <experimental/iterator>
 #include <sstream>
 
-#include <ttl/bits/std_raw_shape.hpp>
+#include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/std_shape.hpp>
 
 namespace ttl

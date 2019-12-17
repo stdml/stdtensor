@@ -1,6 +1,6 @@
 #include "testing.hpp"
 #include <experimental/type_encoder>
-#include <ttl/bits/std_scalar_type_encoding.hpp>
+#include <ttl/bits/idx_encoding.hpp>
 
 TEST(type_encoder_test, test1)
 {

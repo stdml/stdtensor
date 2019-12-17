@@ -1,2 +1,3 @@
+// # -*- mode: c++ -*-
 #pragma once
 #include <experimental/bits/type_encoder.hpp>

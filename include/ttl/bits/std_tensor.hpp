@@ -14,10 +14,9 @@ class basic_tensor<R, basic_shape<0, Dim>, D, owner>
     : public basic_scalar_mixin<R, basic_shape<0, Dim>, D, owner>
 {
     using mixin = basic_scalar_mixin<R, basic_shape<0, Dim>, D, owner>;
-    using allocator = basic_allocator<R, D>;
 
   public:
-    basic_tensor() : mixin(allocator()(1)) {}
+    basic_tensor() : mixin(typename mixin::allocator()(1)) {}
 
     basic_tensor(const basic_shape<0, Dim> &) : basic_tensor() {}
 
@@ -90,7 +89,6 @@ template <typename R, typename S, typename D>
 class basic_tensor<R, S, D, owner> : public basic_tensor_mixin<R, S, D, owner>
 {
     using mixin = basic_tensor_mixin<R, S, D, owner>;
-    using allocator = basic_allocator<R, D>;
 
   public:
     template <typename... Dims>
@@ -99,7 +97,7 @@ class basic_tensor<R, S, D, owner> : public basic_tensor_mixin<R, S, D, owner>
     }
 
     constexpr explicit basic_tensor(const S &shape)
-        : mixin(allocator()(shape.size()), shape)
+        : mixin(typename mixin::allocator()(shape.size()), shape)
     {
     }
 };

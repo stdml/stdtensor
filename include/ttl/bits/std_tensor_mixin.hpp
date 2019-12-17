@@ -18,6 +18,8 @@ class basic_scalar_mixin
     data_t data_;
 
   protected:
+    using allocator = basic_allocator<R, D>;
+
     basic_scalar_mixin(data_ptr data) : data_(data)
     {
         static_assert(rank == 0, "");
