@@ -1,0 +1,9 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/std_device.hpp>
+
+namespace ttl
+{
+using internal::cuda_memory;
+using internal::host_memory;
+}  // namespace ttl
