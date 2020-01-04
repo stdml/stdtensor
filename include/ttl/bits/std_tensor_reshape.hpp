@@ -9,7 +9,7 @@ namespace internal
 {
 template <typename R, typename S, typename D, typename A>
 struct flattener {
-    using S1 = typename S::template subshape_t<S::rank - 1>;
+    using S1 = basic_shape<1, typename S::dimension_type>;
     using vector =
         basic_tensor<R, S1, D, typename basic_tensor_traits<R, A, D>::Access>;
 
