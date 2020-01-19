@@ -2,6 +2,7 @@
 set -e
 
 PREFIX=$(pwd)/local
+CUDA_HOME=/usr/local/cuda
 USE_OPENCV=0
 BUILD_TESTS=0
 BUILD_BENCHMARKS=0
@@ -10,10 +11,6 @@ BUILD_GTEST=0
 BUILD_GBENCH=0
 HAVE_CUDA=0
 VERBOSE=0
-
-if [ $(find /usr/include/cuda_runtime.h | wc -l) -gt 0 ]; then
-    HAVE_CUDA=1
-fi
 
 parse_args() {
     for i in "$@"; do
@@ -48,6 +45,10 @@ parse_args() {
         --build-gbench)
             BUILD_GBENCH=1
             ;;
+        --with-cuda=*)
+            CUDA_HOME="${i#*=}"
+            echo "configure --with-cuda=$CUDA_HOME"
+            ;;
         --verbose)
             VERBOSE=1
             ;;
@@ -57,6 +58,10 @@ parse_args() {
             ;;
         esac
     done
+
+    if [ -f $CUDA_HOME/include/cuda_runtime.h ]; then
+        HAVE_CUDA=1
+    fi
 }
 
 CMAKE_FLAGS=
@@ -96,7 +101,11 @@ add_cmake_flags() {
     add_cmake_flag BUILD_TESTS ${BUILD_TESTS}
     add_cmake_flag BUILD_BENCHMARKS ${BUILD_BENCHMARKS}
     add_cmake_flag BUILD_EXAMPLES ${BUILD_EXAMPLES}
-    add_cmake_flag HAVE_CUDA ${HAVE_CUDA}
+
+    if [ ${HAVE_CUDA} -eq 1 ]; then
+        add_cmake_flag HAVE_CUDA ${HAVE_CUDA}
+        add_cmake_flag CUDA_HOME $CUDA_HOME
+    fi
 
     if [ ${BUILD_EXAMPLES} -eq 1 ]; then
         add_cmake_flag USE_OPENCV ${USE_OPENCV}

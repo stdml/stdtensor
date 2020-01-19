@@ -29,4 +29,7 @@ TEST(copy_test, test_copy)
     test_copy(10);
     test_copy(100);
     test_copy(1000);
+    test_copy(1 << 20);
+    test_copy(1 << 20);
+    test_copy(1 << 20);
 }
