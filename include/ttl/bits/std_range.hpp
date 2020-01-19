@@ -45,6 +45,5 @@ basic_integer_range<N> range(N m, N n)
 {
     return basic_integer_range<N>(m, n);
 }
-
 }  // namespace internal
 }  // namespace ttl
