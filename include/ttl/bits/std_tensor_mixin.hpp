@@ -15,6 +15,8 @@ class basic_scalar_mixin
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
 
+    using Dim = typename S::dimension_type;
+
     data_t data_;
 
   protected:
@@ -32,6 +34,8 @@ class basic_scalar_mixin
     static constexpr auto rank = S::rank;  // == 0
 
     basic_scalar_mixin(data_ptr data, const S &) : data_(data) {}
+
+    constexpr Dim size() const { return 1; }
 
     constexpr size_t data_size() const { return sizeof(R); }
 
@@ -120,6 +124,8 @@ class basic_tensor_mixin
     using slice_type = basic_tensor<R, S, D, typename trait::Access>;
 
     static constexpr auto rank = S::rank;
+
+    Dim size() const { return shape_.size(); }
 
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
