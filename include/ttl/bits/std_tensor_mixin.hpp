@@ -40,16 +40,6 @@ class basic_scalar_mixin
     data_ptr data_end() const { return data_.get() + 1; }
 
     S shape() const { return S(); }
-
-    void from_host(const void *data) const
-    {
-        basic_copier<D, host_memory>()(data_.get(), data, data_size());
-    }
-
-    void to_host(void *data) const
-    {
-        basic_copier<host_memory, D>()(data, data_.get(), data_size());
-    }
 };
 
 template <typename R, typename S, typename D, typename A>
@@ -157,16 +147,6 @@ class basic_tensor_mixin
         const auto sub_shape = shape_.subshape();
         return slice_type(data_.get() + i * sub_shape.size(),
                           batch(j - i, sub_shape));
-    }
-
-    void from_host(const void *data) const
-    {
-        basic_copier<D, host_memory>()(data_.get(), data, data_size());
-    }
-
-    void to_host(void *data) const
-    {
-        basic_copier<host_memory, D>()(data, data_.get(), data_size());
     }
 };
 }  // namespace internal

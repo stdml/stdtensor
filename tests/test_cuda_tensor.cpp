@@ -1,6 +1,7 @@
 #include "testing.hpp"
 
 #include <ttl/cuda_tensor>
+#include <ttl/experimental/copy>
 #include <ttl/range>
 #include <ttl/tensor>
 
@@ -23,11 +24,10 @@ TEST(cuda_tensor_test, test0)
 {
     using R = float;
     cuda_tensor<R, 0> m0;
-
     tensor<R, 0> x;
 
-    m0.from_host(x.data());
-    m0.to_host(x.data());
+    ttl::copy(ttl::ref(m0), ttl::view(x));
+    ttl::copy(ttl::ref(x), ttl::view(m0));
 }
 
 TEST(cuda_tensor_test, test1)
@@ -42,8 +42,8 @@ TEST(cuda_tensor_test, test2)
     cuda_tensor<R, 2> m1(10, 100);
     tensor<R, 2> m2(10, 100);
 
-    m1.from_host(m2.data());
-    m1.to_host(m2.data());
+    ttl::copy(ttl::ref(m1), ttl::view(m2));
+    ttl::copy(ttl::ref(m2), ttl::view(m1));
 
     m1.slice(1, 2);
     auto r = ref(m1);
@@ -58,14 +58,16 @@ TEST(cuda_tensor_test, test_3)
     cuda_tensor<R, 2> m1(ttl::make_shape(10, 100));
 }
 
-template <typename R, uint8_t r> void test_auto_ref()
+template <typename R, uint8_t r>
+void test_auto_ref()
 {
     static_assert(
         std::is_convertible<cuda_tensor<R, r>, cuda_tensor_ref<R, r>>::value,
         "can't convert to ref");
 }
 
-template <typename R, uint8_t r> void test_auto_view()
+template <typename R, uint8_t r>
+void test_auto_view()
 {
     static_assert(
         std::is_convertible<cuda_tensor<R, r>, cuda_tensor_view<R, r>>::value,
@@ -87,15 +89,17 @@ TEST(cuda_tensor_test, test_convert)
     test_auto_view<int, 2>();
 }
 
-template <typename R, uint8_t r> void test_copy(const ttl::shape<r> &shape)
+template <typename R, uint8_t r>
+void test_copy(const ttl::shape<r> &shape)
 {
     tensor<R, r> x(shape);
     cuda_tensor<R, r> y(shape);
     tensor<R, r> z(shape);
 
     std::iota(x.data(), x.data_end(), 1);
-    y.from_host(x.data());
-    y.to_host(z.data());
+
+    ttl::copy(ttl::ref(y), ttl::view(x));
+    ttl::copy(ttl::ref(z), ttl::view(y));
 
     for (auto i : ttl::range(shape.size())) {
         ASSERT_EQ(x.data()[i], z.data()[i]);
@@ -103,12 +107,12 @@ template <typename R, uint8_t r> void test_copy(const ttl::shape<r> &shape)
 
     {
         cuda_tensor_ref<R, r> ry = ref(y);
-        ry.from_host(x.data());
-        ry.to_host(x.data());
+        ttl::copy(ry, ttl::view(x));
+        ttl::copy(ttl::ref(z), ttl::view(ry));
     }
     {
         cuda_tensor_view<R, r> vy = view(y);
-        vy.to_host(x.data());
+        ttl::copy(ttl::ref(x), vy);
     }
 }
 
