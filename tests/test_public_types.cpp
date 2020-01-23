@@ -45,6 +45,16 @@ ttl::shape<r> unit_shape()
     return ttl::shape<r>(dims);
 }
 
+template <typename T>
+void test_public_apis(const T &t)
+{
+    const auto size = t.size();
+    ASSERT_EQ(size, static_cast<decltype(size)>(1));
+
+    const auto dims = t.dims();
+    static_assert(dims.size() == T::rank, "");
+}
+
 template <ttl::rank_t r>
 struct test_ranked_type {
     template <typename R>
@@ -65,6 +75,10 @@ struct test_ranked_type {
         Tensor t(unit_shape<r>());
         TensorRef tr(t);
         TensorView tv(t);
+
+        test_public_apis(t);
+        test_public_apis(tr);
+        test_public_apis(tv);
     }
 };
 

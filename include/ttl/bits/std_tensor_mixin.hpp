@@ -37,6 +37,8 @@ class basic_scalar_mixin
 
     constexpr Dim size() const { return 1; }
 
+    constexpr auto dims() const { return S().dims(); }
+
     constexpr size_t data_size() const { return sizeof(R); }
 
     data_ptr data() const { return data_.get(); }
@@ -126,6 +128,8 @@ class basic_tensor_mixin
     static constexpr auto rank = S::rank;
 
     Dim size() const { return shape_.size(); }
+
+    const auto &dims() const { return shape_.dims(); }
 
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
