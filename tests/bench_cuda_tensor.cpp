@@ -1,16 +1,18 @@
 #include "benchmark.hpp"
 
 #include <ttl/cuda_tensor>
+#include <ttl/experimental/copy>
 
-template <typename R, int n> struct bench_cuda_tensor {
+template <typename R, int n>
+struct bench_cuda_tensor {
     static void run(benchmark::State &state)
     {
         ttl::cuda_tensor<R, 1> m1(n);
         ttl::tensor<R, 1> m2(n);
 
         for (auto _ : state) {
-            m1.from_host(m2.data());
-            m1.to_host(m2.data());
+            ttl::copy(ttl::ref(m1), ttl::view(m2));
+            ttl::copy(ttl::ref(m2), ttl::view(m1));
         }
     }
 };
