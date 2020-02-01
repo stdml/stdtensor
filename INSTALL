@@ -1,7 +1,9 @@
 #!/bin/sh
 set -e
 
-PREFIX=$HOME/local
+if [ -z $PREFIX ]; then
+    PREFIX=$HOME/local
+fi
 
 ./configure --prefix=$PREFIX
 
