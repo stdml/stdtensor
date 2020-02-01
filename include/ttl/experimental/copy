@@ -1,0 +1,8 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/std_copy.hpp>
+
+namespace ttl
+{
+using internal::experimental::copy;
+}  // namespace ttl

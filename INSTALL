@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ -z $PREFIX ]; then
+    PREFIX=$HOME/local
+fi
+
+./configure --prefix=$PREFIX
+
+make install

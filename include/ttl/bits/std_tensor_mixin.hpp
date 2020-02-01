@@ -15,6 +15,8 @@ class basic_scalar_mixin
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
 
+    using Dim = typename S::dimension_type;
+
     data_t data_;
 
   protected:
@@ -33,6 +35,10 @@ class basic_scalar_mixin
 
     basic_scalar_mixin(data_ptr data, const S &) : data_(data) {}
 
+    constexpr Dim size() const { return 1; }
+
+    constexpr auto dims() const { return S().dims(); }
+
     constexpr size_t data_size() const { return sizeof(R); }
 
     data_ptr data() const { return data_.get(); }
@@ -40,16 +46,6 @@ class basic_scalar_mixin
     data_ptr data_end() const { return data_.get() + 1; }
 
     S shape() const { return S(); }
-
-    void from_host(const void *data) const
-    {
-        basic_copier<D, host_memory>()(data_.get(), data, data_size());
-    }
-
-    void to_host(void *data) const
-    {
-        basic_copier<host_memory, D>()(data, data_.get(), data_size());
-    }
 };
 
 template <typename R, typename S, typename D, typename A>
@@ -121,6 +117,10 @@ class basic_tensor_mixin
 
     static constexpr auto rank = S::rank;
 
+    Dim size() const { return shape_.size(); }
+
+    const auto &dims() const { return shape_.dims(); }
+
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
     const S &shape() const { return shape_; }
@@ -157,16 +157,6 @@ class basic_tensor_mixin
         const auto sub_shape = shape_.subshape();
         return slice_type(data_.get() + i * sub_shape.size(),
                           batch(j - i, sub_shape));
-    }
-
-    void from_host(const void *data) const
-    {
-        basic_copier<D, host_memory>()(data_.get(), data, data_size());
-    }
-
-    void to_host(void *data) const
-    {
-        basic_copier<host_memory, D>()(data, data_.get(), data_size());
     }
 };
 }  // namespace internal
