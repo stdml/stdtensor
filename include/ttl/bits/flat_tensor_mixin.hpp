@@ -44,6 +44,7 @@ class flat_tensor_mixin
   public:
     using value_type = R;
     using shape_type = S;
+    using device_type = D;
 
     size_t data_size() const { return shape_.size() * sizeof(R); }
 

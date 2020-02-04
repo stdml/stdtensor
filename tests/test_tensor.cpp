@@ -40,20 +40,24 @@ TEST(tensor_test, test1)
     ASSERT_EQ(sum, n * (n + 1) / 2);
 }
 
-template <bool write, typename T> struct test_assign_ {
+template <bool write, typename T>
+struct test_assign_ {
     void operator()(T &x, int v) { x = v; }
 };
 
-template <typename T> struct test_assign_<false, T> {
+template <typename T>
+struct test_assign_<false, T> {
     void operator()(T &x, int v) {}
 };
 
-template <bool write, typename T> void test_assign(T &&x, int v)
+template <bool write, typename T>
+void test_assign(T &&x, int v)
 {
     test_assign_<write, T>()(x, v);
 }
 
-template <typename T, bool write = true> struct test_5d_array {
+template <typename T, bool write = true>
+struct test_5d_array {
     void operator()(const T &t)
     {
         using R = typename T::value_type;
@@ -118,9 +122,13 @@ TEST(tensor_test, test3)
     test_5d_array<decltype(v), false>()(v);
 }
 
-template <typename R, uint8_t r> void ref_func(const tensor_ref<R, r> &x) {}
+template <typename R, uint8_t r>
+void ref_func(const tensor_ref<R, r> &x)
+{
+}
 
-template <typename R, uint8_t r> void test_auto_ref()
+template <typename R, uint8_t r>
+void test_auto_ref()
 {
     static_assert(std::is_convertible<tensor<R, r>, tensor_ref<R, r>>::value,
                   "can't convert to ref");
@@ -142,9 +150,13 @@ TEST(tensor_test, auto_ref)
     // f(t);  // NOT possible
 }
 
-template <typename R, uint8_t r> void view_func(const tensor_view<R, r> &x) {}
+template <typename R, uint8_t r>
+void view_func(const tensor_view<R, r> &x)
+{
+}
 
-template <typename R, uint8_t r> void test_auto_view()
+template <typename R, uint8_t r>
+void test_auto_view()
 {
     static_assert(std::is_convertible<tensor<R, r>, tensor_view<R, r>>::value,
                   "can't convert to view");
@@ -177,7 +189,8 @@ auto create_tensor_func()
 
 TEST(tensor_test, return_tensor) { auto t = create_tensor_func(); }
 
-template <typename R> R read_tensor_func(const tensor<R, 2> &t, int i, int j)
+template <typename R>
+R read_tensor_func(const tensor<R, 2> &t, int i, int j)
 {
     const R x = t.at(i, j);
     return x;
@@ -256,6 +269,8 @@ void test_static_properties(const ttl::internal::basic_tensor<R, S, D, A> &x)
     using T = ttl::internal::basic_tensor<R, S, D, A>;
     static_assert(std::is_same<typename T::value_type, R>::value,
                   "invalid value_type");
+    static_assert(std::is_same<typename T::device_type, D>::value,
+                  "invalid device_type");
     static_assert(T::rank == r, "invalid rank");
     auto x_shape = x.shape();
     static_assert(decltype(x_shape)::rank == r, "invalid rank of shape");
@@ -316,7 +331,8 @@ TEST(tensor_test, test_const_properties)
         "");
 }
 
-template <typename T> void test_slice_57_52_53_slice_19_38(const T &t)
+template <typename T>
+void test_slice_57_52_53_slice_19_38(const T &t)
 {
     const auto t1 = t.slice(0, 19);
     const auto t2 = t.slice(19, 57);
@@ -349,7 +365,8 @@ TEST(tensor_test, test_slice)
     }
 }
 
-template <typename T> void test_data_end(const T &t)
+template <typename T>
+void test_data_end(const T &t)
 {
     ASSERT_EQ(t.data_end(), t.data() + t.shape().size());
     {
@@ -359,7 +376,8 @@ template <typename T> void test_data_end(const T &t)
     }
 }
 
-template <typename R> void test_data_end_all()
+template <typename R>
+void test_data_end_all()
 {
     // using ttl::experimental::raw_ref;
     // using ttl::experimental::raw_view;
