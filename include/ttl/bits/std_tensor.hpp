@@ -41,6 +41,8 @@ class basic_tensor<R, basic_shape<0, Dim>, D, readwrite>
     using mixin::mixin;
 
   public:
+    basic_tensor(R *data) : mixin(data) {}
+
     basic_tensor(const basic_tensor<R, basic_shape<0, Dim>, D, owner> &t)
         : mixin(t.data())
     {
@@ -67,6 +69,8 @@ class basic_tensor<R, basic_shape<0, Dim>, D, readonly>
     using mixin::mixin;
 
   public:
+    basic_tensor(const R *data) : mixin(data) {}
+
     basic_tensor(const basic_tensor<R, basic_shape<0, Dim>, D, owner> &t)
         : mixin(t.data())
     {
