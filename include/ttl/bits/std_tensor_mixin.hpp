@@ -30,6 +30,7 @@ class basic_scalar_mixin
   public:
     using value_type = R;
     using shape_type = S;
+    using device_type = D;
 
     static constexpr auto rank = S::rank;  // == 0
 
@@ -112,6 +113,7 @@ class basic_tensor_mixin
   public:
     using value_type = R;
     using shape_type = S;
+    using device_type = D;
 
     using slice_type = basic_tensor<R, S, D, typename trait::Access>;
 
