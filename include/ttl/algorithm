@@ -6,6 +6,7 @@ namespace ttl
 {
 using ttl::internal::argmax;
 using ttl::internal::cast;
+using ttl::internal::chebyshev_distenace;
 using ttl::internal::fill;
 using ttl::internal::hamming_distance;
 using ttl::internal::max;
