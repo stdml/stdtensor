@@ -1,8 +1,10 @@
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/gtest.cmake)
 
-FUNCTION(ADD_GTEST target)
+FUNCTION(ADD_UNIT_TEST target)
     ADD_EXECUTABLE(${target} ${ARGN} tests/main.cpp)
     TARGET_USE_GTEST(${target})
+    TARGET_INCLUDE_DIRECTORIES(${target}
+                               PRIVATE ${CMAKE_SOURCE_DIR}/tests/include)
     TARGET_LINK_LIBRARIES(${target} stdtensor)
     IF(HAVE_CUDA)
         TARGET_LINK_LIBRARIES(${target} cudart)
@@ -13,9 +15,6 @@ ENDFUNCTION()
 FILE(GLOB tests tests/test_*.cpp)
 FOREACH(t ${tests})
     GET_FILENAME_COMPONENT(name ${t} NAME_WE)
-    STRING(REPLACE "_"
-                   "-"
-                   name
-                   ${name})
-    ADD_GTEST(${name} ${t})
+    STRING(REPLACE "_" "-" name ${name})
+    ADD_UNIT_TEST(${name} ${t})
 ENDFOREACH()
