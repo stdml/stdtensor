@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 #include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/std_access_traits.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 
@@ -84,6 +85,14 @@ class raw_tensor_mixin
         }
         using ptr_type = typename basic_tensor_traits<R, A, D>::ptr_type;
         return reinterpret_cast<ptr_type>(data_.get());
+    }
+
+    template <typename R>
+    auto typed() const
+    {
+        using Access = typename basic_access_traits<A>::type;
+        using T = basic_tensor<R, basic_raw_shape<Dim>, D, Access>;
+        return T(data<R>(), shape_);
     }
 
     template <typename R, rank_t r, typename A1 = A>

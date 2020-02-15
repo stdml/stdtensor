@@ -1,15 +1,12 @@
 #pragma once
 #include <memory>
+#include <ttl/bits/std_access_traits.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 
 namespace ttl
 {
 namespace internal
 {
-struct owner;
-struct readwrite;
-struct readonly;
-
 template <typename R, typename D>
 using own_ptr = std::unique_ptr<R[], basic_deallocator<R, D>>;
 
@@ -45,7 +42,7 @@ struct basic_tensor_traits<R, owner, D> {
     using ref_type = R &;
 
     using Data = own_ptr<R, D>;
-    using Access = readwrite;
+    using Access = readwrite;  // FIXME: use basic_access_traits
 };
 
 template <typename R, typename D>
