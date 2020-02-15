@@ -47,6 +47,12 @@ class basic_scalar_mixin
     data_ptr data_end() const { return data_.get() + 1; }
 
     S shape() const { return S(); }
+
+    data_ref at() const
+    {  // FIXME: support other devices
+        static_assert(std::is_same<D, host_memory>::value, "");
+        return data_.get()[0];
+    }
 };
 
 template <typename R, typename S, typename D, typename A>
