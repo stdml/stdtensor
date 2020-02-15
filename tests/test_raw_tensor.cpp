@@ -143,7 +143,7 @@ TEST(raw_tensor_test, test_convert_to_flat)
                          ttl::experimental::flat_tensor_ref<float>>::value,
             "");
         ttl::experimental::flat_tensor_ref<float> ft = rt.typed<float>();
-        ASSERT_EQ(ft.shape().size(), static_cast<raw_shape::dimension_type>(6));
+        ASSERT_EQ(ft.size(), static_cast<raw_shape::dimension_type>(6));
     }
     {
         const raw_tensor_ref rtr(rt);
