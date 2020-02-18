@@ -60,6 +60,16 @@ class basic_shape
         return off;
     }
 
+    std::array<dim_t, r> expand(dim_t off) const
+    {
+        std::array<dim_t, r> coords;
+        for (rank_t i = r; i > 0; --i) {
+            coords[i - 1] = off % dims_[i - 1];
+            off /= dims_[i - 1];
+        }
+        return coords;
+    }
+
     template <rank_t p>
     dim_t coord(dim_t off) const
     {

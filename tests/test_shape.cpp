@@ -16,6 +16,12 @@ void test_shape(dim_t h, dim_t w)
     for (dim_t i = 0; i < h; ++i) {
         for (dim_t j = 0; j < w; ++j) {
             ASSERT_EQ(s.offset(i, j), k);
+            {
+                dim_t u, v;
+                std::tie(u, v) = s.expand(k);
+                ASSERT_EQ(i, u);
+                ASSERT_EQ(j, v);
+            }
             ++k;
         }
     }
@@ -26,7 +32,6 @@ TEST(shape_test, test1)
     for (dim_t h = 1; h < 10; ++h) {
         for (dim_t w = 1; w < 10; ++w) { test_shape(h, w); }
     }
-
     {
         shape<5> s(10, 10, 10, 10, 10);
         ASSERT_EQ(s.offset(1, 2, 3, 4, 5), static_cast<dim_t>(12345));
