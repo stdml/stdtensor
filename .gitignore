@@ -47,3 +47,5 @@ compile_commands.json
 CTestTestfile.cmake
 install_manifest.txt
 Makefile
+
+*.png
