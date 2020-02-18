@@ -8,8 +8,10 @@ using bmp_t = ttl::matrix<pixel_t>;
 
 void save_bmp(const bmp_t &bmp)
 {
-    const cv::Mat img(cv::Size(bmp.shape().dims()[1], bmp.shape().dims()[0]),
-                      CV_8UC(3), (void *)bmp.data());
+    uint32_t h, w;
+    std::tie(h, w) = bmp.dims();
+    // const auto [h, w] = bmp.dims();  // c++17
+    const cv::Mat img(cv::Size(w, h), CV_8UC(3), bmp.data());
     cv::imwrite("i.png", img);
 }
 

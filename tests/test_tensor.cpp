@@ -189,52 +189,67 @@ auto create_tensor_func()
 
 TEST(tensor_test, return_tensor) { auto t = create_tensor_func(); }
 
-template <typename R>
-R read_tensor_func(const tensor<R, 2> &t, int i, int j)
+template <typename R, typename... I>
+R read_tensor_func(const tensor<R, sizeof...(I)> &t, I... is)
 {
-    const R x = t.at(i, j);
+    const R x = t.at(is...);
     return x;
 }
 
-template <typename R>
-R read_tensor_ref_func(const tensor_ref<R, 2> &t, int i, int j)
+template <typename R, typename... I>
+R read_tensor_ref_func(const tensor_ref<R, sizeof...(I)> &t, I... is)
 {
-    const R x = t.at(i, j);
+    const R x = t.at(is...);
     return x;
 }
 
-template <typename R>
-R read_tensor_view_func(const tensor_view<R, 2> &t, int i, int j)
+template <typename R, typename... I>
+R read_tensor_view_func(const tensor_view<R, sizeof...(I)> &t, I... is)
 {
-    const R x = t.at(i, j);
+    const R x = t.at(is...);
     return x;
 }
 
 TEST(tensor_test, test_read_access)
 {
-    tensor<int, 2> t(2, 2);
-
-    t[0][0] = 1;
-    ASSERT_EQ(1, read_tensor_func(t, 0, 0));
-
-    t[0][0] = 2;
-    ASSERT_EQ(2, read_tensor_ref_func(ref(t), 0, 0));
-
-    t[0][0] = 3;
-    ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
-
     {
-        auto v = view(t);
-        auto p = v.at(0, 0);
-        p += 1;
-        UNUSED(p);
-        ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
+        tensor<int, 0> t;
+        t.data()[0] = 1;
+        ASSERT_EQ(t.at(), 1);
+
+        t.at() = 2;
+        tensor_ref<int, 0> r = ttl::ref(t);
+        ASSERT_EQ(r.at(), 2);
+
+        r.at() = 3;
+        tensor_view<int, 0> v = ttl::view(t);
+        ASSERT_EQ(v.at(), 3);
     }
     {
-        auto &p = t.at(0, 0);
-        p += 1;
-        UNUSED(p);
-        ASSERT_EQ(4, read_tensor_view_func(view(t), 0, 0));
+        tensor<int, 2> t(2, 2);
+
+        t[0][0] = 1;
+        ASSERT_EQ(1, read_tensor_func(t, 0, 0));
+
+        t[0][0] = 2;
+        ASSERT_EQ(2, read_tensor_ref_func(ref(t), 0, 0));
+
+        t[0][0] = 3;
+        ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
+
+        {
+            auto v = view(t);
+            auto p = v.at(0, 0);
+            p += 1;
+            UNUSED(p);
+            ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
+        }
+        {
+            auto &p = t.at(0, 0);
+            p += 1;
+            UNUSED(p);
+            ASSERT_EQ(4, read_tensor_view_func(view(t), 0, 0));
+        }
     }
 }
 

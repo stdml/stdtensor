@@ -93,7 +93,8 @@ TEST(raw_tensor_test, test_convert)
     }
 }
 
-template <typename R, typename T> void test_raw_accessors(const T &t)
+template <typename R, typename T>
+void test_raw_accessors(const T &t)
 {
     t.shape();
     t.value_type();
@@ -123,4 +124,39 @@ TEST(raw_tensor_test, test_data)
     test_raw_accessors<R>(rt);
     test_raw_accessors<R>(rr);
     test_raw_accessors<R>(rv);
+}
+
+#include <ttl/experimental/flat_tensor>
+
+TEST(raw_tensor_test, test_convert_to_flat)
+{
+    using ttl::experimental::raw_tensor;
+    using ttl::experimental::raw_tensor_ref;
+    using ttl::experimental::raw_tensor_view;
+    using encoder = raw_tensor::encoder_type;
+    using raw_shape = raw_tensor::shape_type;
+
+    raw_tensor rt(encoder::value<float>(), 1, 2, 3);
+    {
+        static_assert(
+            std::is_same<decltype(rt.typed<float>()),
+                         ttl::experimental::flat_tensor_ref<float>>::value,
+            "");
+        ttl::experimental::flat_tensor_ref<float> ft = rt.typed<float>();
+        ASSERT_EQ(ft.size(), static_cast<raw_shape::dimension_type>(6));
+    }
+    {
+        const raw_tensor_ref rtr(rt);
+        static_assert(
+            std::is_same<decltype(rtr.typed<float>()),
+                         ttl::experimental::flat_tensor_ref<float>>::value,
+            "");
+    }
+    {
+        const raw_tensor_view rtv(rt);
+        static_assert(
+            std::is_same<decltype(rtv.typed<float>()),
+                         ttl::experimental::flat_tensor_view<float>>::value,
+            "");
+    }
 }

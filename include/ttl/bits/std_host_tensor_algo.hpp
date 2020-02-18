@@ -38,6 +38,19 @@ Dim hamming_distance(const basic_host_tensor_view<R, r, Dim> &x,
 }
 
 template <typename R, rank_t r, typename Dim>
+R chebyshev_distenace(const basic_host_tensor_view<R, r, Dim> &x,
+                      const basic_host_tensor_view<R, r, Dim> &y)
+{
+    return std::inner_product(
+        x.data(), x.data_end(), y.data(), static_cast<R>(0),
+        [](R a, R d) { return std::max<R>(a, d); },
+        [](R x, R y) {
+            // FIXME: make sure it is commutative for floats
+            return x > y ? x - y : y - x;
+        });
+}
+
+template <typename R, rank_t r, typename Dim>
 R max(const basic_host_tensor_view<R, r, Dim> &t)
 {
     return *std::max_element(t.data(), t.data_end());

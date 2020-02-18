@@ -46,6 +46,12 @@ class flat_tensor_mixin
     using shape_type = S;
     using device_type = D;
 
+    rank_t rank() const { return shape_.rank(); }
+
+    Dim size() const { return shape_.size(); }
+
+    const auto &dims() const { return shape_.dims(); }
+
     size_t data_size() const { return shape_.size() * sizeof(R); }
 
     const S &shape() const { return shape_; }

@@ -1,0 +1,21 @@
+// -*- mode: c++ -*-
+#pragma once
+
+#ifdef HAVE_STD_CPP_FS
+#include <filesystem>
+
+namespace std
+{
+namespace filesystem = std::__fs::filesystem;
+}
+
+#else
+
+#include <experimental/filesystem>
+
+namespace std
+{
+namespace filesystem = std::experimental::filesystem;
+}
+
+#endif

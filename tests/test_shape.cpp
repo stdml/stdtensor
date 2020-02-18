@@ -17,8 +17,11 @@ void test_shape(dim_t h, dim_t w)
         for (dim_t j = 0; j < w; ++j) {
             ASSERT_EQ(s.offset(i, j), k);
             {
-                dim_t u, v;
-                std::tie(u, v) = s.expand(k);
+                // dim_t u, v;
+                // std::tie(u, v) = s.expand(k);
+                const auto coords = s.expand(k);
+                const auto u = std::get<0>(coords);
+                const auto v = std::get<1>(coords);
                 ASSERT_EQ(i, u);
                 ASSERT_EQ(j, v);
             }

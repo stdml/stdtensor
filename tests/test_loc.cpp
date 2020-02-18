@@ -1,6 +1,6 @@
 #include <cstdlib>
-#include <filesystem>
 #include <iostream>
+#include <ttl/filesystem>
 
 #include "testing.hpp"
 
@@ -20,7 +20,6 @@ int loc(const char *filename)
 
 TEST(test_loc, test1)
 {
-    std::string path = "/path/to/directory";
     int tot = 0;
     int n = 0;
     for (const auto &entry : fs::directory_iterator("include/ttl/bits")) {
