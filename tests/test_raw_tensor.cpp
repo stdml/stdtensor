@@ -15,32 +15,36 @@ TEST(raw_tensor_test, test1)
         ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(1));
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.data<float>(), t.data());
-        t.ref_as<float, 0>();
-        t.view_as<float, 0>();
+        auto x = t.typed<float, 0>();
+        static_assert(
+            std::is_same<decltype(x), ttl::tensor_ref<float, 0>>::value, "");
     }
     {
         raw_tensor t(encoder::value<float>(), 1);
         ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(1));
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.data<float>(), t.data());
-        t.ref_as<float, 1>();
-        t.view_as<float, 1>();
+        auto x = t.typed<float, 1>();
+        static_assert(
+            std::is_same<decltype(x), ttl::tensor_ref<float, 1>>::value, "");
     }
     {
         raw_tensor t(encoder::value<float>(), 1, 2);
         ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(2));
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.data<float>(), t.data());
-        t.ref_as<float, 2>();
-        t.view_as<float, 2>();
+        auto x = t.typed<float, 2>();
+        static_assert(
+            std::is_same<decltype(x), ttl::tensor_ref<float, 2>>::value, "");
     }
     {
         raw_tensor t(encoder::value<float>(), 1, 2, 3);
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(6));
         ASSERT_EQ(t.data<float>(), t.data());
-        t.ref_as<float, 3>();
-        t.view_as<float, 3>();
+        auto x = t.typed<float, 3>();
+        static_assert(
+            std::is_same<decltype(x), ttl::tensor_ref<float, 3>>::value, "");
     }
 }
 
@@ -64,9 +68,9 @@ TEST(raw_tensor_test, test_convert)
         raw_tensor_ref r1 = raw_ref(t);
         raw_tensor_view v1 = raw_view(t);
 
-        ttl::tensor_ref<R, 4> _tr = r.ranked_as<R, 4>();
+        ttl::tensor_ref<R, 4> _tr = r.typed<R, 4>();
         UNUSED(_tr);
-        ttl::tensor_view<R, 4> _tv = v.ranked_as<R, 4>();
+        ttl::tensor_view<R, 4> _tv = v.typed<R, 4>();
         UNUSED(_tv);
     }
     {
