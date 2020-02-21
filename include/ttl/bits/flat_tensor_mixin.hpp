@@ -65,7 +65,7 @@ class flat_tensor_mixin
     {
         using Access = typename basic_access_traits<A>::type;
         using T = basic_tensor<R, basic_shape<r, Dim>, D, Access>;
-        return T(data(), shape_.template as_ranked<r>());
+        return T(data(), shape_.template ranked<r>());
     }
 
     template <rank_t r>

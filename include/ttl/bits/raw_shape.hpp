@@ -47,7 +47,7 @@ class basic_raw_shape
     dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }
 
     template <rank_t r>
-    basic_shape<r, dim_t> as_ranked() const
+    basic_shape<r, dim_t> ranked() const
     {
         // TODO: use contracts of c++20
         if (r != rank()) { throw std::invalid_argument("invalid rank"); }

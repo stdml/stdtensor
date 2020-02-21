@@ -100,14 +100,14 @@ class raw_tensor_mixin
     {
         using Access = typename basic_access_traits<A>::type;
         using T = basic_tensor<R, basic_shape<r, Dim>, D, Access>;
-        return T(data<R>(), shape_.template as_ranked<r>());
+        return T(data<R>(), shape_.template ranked<r>());
     }
 
     template <typename R, rank_t r, typename A1 = A>
     [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, A1> ranked_as() const
     {
         return basic_tensor<R, basic_shape<r, Dim>, D, A1>(
-            data<R>(), shape_.template as_ranked<r>());
+            data<R>(), shape_.template ranked<r>());
     }
 
     template <typename R, rank_t r>
