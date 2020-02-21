@@ -1,6 +1,6 @@
 #pragma once
 #include <stdexcept>
-#include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/std_access_traits.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
@@ -91,7 +91,7 @@ class raw_tensor_mixin
     auto typed() const
     {
         using Access = typename basic_access_traits<A>::type;
-        using T = basic_tensor<R, basic_raw_shape<Dim>, D, Access>;
+        using T = basic_tensor<R, basic_flat_shape<Dim>, D, Access>;
         return T(data<R>(), shape_);
     }
 

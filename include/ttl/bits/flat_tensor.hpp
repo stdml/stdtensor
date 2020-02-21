@@ -1,6 +1,6 @@
 #pragma once
+#include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/flat_tensor_mixin.hpp>
-#include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/std_tensor.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 
@@ -9,10 +9,10 @@ namespace ttl
 namespace internal
 {
 template <typename R, typename Dim, typename D>
-class basic_tensor<R, basic_raw_shape<Dim>, D, owner>
-    : public flat_tensor_mixin<R, basic_raw_shape<Dim>, D, owner>
+class basic_tensor<R, basic_flat_shape<Dim>, D, owner>
+    : public flat_tensor_mixin<R, basic_flat_shape<Dim>, D, owner>
 {
-    using S = basic_raw_shape<Dim>;
+    using S = basic_flat_shape<Dim>;
     using mixin = flat_tensor_mixin<R, S, D, owner>;
 
   public:
@@ -28,10 +28,10 @@ class basic_tensor<R, basic_raw_shape<Dim>, D, owner>
 };
 
 template <typename R, typename Dim, typename D>
-class basic_tensor<R, basic_raw_shape<Dim>, D, readwrite>
-    : public flat_tensor_mixin<R, basic_raw_shape<Dim>, D, readwrite>
+class basic_tensor<R, basic_flat_shape<Dim>, D, readwrite>
+    : public flat_tensor_mixin<R, basic_flat_shape<Dim>, D, readwrite>
 {
-    using S = basic_raw_shape<Dim>;
+    using S = basic_flat_shape<Dim>;
     using mixin = flat_tensor_mixin<R, S, D, readwrite>;
 
   public:
@@ -53,10 +53,10 @@ class basic_tensor<R, basic_raw_shape<Dim>, D, readwrite>
 };
 
 template <typename R, typename Dim, typename D>
-class basic_tensor<R, basic_raw_shape<Dim>, D, readonly>
-    : public flat_tensor_mixin<R, basic_raw_shape<Dim>, D, readonly>
+class basic_tensor<R, basic_flat_shape<Dim>, D, readonly>
+    : public flat_tensor_mixin<R, basic_flat_shape<Dim>, D, readonly>
 {
-    using S = basic_raw_shape<Dim>;
+    using S = basic_flat_shape<Dim>;
     using mixin = flat_tensor_mixin<R, S, D, readonly>;
 
   public:
@@ -83,12 +83,12 @@ class basic_tensor<R, basic_raw_shape<Dim>, D, readonly>
 };
 
 template <typename R, typename D>
-using basic_flat_tensor = basic_tensor<R, basic_raw_shape<>, D, owner>;
+using basic_flat_tensor = basic_tensor<R, basic_flat_shape<>, D, owner>;
 
 template <typename R, typename D>
-using basic_flat_tensor_ref = basic_tensor<R, basic_raw_shape<>, D, readwrite>;
+using basic_flat_tensor_ref = basic_tensor<R, basic_flat_shape<>, D, readwrite>;
 
 template <typename R, typename D>
-using basic_flat_tensor_view = basic_tensor<R, basic_raw_shape<>, D, readonly>;
+using basic_flat_tensor_view = basic_tensor<R, basic_flat_shape<>, D, readonly>;
 }  // namespace internal
 }  // namespace ttl

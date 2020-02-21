@@ -1,5 +1,5 @@
 #pragma once
-#include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/std_shape.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>

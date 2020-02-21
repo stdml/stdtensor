@@ -8,11 +8,11 @@ TEST(raw_tensor_test, test1)
     using ttl::experimental::raw_tensor;
 
     using encoder = raw_tensor::encoder_type;
-    using raw_shape = raw_tensor::shape_type;
+    using flat_shape = raw_tensor::shape_type;
 
     {
         raw_tensor t(encoder::value<float>());
-        ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(1));
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(1));
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.data<float>(), t.data());
         auto x = t.typed<float, 0>();
@@ -21,7 +21,7 @@ TEST(raw_tensor_test, test1)
     }
     {
         raw_tensor t(encoder::value<float>(), 1);
-        ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(1));
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(1));
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.data<float>(), t.data());
         auto x = t.typed<float, 1>();
@@ -30,7 +30,7 @@ TEST(raw_tensor_test, test1)
     }
     {
         raw_tensor t(encoder::value<float>(), 1, 2);
-        ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(2));
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(2));
         ASSERT_EQ(t.value_type(), encoder::value<float>());
         ASSERT_EQ(t.data<float>(), t.data());
         auto x = t.typed<float, 2>();
@@ -40,7 +40,7 @@ TEST(raw_tensor_test, test1)
     {
         raw_tensor t(encoder::value<float>(), 1, 2, 3);
         ASSERT_EQ(t.value_type(), encoder::value<float>());
-        ASSERT_EQ(t.shape().size(), static_cast<raw_shape::dimension_type>(6));
+        ASSERT_EQ(t.shape().size(), static_cast<flat_shape::dimension_type>(6));
         ASSERT_EQ(t.data<float>(), t.data());
         auto x = t.typed<float, 3>();
         static_assert(
@@ -138,7 +138,7 @@ TEST(raw_tensor_test, test_convert_to_flat)
     using ttl::experimental::raw_tensor_ref;
     using ttl::experimental::raw_tensor_view;
     using encoder = raw_tensor::encoder_type;
-    using raw_shape = raw_tensor::shape_type;
+    using flat_shape = raw_tensor::shape_type;
 
     raw_tensor rt(encoder::value<float>(), 1, 2, 3);
     {
@@ -147,7 +147,7 @@ TEST(raw_tensor_test, test_convert_to_flat)
                          ttl::experimental::flat_tensor_ref<float>>::value,
             "");
         ttl::experimental::flat_tensor_ref<float> ft = rt.typed<float>();
-        ASSERT_EQ(ft.size(), static_cast<raw_shape::dimension_type>(6));
+        ASSERT_EQ(ft.size(), static_cast<flat_shape::dimension_type>(6));
     }
     {
         const raw_tensor_ref rtr(rt);

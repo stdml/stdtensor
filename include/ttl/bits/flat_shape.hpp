@@ -20,7 +20,7 @@ std::vector<D_out> arr2vec(const std::array<D_in, r> &a)
 }
 
 template <typename Dim = uint32_t>
-class basic_raw_shape
+class basic_flat_shape
 {
     using dim_t = Dim;
     const std::vector<dim_t> dims_;
@@ -29,15 +29,15 @@ class basic_raw_shape
     using dimension_type = Dim;
 
     template <typename... D>
-    explicit basic_raw_shape(D... d) : dims_({static_cast<dim_t>(d)...})
+    explicit basic_flat_shape(D... d) : dims_({static_cast<dim_t>(d)...})
     {
         static_assert(sizeof...(D) <= 0xff, "too many dimensions");
     }
 
-    explicit basic_raw_shape(const std::vector<dim_t> &dims) : dims_(dims) {}
+    explicit basic_flat_shape(const std::vector<dim_t> &dims) : dims_(dims) {}
 
     template <rank_t r, typename D>
-    explicit basic_raw_shape(const basic_shape<r, D> &shape)
+    explicit basic_flat_shape(const basic_shape<r, D> &shape)
         : dims_(std::move(arr2vec<Dim, D, r>(shape.dims())))
     {
     }
