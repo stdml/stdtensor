@@ -113,8 +113,6 @@ TEST(tensor_test, test3)
     {
         tensor_ref<int, 5> r(t.data(), 3, 4, 5, 6, 7);
         tensor_view<int, 5> v(t.data(), 3, 4, 5, 6, 7);
-        UNUSED(r);
-        UNUSED(v);
     }
 
     test_5d_array<decltype(t)>()(t);
@@ -241,13 +239,11 @@ TEST(tensor_test, test_read_access)
             auto v = view(t);
             auto p = v.at(0, 0);
             p += 1;
-            UNUSED(p);
             ASSERT_EQ(3, read_tensor_view_func(view(t), 0, 0));
         }
         {
             auto &p = t.at(0, 0);
             p += 1;
-            UNUSED(p);
             ASSERT_EQ(4, read_tensor_view_func(view(t), 0, 0));
         }
     }
