@@ -128,6 +128,21 @@ TEST(raw_tensor_test, test_data)
     test_raw_accessors<R>(rv);
 }
 
+TEST(raw_tensor_test, test_type_reification)
+{
+    using ttl::experimental::raw_tensor;
+    raw_tensor t(raw_tensor::type<int>(), 2, 3);
+    {
+        bool caught = false;
+        try {
+            t.typed<float>();
+        } catch (std::invalid_argument &e) {
+            caught = true;
+        }
+        ASSERT_TRUE(caught);
+    }
+}
+
 #include <ttl/experimental/flat_tensor>
 
 TEST(raw_tensor_test, test_convert_to_flat)

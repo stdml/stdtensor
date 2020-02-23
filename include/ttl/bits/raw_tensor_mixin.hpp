@@ -39,6 +39,15 @@ class raw_tensor_traits<readonly>
     using Data = view_ptr<void>;
 };
 
+class invalid_type_reification : public std::invalid_argument
+{
+  public:
+    invalid_type_reification(const std::type_info &ti)
+        : invalid_argument(ti.name())  // FIXME: demangling
+    {
+    }
+};
+
 template <typename Encoder, typename S, typename D, typename A>
 class raw_tensor_mixin
 {
@@ -66,6 +75,12 @@ class raw_tensor_mixin
     using encoder_type = Encoder;
     using shape_type = S;
 
+    template <typename R>
+    static constexpr value_type_t type()
+    {
+        return Encoder::template value<R>();
+    }
+
     value_type_t value_type() const { return value_type_; }
 
     size_t data_size() const
@@ -84,9 +99,7 @@ class raw_tensor_mixin
     {
         // TODO: use contracts of c++20
         if (Encoder::template value<R>() != value_type_) {
-            throw std::invalid_argument(
-                std::string("invalid type reification: ") +
-                typeid(R).name());  // FIXME: demangling
+            throw invalid_type_reification(typeid(R));
         }
         using ptr_type = typename basic_tensor_traits<R, A, D>::ptr_type;
         return reinterpret_cast<ptr_type>(data_.get());
