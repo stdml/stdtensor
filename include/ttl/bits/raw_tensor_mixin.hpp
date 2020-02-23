@@ -1,5 +1,8 @@
 #pragma once
 #include <stdexcept>
+#include <string>
+#include <typeinfo>
+
 #include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/std_access_traits.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
@@ -81,7 +84,9 @@ class raw_tensor_mixin
     {
         // TODO: use contracts of c++20
         if (Encoder::template value<R>() != value_type_) {
-            throw std::invalid_argument("invalid scalar type");
+            throw std::invalid_argument(
+                std::string("invalid type reification: ") +
+                typeid(R).name());  // FIXME: demangling
         }
         using ptr_type = typename basic_tensor_traits<R, A, D>::ptr_type;
         return reinterpret_cast<ptr_type>(data_.get());
