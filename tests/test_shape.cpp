@@ -184,3 +184,14 @@ TEST(shape_test, test_flatten)
 struct S {
     static constexpr auto shape = ttl::make_shape(2, 3);
 };
+
+TEST(shape_test, test_batch_vectorize)
+{
+    auto shape = ttl::make_shape(2, 3);
+    auto bs = ttl::batch(4, shape);
+    ASSERT_EQ(bs, ttl::make_shape(4, 2, 3));
+    auto vs = ttl::vectorize(shape, 5);
+    ASSERT_EQ(vs, ttl::make_shape(2, 3, 5));
+    auto vs1 = ttl::vectorize(shape);
+    ASSERT_EQ(vs1, ttl::make_shape(2, 3, 1));
+}

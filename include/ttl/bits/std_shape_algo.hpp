@@ -47,6 +47,13 @@ basic_shape<r + 1, dim_t> batch(const N n, const basic_shape<r, dim_t> &s)
     return join_shape(basic_shape<1, dim_t>(n), s);
 }
 
+template <rank_t r, typename dim_t, typename N = dim_t>
+basic_shape<r + 1, dim_t> vectorize(const basic_shape<r, dim_t> &s,
+                                    const N d = 1)
+{
+    return join_shape(s, basic_shape<1, dim_t>(d));
+}
+
 template <rank_t... rs>
 class flatten_shape;
 
