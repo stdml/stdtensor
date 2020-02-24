@@ -84,6 +84,12 @@ class flatten_shape
     }
 };
 
+template <rank_t r, typename dim_t>
+basic_shape<1, dim_t> flatten(const basic_shape<r, dim_t> &s)
+{
+    return flatten_shape<r>()(s);
+}
+
 template <typename S>
 struct super_shape;
 

@@ -136,6 +136,18 @@ TEST(shape_test, test_batch)
     ASSERT_EQ(make_shape(2, 3), batch(2, make_shape(3)));
 }
 
+TEST(shape_test, test_flatten1)
+{
+    {
+        const ttl::shape<6> s(1, 2, 3, 4, 5, 6);
+        ASSERT_EQ(ttl::flatten(s), ttl::shape<1>(720));
+    }
+    {
+        const ttl::shape<0> s;
+        ASSERT_EQ(ttl::flatten(s), ttl::shape<1>(1));
+    }
+}
+
 TEST(shape_test, test_flatten)
 {
     using ttl::internal::flatten_shape;
