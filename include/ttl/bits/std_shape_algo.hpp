@@ -27,7 +27,7 @@ merge_indexed(const std::array<T, p> &a, std::index_sequence<Is...>,
 }
 
 template <typename... D>
-basic_shape<sizeof...(D)> make_shape(const D... d)
+constexpr basic_shape<sizeof...(D)> make_shape(const D... d)
 {
     return basic_shape<sizeof...(D)>(d...);
 }

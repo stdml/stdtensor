@@ -168,3 +168,7 @@ TEST(shape_test, test_flatten)
     const auto s8 = flatten_shape<>()(s);
     ASSERT_EQ(s8, ttl::shape<1>(720));
 }
+
+struct S {
+    static constexpr auto shape = ttl::make_shape(2, 3);
+};
