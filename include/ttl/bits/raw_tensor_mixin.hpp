@@ -88,6 +88,12 @@ class raw_tensor_mixin
         return Encoder::size(value_type_) * shape_.size();
     }
 
+    rank_t rank() const { return shape_.rank(); }
+
+    Dim size() const { return shape_.size(); }
+
+    const auto &dims() const { return shape_.dims(); }
+
     const S &shape() const { return shape_; }
 
     data_ptr data() const { return data_.get(); }
