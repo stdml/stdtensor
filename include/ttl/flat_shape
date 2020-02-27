@@ -1,0 +1,8 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/flat_shape.hpp>
+
+namespace ttl
+{
+using flat_shape = ttl::internal::basic_flat_shape<>;
+}  // namespace ttl
