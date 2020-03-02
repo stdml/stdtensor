@@ -4,29 +4,28 @@
 #include <tuple>
 #include <utility>
 
-namespace std
-{
-namespace experimental
+namespace ttl
 {
 namespace internal
 {
 template <typename Ts, typename P, typename E, std::size_t... I>
 static constexpr std::array<P, sizeof...(I)>
-get_type_sizes(std::index_sequence<I...>)
+    get_type_sizes(std::index_sequence<I...>)
 {
     return {P{
         E::template value<typename std::tuple_element<I, Ts>::type>(),
         sizeof(typename std::tuple_element<I, Ts>::type),
     }...};
 }
-}  // namespace internal
 
-template <typename encoding> class basic_type_encoder
+template <typename encoding>
+class basic_type_encoder
 {
   public:
     using value_type = typename encoding::value_type;
 
-    template <typename R> static constexpr value_type value()
+    template <typename R>
+    static constexpr value_type value()
     {
         return encoding::template value<R>();
     }
@@ -47,6 +46,5 @@ template <typename encoding> class basic_type_encoder
         throw std::invalid_argument("invalid scalar code");
     }
 };
-
-}  // namespace experimental
-}  // namespace std
+}  // namespace internal
+}  // namespace ttl

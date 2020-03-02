@@ -1,11 +1,11 @@
 #include "testing.hpp"
-#include <experimental/type_encoder>
 #include <ttl/bits/idx_encoding.hpp>
+#include <ttl/bits/type_encoder.hpp>
 
 TEST(type_encoder_test, test1)
 {
-    using encoder = std::experimental::basic_type_encoder<
-        ttl::internal::idx_format::encoding>;
+    using encoder =
+        ttl::internal::basic_type_encoder<ttl::internal::idx_format::encoding>;
 
     using V = encoder::value_type;
 

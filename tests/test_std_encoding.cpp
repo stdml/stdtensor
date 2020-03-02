@@ -1,12 +1,12 @@
 #include "testing.hpp"
 
-#include <experimental/type_encoder>
 #include <ttl/bits/std_encoding.hpp>
+#include <ttl/bits/type_encoder.hpp>
 
 TEST(std_encoding_test, test_std_encoding)
 {
     using encoder =
-        std::experimental::basic_type_encoder<ttl::experimental::std_encoding>;
+        ttl::internal::basic_type_encoder<ttl::experimental::std_encoding>;
     using V = encoder::value_type;
 
     ASSERT_EQ(encoder::value<uint8_t>(), static_cast<V>(264));
@@ -29,7 +29,7 @@ TEST(std_encoding_test, test_std_encoding)
 #include <ttl/tensor>
 
 using encoder =
-    std::experimental::basic_type_encoder<ttl::experimental::std_encoding>;
+    ttl::internal::basic_type_encoder<ttl::experimental::std_encoding>;
 using cpu = ttl::internal::host_memory;
 using raw_tensor = ttl::internal::raw_tensor<encoder, cpu>;
 using raw_tensor_ref = ttl::internal::raw_tensor_ref<encoder, cpu>;
