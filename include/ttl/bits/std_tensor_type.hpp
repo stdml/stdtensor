@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <ttl/bits/std_except.hpp>
 
 namespace ttl
 {
@@ -57,14 +58,23 @@ class basic_raw_tensor_type : public S
         return E::size(value_type_) * this->size();
     }
 
-    // template <typename R>
-    // R *typed(void *data)
-    // {
-    //     if (type<R>() != value_type_) {
-    //         throw invalid_type_reification(typeid(R));
-    //     }
-    //     return reinterpret_cast<R *>(data);
-    // }
+    template <typename R>
+    R *typed(void *data) const
+    {
+        if (type<R>() != value_type_) {
+            throw invalid_type_reification(typeid(R));
+        }
+        return reinterpret_cast<R *>(data);
+    }
+
+    template <typename R>
+    const R *typed(const void *data) const
+    {
+        if (type<R>() != value_type_) {
+            throw invalid_type_reification(typeid(R));
+        }
+        return reinterpret_cast<const R *>(data);
+    }
 };
 }  // namespace internal
 }  // namespace ttl

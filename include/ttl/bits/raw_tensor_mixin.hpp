@@ -1,10 +1,7 @@
 #pragma once
-#include <stdexcept>
-#include <string>
-#include <typeinfo>
-
 #include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/std_access_traits.hpp>
+#include <ttl/bits/std_except.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 
@@ -37,15 +34,6 @@ class raw_tensor_traits<readonly>
   public:
     using ptr_type = const void *;
     using Data = view_ptr<void>;
-};
-
-class invalid_type_reification : public std::invalid_argument
-{
-  public:
-    invalid_type_reification(const std::type_info &ti)
-        : invalid_argument(ti.name())  // FIXME: demangling
-    {
-    }
 };
 
 template <typename Encoder, typename S, typename D, typename A>
@@ -103,8 +91,7 @@ class raw_tensor_mixin
     template <typename R>
     typename basic_tensor_traits<R, A, D>::ptr_type data() const
     {
-        // TODO: use contracts of c++20
-        if (Encoder::template value<R>() != value_type_) {
+        if (type<R>() != value_type_) {
             throw invalid_type_reification(typeid(R));
         }
         using ptr_type = typename basic_tensor_traits<R, A, D>::ptr_type;

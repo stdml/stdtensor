@@ -39,3 +39,22 @@ TEST(type_test, test_raw_type)
         ASSERT_EQ(tt.data_size(), static_cast<uint32_t>(12 * 8));
     }
 }
+
+TEST(type_test, test_type_reification)
+{
+    using TT = ttl::raw_type<>;
+    const TT tt = TT::scalar<int>();
+    {
+        int x = 1;
+        void *ptr = &x;
+        int *iptr = tt.typed<int>(ptr);
+        *iptr = 2;
+        ASSERT_EQ(x, 2);
+    }
+    {
+        const int x = 1;
+        const void *ptr = &x;
+        const int *iptr = tt.typed<int>(ptr);
+        ASSERT_EQ(*iptr, 1);
+    }
+}
