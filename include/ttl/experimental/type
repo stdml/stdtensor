@@ -1,0 +1,27 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <experimental/type_encoder>
+#include <ttl/bits/flat_shape.hpp>
+#include <ttl/bits/idx_encoding.hpp>
+#include <ttl/bits/std_encoding.hpp>
+#include <ttl/bits/std_shape.hpp>
+#include <ttl/bits/std_tensor_type.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+template <typename R, internal::rank_t r>
+using type = internal::basic_tensor_type<R, internal::basic_shape<r>>;
+
+using idx_encoder =
+    std::experimental::basic_type_encoder<internal::idx_format::encoding>;
+
+using std_encoder =
+    std::experimental::basic_type_encoder<experimental::std_encoding>;
+
+template <typename E = idx_encoder>
+using raw_type =
+    internal::basic_raw_tensor_type<E, internal::basic_flat_shape<>>;
+}  // namespace experimental
+}  // namespace ttl

@@ -57,6 +57,13 @@ class basic_flat_shape
     }
 
     const std::vector<dim_t> &dims() const { return dims_; }
+
+    bool operator==(const basic_flat_shape &s) const
+    {
+        return std::equal(dims_.begin(), dims_.end(), s.dims().begin());
+    }
+
+    bool operator!=(const basic_flat_shape &s) const { return !operator==(s); }
 };
 }  // namespace internal
 }  // namespace ttl

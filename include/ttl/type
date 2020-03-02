@@ -1,0 +1,8 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/experimental/type>
+
+namespace ttl
+{
+using experimental::type;
+}  // namespace ttl
