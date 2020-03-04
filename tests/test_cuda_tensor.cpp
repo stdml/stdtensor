@@ -121,3 +121,15 @@ TEST(cuda_tensor_test, test_copy)
     test_copy<int, 2>(ttl::make_shape(4, 5));
     test_copy<int, 3>(ttl::make_shape(2, 3, 4));
 }
+
+#include <ttl/experimental/raw_tensor>
+
+TEST(cuda_tensor_test, test_raw_tensor)
+{
+    using idx_encoder =
+        ttl::internal::basic_type_encoder<ttl::internal::idx_format::encoding>;
+
+    using cuda_raw_tensor =
+        ttl::internal::raw_tensor<idx_encoder, ttl::internal::cuda_memory>;
+    cuda_raw_tensor t(cuda_raw_tensor::type<int>(), 2, 3);
+}

@@ -9,27 +9,27 @@ namespace ttl
 {
 namespace internal
 {
-template <typename A>
+template <typename A, typename D>
 class raw_tensor_traits;
 
-template <>
-class raw_tensor_traits<owner>
+template <typename D>
+class raw_tensor_traits<owner, D>
 {
   public:
     using ptr_type = void *;
-    using Data = std::unique_ptr<char[]>;
+    using Data = own_ptr<char, D>;
 };
 
-template <>
-class raw_tensor_traits<readwrite>
+template <typename D>
+class raw_tensor_traits<readwrite, D>
 {
   public:
     using ptr_type = void *;
     using Data = ref_ptr<void>;
 };
 
-template <>
-class raw_tensor_traits<readonly>
+template <typename D>
+class raw_tensor_traits<readonly, D>
 {
   public:
     using ptr_type = const void *;
@@ -39,7 +39,7 @@ class raw_tensor_traits<readonly>
 template <typename Encoder, typename S, typename D, typename A>
 class raw_tensor_mixin
 {
-    using trait = raw_tensor_traits<A>;
+    using trait = raw_tensor_traits<A, D>;
     using data_ptr = typename trait::ptr_type;
     using data_t = typename trait::Data;
 
@@ -115,25 +115,19 @@ class raw_tensor_mixin
     }
 
     template <typename R, rank_t r, typename A1 = A>
-    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, A1> ranked_as() const
-    {
+    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, A1>
+    ranked_as() const {
         return basic_tensor<R, basic_shape<r, Dim>, D, A1>(
             data<R>(), shape_.template ranked<r>());
     }
 
     template <typename R, rank_t r>
-    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, readwrite>
-    ref_as() const
-    {
-        return ranked_as<R, r, readwrite>();
-    }
+    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, readwrite> ref_as()
+        const { return ranked_as<R, r, readwrite>(); }
 
     template <typename R, rank_t r>
-    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, readonly>
-    view_as() const
-    {
-        return ranked_as<R, r, readonly>();
-    }
+    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, readonly> view_as()
+        const { return ranked_as<R, r, readonly>(); }
 };
 }  // namespace internal
 }  // namespace ttl
