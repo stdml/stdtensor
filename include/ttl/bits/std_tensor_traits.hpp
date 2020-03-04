@@ -80,5 +80,26 @@ basic_tensor<R, S, D, readonly> view(const basic_tensor<R, S, D, readwrite> &t)
 {
     return basic_tensor<R, S, D, readonly>(t);
 }
+
+template <typename E, typename S, typename D>
+basic_raw_tensor<E, S, D, readwrite>
+ref(const basic_raw_tensor<E, S, D, owner> &t)
+{
+    return basic_raw_tensor<E, S, D, readwrite>(t);
+}
+
+template <typename E, typename S, typename D>
+basic_raw_tensor<E, S, D, readonly>
+view(const basic_raw_tensor<E, S, D, owner> &t)
+{
+    return basic_raw_tensor<E, S, D, readwrite>(t);
+}
+
+template <typename E, typename S, typename D>
+basic_raw_tensor<E, S, D, readonly>
+view(const basic_raw_tensor<E, S, D, readwrite> &t)
+{
+    return basic_raw_tensor<E, S, D, readonly>(t);
+}
 }  // namespace internal
 }  // namespace ttl

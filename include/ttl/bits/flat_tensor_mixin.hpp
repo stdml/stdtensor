@@ -1,5 +1,5 @@
 #pragma once
-#include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/std_shape.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
@@ -28,7 +28,7 @@ class flat_tensor_mixin
     using T = basic_tensor<R, basic_shape<r, Dim>, D, A1>;
 
     template <rank_t r, typename A1>
-    T<r, A1> ranked_as() const
+    [[deprecated]] T<r, A1> ranked_as() const
     {
         return T<r, A1>(data_.get(), shape_.template as_ranked<r>());
     }
@@ -61,13 +61,21 @@ class flat_tensor_mixin
     data_ptr data_end() const { return data_.get() + shape_.size(); }
 
     template <rank_t r>
-    T<r, readwrite> ref_as() const
+    auto ranked() const
+    {
+        using Access = typename basic_access_traits<A>::type;
+        using T = basic_tensor<R, basic_shape<r, Dim>, D, Access>;
+        return T(data(), shape_.template ranked<r>());
+    }
+
+    template <rank_t r>
+    [[deprecated]] T<r, readwrite> ref_as() const
     {
         return ranked_as<r, readwrite>();
     }
 
     template <rank_t r>
-    T<r, readonly> view_as() const
+    [[deprecated]] T<r, readonly> view_as() const
     {
         return ranked_as<r, readonly>();
     }

@@ -2,7 +2,7 @@
 #include <experimental/iterator>
 #include <sstream>
 
-#include <ttl/bits/raw_shape.hpp>
+#include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/std_shape.hpp>
 
 namespace ttl
@@ -21,7 +21,7 @@ std::string to_string(const basic_shape<r, D> &shape)
 }
 
 template <typename D>
-std::string to_string(const basic_raw_shape<D> &shape)
+std::string to_string(const basic_flat_shape<D> &shape)
 {
     std::stringstream ss;
     ss << "(";

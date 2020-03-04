@@ -8,11 +8,12 @@ void test_shape_to_string(const std::string &str,
                           const ttl::internal::basic_shape<r, D> &s)
 {
     ASSERT_EQ(str, ttl::to_string(s));
-    const auto rs = ttl::internal::basic_raw_shape<D>(s);
+    const auto rs = ttl::internal::basic_flat_shape<D>(s);
     ASSERT_EQ(str, ttl::to_string(rs));
 }
 
-template <typename D> void test_shape_to_string_all()
+template <typename D>
+void test_shape_to_string_all()
 {
     {
         const auto s = ttl::internal::basic_shape<0, D>();

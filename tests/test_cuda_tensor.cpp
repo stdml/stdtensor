@@ -46,10 +46,8 @@ TEST(cuda_tensor_test, test2)
     ttl::copy(ttl::ref(m2), ttl::view(m1));
 
     m1.slice(1, 2);
-    auto r = ref(m1);
-    UNUSED(r);
-    auto v = view(m1);
-    UNUSED(v);
+    [[gnu::unused]] auto r = ttl::ref(m1);
+    [[gnu::unused]] auto v = ttl::view(m1);
 }
 
 TEST(cuda_tensor_test, test_3)
@@ -122,4 +120,16 @@ TEST(cuda_tensor_test, test_copy)
     test_copy<int, 1>(ttl::make_shape(10));
     test_copy<int, 2>(ttl::make_shape(4, 5));
     test_copy<int, 3>(ttl::make_shape(2, 3, 4));
+}
+
+#include <ttl/experimental/raw_tensor>
+
+TEST(cuda_tensor_test, test_raw_tensor)
+{
+    using idx_encoder =
+        ttl::internal::basic_type_encoder<ttl::internal::idx_format::encoding>;
+
+    using cuda_raw_tensor =
+        ttl::internal::raw_tensor<idx_encoder, ttl::internal::cuda_memory>;
+    cuda_raw_tensor t(cuda_raw_tensor::type<int>(), 2, 3);
 }

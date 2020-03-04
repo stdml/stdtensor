@@ -3,14 +3,8 @@
 
 #include <gtest/gtest.h>  // TODO: don't depend on gtest
 
-inline void make_unuse(void *) {}
-
-#define UNUSED(e)                                                              \
-    {                                                                          \
-        make_unuse(&e);                                                        \
-    }
-
-template <typename R, typename T> void test_data_end_raw(const T &t)
+template <typename R, typename T>
+void test_data_end_raw(const T &t)
 {
     ASSERT_EQ(static_cast<const char *>(t.data_end()) -
                   static_cast<const char *>(t.data()),
@@ -23,7 +17,8 @@ void do_apply(const F &f, const T &t, std::index_sequence<I...>)
     f(std::get<I>(t)...);
 }
 
-template <typename F, typename T> void apply(const F &f, const T &t)
+template <typename F, typename T>
+void apply(const F &f, const T &t)
 {
     do_apply(f, t, std::make_index_sequence<std::tuple_size<T>::value>());
 }

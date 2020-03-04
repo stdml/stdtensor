@@ -21,8 +21,8 @@ struct tensor_s : raw_tensor {
 
 tensor_t *new_tensor(uint8_t value_type, int rank, ...)
 {
-    using raw_shape = raw_tensor::shape_type;
-    using dim_t = raw_shape::dimension_type;
+    using flat_shape = raw_tensor::shape_type;
+    using dim_t = flat_shape::dimension_type;
 
     std::vector<dim_t> dims;
     va_list list;
@@ -32,7 +32,7 @@ tensor_t *new_tensor(uint8_t value_type, int rank, ...)
         dims.push_back(dim);
     }
     va_end(list);
-    raw_shape shape(dims);
+    flat_shape shape(dims);
 
     return new tensor_s(value_type, shape);
 }

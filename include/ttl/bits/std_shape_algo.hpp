@@ -27,7 +27,7 @@ merge_indexed(const std::array<T, p> &a, std::index_sequence<Is...>,
 }
 
 template <typename... D>
-basic_shape<sizeof...(D)> make_shape(const D... d)
+constexpr basic_shape<sizeof...(D)> make_shape(const D... d)
 {
     return basic_shape<sizeof...(D)>(d...);
 }
@@ -45,6 +45,13 @@ template <rank_t r, typename dim_t, typename N = dim_t>
 basic_shape<r + 1, dim_t> batch(const N n, const basic_shape<r, dim_t> &s)
 {
     return join_shape(basic_shape<1, dim_t>(n), s);
+}
+
+template <rank_t r, typename dim_t, typename N = dim_t>
+basic_shape<r + 1, dim_t> vectorize(const basic_shape<r, dim_t> &s,
+                                    const N d = 1)
+{
+    return join_shape(s, basic_shape<1, dim_t>(d));
 }
 
 template <rank_t... rs>
@@ -83,6 +90,12 @@ class flatten_shape
         return basic_shape<out_rank, dim_t>(dims);
     }
 };
+
+template <rank_t r, typename dim_t>
+basic_shape<1, dim_t> flatten(const basic_shape<r, dim_t> &s)
+{
+    return flatten_shape<r>()(s);
+}
 
 template <typename S>
 struct super_shape;

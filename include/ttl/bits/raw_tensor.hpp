@@ -1,6 +1,6 @@
 #pragma once
+#include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/flat_tensor.hpp>
-#include <ttl/bits/raw_shape.hpp>
 #include <ttl/bits/raw_tensor_mixin.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 
@@ -9,11 +9,11 @@ namespace ttl
 namespace internal
 {
 template <typename Encoder, typename Dim, typename D>
-class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, owner>
-    : public raw_tensor_mixin<Encoder, basic_raw_shape<Dim>, D, owner>
+class basic_raw_tensor<Encoder, basic_flat_shape<Dim>, D, owner>
+    : public raw_tensor_mixin<Encoder, basic_flat_shape<Dim>, D, owner>
 {
     using value_type_t = typename Encoder::value_type;
-    using S = basic_raw_shape<Dim>;
+    using S = basic_flat_shape<Dim>;
     using mixin = raw_tensor_mixin<Encoder, S, D, owner>;
     using allocator = basic_allocator<char, D>;
 
@@ -32,11 +32,11 @@ class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, owner>
 };
 
 template <typename Encoder, typename Dim, typename D>
-class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, readwrite>
-    : public raw_tensor_mixin<Encoder, basic_raw_shape<Dim>, D, readwrite>
+class basic_raw_tensor<Encoder, basic_flat_shape<Dim>, D, readwrite>
+    : public raw_tensor_mixin<Encoder, basic_flat_shape<Dim>, D, readwrite>
 {
     using value_type_t = typename Encoder::value_type;
-    using S = basic_raw_shape<Dim>;
+    using S = basic_flat_shape<Dim>;
     using mixin = raw_tensor_mixin<Encoder, S, D, readwrite>;
 
   public:
@@ -66,11 +66,11 @@ class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, readwrite>
 };
 
 template <typename Encoder, typename Dim, typename D>
-class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, readonly>
-    : public raw_tensor_mixin<Encoder, basic_raw_shape<Dim>, D, readonly>
+class basic_raw_tensor<Encoder, basic_flat_shape<Dim>, D, readonly>
+    : public raw_tensor_mixin<Encoder, basic_flat_shape<Dim>, D, readonly>
 {
     using value_type_t = typename Encoder::value_type;
-    using S = basic_raw_shape<Dim>;
+    using S = basic_flat_shape<Dim>;
     using mixin = raw_tensor_mixin<Encoder, S, D, readonly>;
 
   public:
@@ -106,12 +106,12 @@ class basic_raw_tensor<Encoder, basic_raw_shape<Dim>, D, readonly>
 };
 
 template <typename E, typename D>
-using raw_tensor = basic_raw_tensor<E, basic_raw_shape<>, D, owner>;
+using raw_tensor = basic_raw_tensor<E, basic_flat_shape<>, D, owner>;
 
 template <typename E, typename D>
-using raw_tensor_ref = basic_raw_tensor<E, basic_raw_shape<>, D, readwrite>;
+using raw_tensor_ref = basic_raw_tensor<E, basic_flat_shape<>, D, readwrite>;
 
 template <typename E, typename D>
-using raw_tensor_view = basic_raw_tensor<E, basic_raw_shape<>, D, readonly>;
+using raw_tensor_view = basic_raw_tensor<E, basic_flat_shape<>, D, readonly>;
 }  // namespace internal
 }  // namespace ttl
