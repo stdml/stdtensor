@@ -1,6 +1,10 @@
 #pragma once
 #include <cstddef>
+
+#include <ttl/bits/std_encoding.hpp>
 #include <ttl/bits/std_except.hpp>
+#include <ttl/bits/std_reflect.hpp>
+#include <ttl/bits/std_shape_debug.hpp>
 
 namespace ttl
 {
@@ -15,6 +19,14 @@ class basic_tensor_type : public S
     const S &shape() const { return *this; }
 
     std::size_t data_size() const { return sizeof(R) * this->size(); }
+
+    std::string name() const
+    {
+        constexpr bool is_simple =
+            std::is_floating_point<R>::value || std::is_integral<R>::value;
+        return scalar_type_name<is_simple, R>()() +
+               _join_string(this->dims(), ",", "[", "]");
+    }
 };
 
 template <typename E, typename S>
@@ -74,6 +86,13 @@ class basic_raw_tensor_type : public S
             throw invalid_type_reification(typeid(R));
         }
         return reinterpret_cast<const R *>(data);
+    }
+
+    std::string name() const
+    {
+        return E::prefix(value_type_) +
+               std::to_string(E::size(value_type_) * CHAR_BIT) +
+               _join_string(this->dims(), ",", "[", "]");
     }
 };
 }  // namespace internal

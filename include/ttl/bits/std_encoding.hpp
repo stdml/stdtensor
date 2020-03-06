@@ -37,6 +37,21 @@ class basic_scalar_encoding
   public:
     static constexpr V value = (category << 16) | (byte_num << 8) | byte_size;
 };
+
+enum class scaler_type : uint32_t {
+    u8 = basic_scalar_encoding<uint8_t, uint32_t>::value,
+    u16 = basic_scalar_encoding<uint16_t, uint32_t>::value,
+    u32 = basic_scalar_encoding<uint32_t, uint32_t>::value,
+    u64 = basic_scalar_encoding<uint64_t, uint32_t>::value,
+
+    i8 = basic_scalar_encoding<int8_t, uint32_t>::value,
+    i16 = basic_scalar_encoding<int16_t, uint32_t>::value,
+    i32 = basic_scalar_encoding<int32_t, uint32_t>::value,
+    i64 = basic_scalar_encoding<int64_t, uint32_t>::value,
+
+    f32 = basic_scalar_encoding<float, uint32_t>::value,
+    f64 = basic_scalar_encoding<double, uint32_t>::value,
+};
 }  // namespace internal
 
 namespace experimental
