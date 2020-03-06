@@ -1,5 +1,7 @@
 #pragma once
 #include <cxxabi.h>
+
+#include <climits>
 #include <string>
 
 namespace ttl
