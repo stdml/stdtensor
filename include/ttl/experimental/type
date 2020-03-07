@@ -11,16 +11,17 @@ namespace ttl
 {
 namespace experimental
 {
-template <typename R, internal::rank_t r>
-using type = internal::basic_tensor_type<R, internal::basic_shape<r>>;
+template <typename R, ttl::internal::rank_t r>
+using type = ttl::internal::basic_tensor_type<R, ttl::internal::basic_shape<r>>;
 
 using idx_encoder =
-    internal::basic_type_encoder<internal::idx_format::encoding>;
+    ttl::internal::basic_type_encoder<ttl::internal::idx_format::encoding>;
 
-using std_encoder = internal::basic_type_encoder<experimental::std_encoding>;
+using std_encoder =
+    ttl::internal::basic_type_encoder<experimental::std_encoding>;
 
 template <typename E = idx_encoder>
 using raw_type =
-    internal::basic_raw_tensor_type<E, internal::basic_flat_shape<>>;
+    ttl::internal::basic_raw_tensor_type<E, ttl::internal::basic_flat_shape<>>;
 }  // namespace experimental
 }  // namespace ttl
