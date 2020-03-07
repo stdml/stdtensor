@@ -49,7 +49,7 @@ template <typename R>
 class basic_allocator<R, cuda_memory>
 {
   public:
-    R *operator()(int count)
+    R *operator()(size_t count)
     {
         void *deviceMem;
         // cudaMalloc<R>(&deviceMem, count);
