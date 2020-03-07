@@ -67,7 +67,7 @@ struct std_encoding {
     template <typename R>
     static constexpr value_type value()
     {
-        return internal::basic_scalar_encoding<R, value_type>::value;
+        return ttl::internal::basic_scalar_encoding<R, value_type>::value;
     }
 };
 }  // namespace experimental
