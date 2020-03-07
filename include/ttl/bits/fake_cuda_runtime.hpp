@@ -51,7 +51,8 @@ class fake_device
         _allocs.erase(data);
     }
 
-    void memcpy(void *dst, const void *src, int size, cudaMemcpyKind dir) const
+    void memcpy(void *dst, const void *src, size_t size,
+                cudaMemcpyKind dir) const
     {
         switch (dir) {
         case cudaMemcpyHostToDevice:
@@ -69,7 +70,7 @@ class fake_device
 
 fake_device fake_cuda;
 
-cudaError_t cudaMalloc(void **ptr, int count)
+cudaError_t cudaMalloc(void **ptr, size_t count)
 {
     *ptr = fake_cuda.alloc(count);
     return cudaSuccess;
