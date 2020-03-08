@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 
 #include <ttl/bits/std_cuda_runtime.hpp>
 #include <ttl/bits/std_device.hpp>
@@ -10,6 +11,23 @@ namespace ttl
 {
 namespace internal
 {
+class std_cuda_error_checker_t
+{
+    const std::string func_name_;
+
+  public:
+    std_cuda_error_checker_t(const char *func_name) : func_name_(func_name) {}
+
+    void operator<<(const cudaError_t err) const
+    {
+        if (err != cudaSuccess) {
+            throw std::runtime_error(func_name_ + " failed with: " +
+                                     std::to_string(static_cast<int>(err)) +
+                                     ": " + cudaGetErrorString(err));
+        }
+    }
+};  // namespace ttl
+
 struct cuda_copier {
     static constexpr auto h2d = cudaMemcpyHostToDevice;
     static constexpr auto d2h = cudaMemcpyDeviceToHost;
@@ -18,10 +36,8 @@ struct cuda_copier {
     template <cudaMemcpyKind dir>
     static void copy(void *dst, const void *src, size_t size)
     {
-        const cudaError_t err = cudaMemcpy(dst, src, size, dir);
-        if (err != cudaSuccess) {
-            throw std::runtime_error("cudaMemcpy failed");
-        }
+        static std_cuda_error_checker_t check("cudaMemcpy");
+        check << cudaMemcpy(dst, src, size, dir);
     }
 };
 
@@ -54,10 +70,8 @@ class basic_allocator<R, cuda_memory>
         void *deviceMem;
         // cudaMalloc<R>(&deviceMem, count);
         // https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY
-        const cudaError_t err = cudaMalloc(&deviceMem, count * sizeof(R));
-        if (err != cudaSuccess) {
-            throw std::runtime_error("cudaMalloc failed");
-        }
+        static std_cuda_error_checker_t check("cudaMalloc");
+        check << cudaMalloc(&deviceMem, count * sizeof(R));
         return reinterpret_cast<R *>(deviceMem);
     }
 };
@@ -68,8 +82,8 @@ class basic_deallocator<R, cuda_memory>
   public:
     void operator()(R *data)
     {
-        const cudaError_t err = cudaFree(data);
-        if (err != cudaSuccess) { throw std::runtime_error("cudaFree failed"); }
+        static std_cuda_error_checker_t check("cudaFree");
+        check << cudaFree(data);
     }
 };
 }  // namespace internal
