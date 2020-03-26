@@ -1,0 +1,11 @@
+// -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/experimental/std_zip.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+using internal::zip;
+}
+}  // namespace ttl

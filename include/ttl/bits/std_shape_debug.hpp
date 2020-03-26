@@ -9,27 +9,29 @@ namespace ttl
 {
 namespace internal
 {
-template <rank_t r, typename D>
-std::string to_string(const basic_shape<r, D> &shape)
+template <typename Dims>
+std::string _join_string(const Dims &dims, const std::string &sep = ", ",
+                         const std::string &bgn = "(",
+                         const std::string &end = ")")
 {
     std::stringstream ss;
-    ss << "(";
-    std::copy(shape.dims().begin(), shape.dims().end(),
-              std::experimental::make_ostream_joiner(ss, ", "));
-    ss << ")";
+    ss << bgn;
+    std::copy(dims.begin(), dims.end(),
+              std::experimental::make_ostream_joiner(ss, sep));
+    ss << end;
     return ss.str();
 }
 
-template <typename D>
-std::string to_string(const basic_flat_shape<D> &shape)
+template <rank_t r, typename Dim>
+std::string to_string(const basic_shape<r, Dim> &shape)
 {
-    std::stringstream ss;
-    ss << "(";
-    std::copy(shape.dims().begin(), shape.dims().end(),
-              std::experimental::make_ostream_joiner(ss, ", "));
-    ss << ")";
-    return ss.str();
+    return _join_string(shape.dims());
 }
 
+template <typename Dim>
+std::string to_string(const basic_flat_shape<Dim> &shape)
+{
+    return _join_string(shape.dims());
+}
 }  // namespace internal
 }  // namespace ttl

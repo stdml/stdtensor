@@ -27,12 +27,6 @@ class flat_tensor_mixin
     template <rank_t r, typename A1 = typename trait::Access>
     using T = basic_tensor<R, basic_shape<r, Dim>, D, A1>;
 
-    template <rank_t r, typename A1>
-    [[deprecated]] T<r, A1> ranked_as() const
-    {
-        return T<r, A1>(data_.get(), shape_.template as_ranked<r>());
-    }
-
   protected:
     using allocator = basic_allocator<R, D>;
 
@@ -66,18 +60,6 @@ class flat_tensor_mixin
         using Access = typename basic_access_traits<A>::type;
         using T = basic_tensor<R, basic_shape<r, Dim>, D, Access>;
         return T(data(), shape_.template ranked<r>());
-    }
-
-    template <rank_t r>
-    [[deprecated]] T<r, readwrite> ref_as() const
-    {
-        return ranked_as<r, readwrite>();
-    }
-
-    template <rank_t r>
-    [[deprecated]] T<r, readonly> view_as() const
-    {
-        return ranked_as<r, readonly>();
     }
 };
 }  // namespace internal

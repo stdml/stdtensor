@@ -113,21 +113,6 @@ class raw_tensor_mixin
         using T = basic_tensor<R, basic_shape<r, Dim>, D, Access>;
         return T(data<R>(), shape_.template ranked<r>());
     }
-
-    template <typename R, rank_t r, typename A1 = A>
-    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, A1>
-    ranked_as() const {
-        return basic_tensor<R, basic_shape<r, Dim>, D, A1>(
-            data<R>(), shape_.template ranked<r>());
-    }
-
-    template <typename R, rank_t r>
-    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, readwrite> ref_as()
-        const { return ranked_as<R, r, readwrite>(); }
-
-    template <typename R, rank_t r>
-    [[deprecated]] basic_tensor<R, basic_shape<r, Dim>, D, readonly> view_as()
-        const { return ranked_as<R, r, readonly>(); }
 };
 }  // namespace internal
 }  // namespace ttl

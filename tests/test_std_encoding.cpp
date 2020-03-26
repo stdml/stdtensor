@@ -1,5 +1,16 @@
 #include "testing.hpp"
 
+namespace ttl
+{
+namespace experimental
+{
+namespace internal
+{
+// test nested namespace
+}
+}  // namespace experimental
+}  // namespace ttl
+
 #include <ttl/bits/std_encoding.hpp>
 #include <ttl/bits/type_encoder.hpp>
 

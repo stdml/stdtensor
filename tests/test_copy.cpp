@@ -7,7 +7,7 @@
 #include <ttl/range>
 #include <ttl/tensor>
 
-void test_copy(int n)
+void test_copy(uint32_t n)
 {
     ttl::tensor<int, 1> x_host(n);
     ttl::cuda_tensor<int, 1> x_cuda(n);
@@ -32,4 +32,6 @@ TEST(copy_test, test_copy)
     test_copy(1 << 20);
     test_copy(1 << 20);
     test_copy(1 << 20);
+    test_copy(1 << 24);
+    // test_copy(1 << 28);
 }
