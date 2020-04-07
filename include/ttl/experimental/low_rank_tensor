@@ -1,0 +1,42 @@
+// -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/low_rank_tensor.hpp>
+#include <ttl/bits/std_access_traits.hpp>
+
+namespace ttl
+{
+namespace internal
+{
+template <typename R, uint32_t n>
+using basic_fixed_vector =
+    basic_tensor<R, basic_static_shape<uint32_t, n>, host_memory, owner>;
+
+template <typename R, uint32_t m, uint32_t n>
+using basic_fixed_matrix =
+    basic_tensor<R, basic_static_shape<uint32_t, m, n>, host_memory, owner>;
+}  // namespace internal
+
+template <typename R, uint32_t n>
+using vec = internal::basic_fixed_vector<R, n>;
+
+template <typename R>
+using vec2 = vec<R, 2>;
+
+template <typename R>
+using vec3 = vec<R, 3>;
+
+template <typename R>
+using vec4 = vec<R, 4>;
+
+template <typename R, uint32_t m, uint32_t n = m>
+using mat = internal::basic_fixed_matrix<R, m, n>;
+
+template <typename R>
+using mat2 = mat<R, 2>;
+
+template <typename R>
+using mat3 = mat<R, 3>;
+
+template <typename R>
+using mat4 = mat<R, 4>;
+}  // namespace ttl
