@@ -22,6 +22,12 @@ class basic_tensor<R, basic_static_shape<Dim, ds...>, host_memory, owner>
     data_t data_;
 
     template <typename F>
+    static void pointwise(const F &f, const data_t &x, data_t &y)
+    {
+        std::transform(x.begin(), x.end(), y.begin(), f);
+    }
+
+    template <typename F>
     static void pointwise(const F &f, const data_t &x, const data_t &y,
                           data_t &z)
     {
@@ -50,9 +56,25 @@ class basic_tensor<R, basic_static_shape<Dim, ds...>, host_memory, owner>
         static_assert(sizeof...(C) == dim, "");
     }
 
-    R *data() const { return data_.data(); }
+    R *data() { return data_.data(); }
+
+    const R *data() const { return data_.data(); }
 
     const R &operator[](int i) const { return data_[i]; }
+
+    basic_tensor<R, S, host_memory, owner> operator-() const
+    {
+        data_t y;
+        pointwise(std::negate<R>(), data_, y);
+        return basic_tensor<R, S, host_memory, owner>(std::move(y));
+    }
+
+    basic_tensor<R, S, host_memory, owner> operator*(R x) const
+    {
+        data_t y;
+        pointwise([x = x](R a) { return a * x; }, data_, y);
+        return basic_tensor<R, S, host_memory, owner>(std::move(y));
+    }
 
     template <typename A>
     basic_tensor<R, S, host_memory, owner>

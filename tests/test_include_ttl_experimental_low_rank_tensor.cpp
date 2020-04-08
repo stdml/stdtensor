@@ -39,3 +39,17 @@ TEST(ttl_low_rank_tensor_include_test, test_mat)
     test_mat<int, 2, 4>();
     test_mat<int, 3, 4>();
 }
+
+TEST(ttl_low_rank_tensor_include_test, test_op)
+{
+    using ttl::vec;
+    vec<int, 2> x;
+    {
+        vec<int, 2> y = -x;
+        static_assert(sizeof(y) > 0, "");
+    }
+    {
+        vec<int, 2> y = x * 2;
+        static_assert(sizeof(y) > 0, "");
+    }
+}
