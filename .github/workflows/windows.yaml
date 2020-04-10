@@ -11,6 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - run: ./configure --examples --tests --benchmarks --build-gtest
+    # - run: ./configure --examples --tests --benchmarks --build-gtest
+    - run: cmake .
     - run: make
-    - run: make test
+    # - run: make test
