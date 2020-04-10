@@ -46,8 +46,8 @@ TEST(cuda_tensor_test, test2)
     ttl::copy(ttl::ref(m2), ttl::view(m1));
 
     m1.slice(1, 2);
-    [[gnu::unused]] auto r = ttl::ref(m1);
-    [[gnu::unused]] auto v = ttl::view(m1);
+    GNU_UNUSED auto r = ttl::ref(m1);
+    GNU_UNUSED auto v = ttl::view(m1);
 }
 
 TEST(cuda_tensor_test, test_3)

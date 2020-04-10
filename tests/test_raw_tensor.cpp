@@ -68,8 +68,8 @@ TEST(raw_tensor_test, test_convert)
         raw_tensor_ref r1 = raw_ref(t);
         raw_tensor_view v1 = raw_view(t);
 
-        [[gnu::unused]] ttl::tensor_ref<R, 4> _tr = r.typed<R, 4>();
-        [[gnu::unused]] ttl::tensor_view<R, 4> _tv = v.typed<R, 4>();
+        GNU_UNUSED ttl::tensor_ref<R, 4> _tr = r.typed<R, 4>();
+        GNU_UNUSED ttl::tensor_view<R, 4> _tv = v.typed<R, 4>();
     }
     {
         ttl::tensor_ref<float, 4> rt = ref(t);

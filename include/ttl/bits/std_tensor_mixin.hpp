@@ -18,7 +18,7 @@ class basic_scalar_mixin
     data_t data_;
 
   protected:
-    using Dim = typename S::dimension_type;
+    using Dim = typename S::dimension_type;  // For MSVC C2248
     using allocator = basic_allocator<R, D>;
 
     basic_scalar_mixin(data_ptr data) : data_(data)
@@ -105,7 +105,7 @@ class basic_tensor_mixin
     }
 
   protected:
-    using Dim = typename S::dimension_type;
+    using Dim = typename S::dimension_type;  // For MSVC C2248
     using allocator = basic_allocator<R, D>;
 
     explicit basic_tensor_mixin(data_ptr data, const S &shape)

@@ -16,8 +16,6 @@ class flat_tensor_mixin
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
 
-    using Dim = typename S::dimension_type;
-
     const S shape_;
     data_t data_;
 
@@ -25,9 +23,11 @@ class flat_tensor_mixin
     // using slice_type = basic_tensor<R, S, D, typename trait::Access>;
 
     template <rank_t r, typename A1 = typename trait::Access>
-    using T = basic_tensor<R, basic_shape<r, Dim>, D, A1>;
+    using T =
+        basic_tensor<R, basic_shape<r, typename S::dimension_type>, D, A1>;
 
   protected:
+    using Dim = typename S::dimension_type;  // For MSVC C2248
     using allocator = basic_allocator<R, D>;
 
     explicit flat_tensor_mixin(data_ptr data, const S &shape)

@@ -13,6 +13,7 @@ ENDIF()
 INCLUDE(cmake/strict.cmake)
 INCLUDE(cmake/stdc++fs.cmake)
 IF(NOT MSVC)
+    ADD_DEFINITIONS(-DGNU_UNUSED=[[gnu::unused]])
     ADD_DEFINITIONS(-DHAVE_CXXABI)
 ENDIF()
 
