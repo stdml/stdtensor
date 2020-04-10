@@ -107,6 +107,10 @@ add_cmake_flags() {
         pass_cmake_flag_from_env GBENCH_GIT_URL
     fi
 
+    # FIXME:
+    # 23/23 Test #23: test-zip .........................***Exception: SegFault  1.51 sec
+    # add_cmake_flag CMAKE_BUILD_TYPE Release
+
     add_cmake_flag CMAKE_RUNTIME_OUTPUT_DIRECTORY $PWD/bin
     add_cmake_flag LIBRARY_OUTPUT_PATH $PWD/lib # TODO: upgrade to CMAKE_LIBRARY_OUTPUT_DIRECTORY
     add_cmake_flag CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}
