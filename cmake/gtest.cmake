@@ -15,9 +15,13 @@ IF(BUILD_GTEST)
         libgtest-dev-repo
         GIT_REPOSITORY ${GTEST_GIT_URL}
         PREFIX ${PREFIX}
+        # https://stackoverflow.com/questions/19024259/how-to-change-the-build-
+        # type-to-release-mode-in-cmake
+        BUILD_COMMAND cmake --build . --config Release
+        INSTALL_COMMAND cmake --install . --config Release
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PREFIX}
                    -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
-                   -DBUILD_GMOCK=0)
+                   -DCMAKE_BUILD_TYPE=Release -DBUILD_GMOCK=0)
 
     LINK_DIRECTORIES(${PREFIX}/lib)
 

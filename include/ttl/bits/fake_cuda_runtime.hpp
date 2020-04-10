@@ -19,7 +19,7 @@ class fake_cuda_device
 
     void check_leak() const
     {
-        if (not _allocs.empty()) {
+        if (!_allocs.empty()) {
             throw std::runtime_error("device memory leak detected.");
         }
     }

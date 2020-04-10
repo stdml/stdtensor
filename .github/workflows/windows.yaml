@@ -1,0 +1,16 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    # https://help.github.com/en/articles/virtual-environments-for-github-actions#supported-virtual-environments
+    runs-on: windows-2019
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - run: cmake . -DBUILD_TESTS=1 -DBUILD_GTEST=1 -DUSE_STRICT=0 -DBUILD_LIB=1
+    - run: cmake --build . --config Release
+    - run: ctest -C Release

@@ -381,8 +381,8 @@ void test_data_end(const T &t)
 {
     ASSERT_EQ(t.data_end(), t.data() + t.shape().size());
     {
-        const int s1 = t.data_end() - t.data();
-        const int s2 = t.shape().size();
+        const size_t s1 = t.data_end() - t.data();
+        const size_t s2 = t.size();
         ASSERT_EQ(s1, s2);
     }
 }
