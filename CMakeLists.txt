@@ -12,6 +12,9 @@ ENDIF()
 
 INCLUDE(cmake/strict.cmake)
 INCLUDE(cmake/stdc++fs.cmake)
+IF(NOT MSVC)
+    ADD_DEFINITIONS(-DHAVE_CXXABI)
+ENDIF()
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 
