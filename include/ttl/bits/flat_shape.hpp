@@ -42,7 +42,7 @@ class basic_flat_shape
     {
     }
 
-    rank_t rank() const { return dims_.size(); }
+    rank_t rank() const { return static_cast<rank_t>(dims_.size()); }
 
     dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }
 
