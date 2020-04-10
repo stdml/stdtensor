@@ -13,5 +13,5 @@ jobs:
 
     # - run: ./configure --examples --tests --benchmarks --build-gtest
     - run: cmake . -DBUILD_TESTS=1 -DBUILD_GTEST=1 -DUSE_STRICT=0
-    - run: cmake --build .
+    - run: cmake --build . --config Release
     # - run: make test
