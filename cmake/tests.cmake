@@ -23,6 +23,8 @@ FUNCTION(ADD_UNIT_TESTS)
 ENDFUNCTION()
 
 IF(MSVC)
+    ADD_COMPILE_OPTIONS($<$<CONFIG:>:/MT> $<$<CONFIG:Debug>:/MTd>
+                        $<$<CONFIG:Release>:/MT>)
     ADD_UNIT_TESTS(tests/test_shape.cpp)
 ELSE()
     FILE(GLOB tests tests/test_*.cpp)
