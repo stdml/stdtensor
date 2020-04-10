@@ -15,11 +15,10 @@ class basic_scalar_mixin
     using data_ref = typename trait::ref_type;
     using data_t = typename trait::Data;
 
-    using Dim = typename S::dimension_type;
-
     data_t data_;
 
   protected:
+    using Dim = typename S::dimension_type;
     using allocator = basic_allocator<R, D>;
 
     basic_scalar_mixin(data_ptr data) : data_(data)
@@ -100,14 +99,13 @@ class basic_tensor_mixin
     const S shape_;
     data_t data_;
 
-    using Dim = typename S::dimension_type;
-
     iterator _iter(data_ptr pos) const
     {
         return iterator(pos, shape_.subshape());
     }
 
   protected:
+    using Dim = typename S::dimension_type;
     using allocator = basic_allocator<R, D>;
 
     explicit basic_tensor_mixin(data_ptr data, const S &shape)
