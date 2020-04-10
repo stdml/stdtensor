@@ -12,11 +12,13 @@ ENDIF()
 
 INCLUDE(cmake/strict.cmake)
 INCLUDE(cmake/stdc++fs.cmake)
-IF(NOT MSVC)
+IF(MSVC)
+    ADD_COMPILE_OPTIONS($<$<CONFIG:>:/MT> $<$<CONFIG:Debug>:/MTd>
+                        $<$<CONFIG:Release>:/MT>)
+    ADD_DEFINITIONS(-DGNU_UNUSED=)
+ELSE()
     ADD_DEFINITIONS(-DGNU_UNUSED=[[gnu::unused]])
     ADD_DEFINITIONS(-DHAVE_CXXABI)
-ELSE()
-    ADD_DEFINITIONS(-DGNU_UNUSED=)
 ENDIF()
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

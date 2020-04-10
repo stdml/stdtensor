@@ -24,8 +24,6 @@ ENDFUNCTION()
 
 FILE(GLOB tests tests/test_*.cpp)
 IF(MSVC)
-    ADD_COMPILE_OPTIONS($<$<CONFIG:>:/MT> $<$<CONFIG:Debug>:/MTd>
-                        $<$<CONFIG:Release>:/MT>)
     LIST(REMOVE_ITEM tests ${CMAKE_SOURCE_DIR}/tests/test_loc.cpp)
     LIST(REMOVE_ITEM tests ${CMAKE_SOURCE_DIR}/tests/test_shape_debug.cpp)
 ENDIF()
