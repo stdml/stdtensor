@@ -136,7 +136,7 @@ TEST(raw_tensor_test, test_type_reification)
         bool caught = false;
         try {
             t.typed<float>();
-        } catch (std::invalid_argument &e) {
+        } catch (std::invalid_argument &) {
             caught = true;
         }
         ASSERT_TRUE(caught);
