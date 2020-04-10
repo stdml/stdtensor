@@ -49,9 +49,9 @@ class raw_tensor_mixin
     const S shape_;
     data_t data_;
 
-    using Dim = typename S::dimension_type;
-
   protected:
+    using Dim = typename S::dimension_type;  // For MSVC C2248
+
     raw_tensor_mixin(data_ptr data, const value_type_t value_type,
                      const S &shape)
         : value_type_(value_type), shape_(shape),

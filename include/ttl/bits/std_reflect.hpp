@@ -1,5 +1,7 @@
 #pragma once
+#ifdef HAVE_CXXABI
 #include <cxxabi.h>
+#endif
 
 #include <climits>
 #include <string>
@@ -11,8 +13,12 @@ namespace internal
 template <typename T>
 std::string demangled_type_info_name()
 {
+#ifdef HAVE_CXXABI
     int status = 0;
     return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
+#else
+    return typeid(T).name();
+#endif
 }
 
 template <typename R>
