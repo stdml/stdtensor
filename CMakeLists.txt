@@ -15,10 +15,13 @@ INCLUDE(cmake/stdc++fs.cmake)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 
-ADD_LIBRARY(stdtensor src/tensor.cpp)
+OPTION(BUILD_LIB "Build c lib." OFF)
+IF(BUILD_LIB)
+    ADD_LIBRARY(stdtensor src/tensor.cpp)
+    INSTALL(TARGETS stdtensor ARCHIVE DESTINATION lib)
+ENDIF()
 
 INSTALL(DIRECTORY include DESTINATION .)
-INSTALL(TARGETS stdtensor ARCHIVE DESTINATION lib)
 
 OPTION(BUILD_TESTS "Build tests." OFF)
 OPTION(BUILD_BENCHMARKS "Build benchmarks." OFF)
