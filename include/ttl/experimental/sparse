@@ -1,0 +1,17 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/std_device.hpp>
+#include <ttl/bits/std_sparse_matrix.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+template <typename R, internal::rank_t r, typename I,
+          typename D = internal::host_memory>
+using sparse_tensor = internal::basic_sparse_tensor<R, r, I, D>;
+
+template <typename R, typename I = uint32_t, typename D = internal::host_memory>
+using sparse_matrix = sparse_tensor<R, 2, I, D>;
+}  // namespace experimental
+}  // namespace ttl

@@ -11,6 +11,8 @@ BreakBeforeBraces: Linux
 SortIncludes: true
 # IncludeBlocks: true
 
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
 DerivePointerAlignment: false
 PointerAlignment: Right
 
