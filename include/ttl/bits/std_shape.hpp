@@ -17,10 +17,10 @@ N product(Iterator begin, Iterator end)
 };
 
 template <size_t off, typename T, size_t r, size_t... Is>
-constexpr std::array<T, r - 1> shift_idx(const std::array<T, r> &a,
-                                         std::index_sequence<Is...>)
+constexpr std::array<T, r - off> shift_idx(const std::array<T, r> &a,
+                                           std::index_sequence<Is...>)
 {
-    return std::array<T, r - 1>({std::get<Is + off>(a)...});
+    return std::array<T, r - off>({std::get<Is + off>(a)...});
 }
 
 using rank_t = uint8_t;

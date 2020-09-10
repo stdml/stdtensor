@@ -181,7 +181,7 @@ TEST(shape_test, test_flatten)
     ASSERT_EQ(s8, ttl::shape<1>(720));
 }
 
-struct S {
+struct Test_constexpr {
     static constexpr auto shape = ttl::make_shape(2, 3);
 };
 
@@ -194,4 +194,13 @@ TEST(shape_test, test_batch_vectorize)
     ASSERT_EQ(vs, ttl::make_shape(2, 3, 5));
     auto vs1 = ttl::vectorize(shape);
     ASSERT_EQ(vs1, ttl::make_shape(2, 3, 1));
+}
+
+TEST(shape_test, test_subshape)
+{
+    auto s = ttl::make_shape(1, 2, 3, 4);
+    auto t1 = s.subshape();  // (2, 3, 4)
+    ASSERT_EQ(t1.size(), 24);
+    auto t2 = s.subshape<2>();  // (3, 4)
+    ASSERT_EQ(t2.size(), 12);
 }
