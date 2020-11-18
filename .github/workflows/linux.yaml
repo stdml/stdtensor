@@ -21,7 +21,7 @@ jobs:
         mkdir /tmp/gtest
         cd /tmp/gtest
         cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
-        make install
+        sudo make install
 
     - run: ./configure --examples --tests --benchmarks
     - run: make
