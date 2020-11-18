@@ -16,6 +16,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - run: sudo apt install -y libgtest-dev libbenchmark-dev
+    - run: |
+        mkdir /tmp/gtest
+        cd /tmp/gtest
+        cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
+        make install
+
     - run: ./configure --examples --tests --benchmarks
     - run: make
     - run: make test
