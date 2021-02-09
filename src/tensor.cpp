@@ -37,4 +37,16 @@ tensor_t *new_tensor(uint8_t value_type, int rank, ...)
     return new tensor_s(value_type, shape);
 }
 
+tensor_t *new_tensor1(uint8_t value_type, int rank, const int *_dims)
+{
+    using raw_shape = raw_tensor::shape_type;
+    using dim_t = raw_shape::dimension_type;
+    std::vector<dim_t> dims(rank);
+    std::copy(_dims, _dims + rank, dims.begin());
+    raw_shape shape(dims);
+    return new tensor_s(value_type, shape);
+}
+
 void del_tensor(const tensor_t *pt) { delete pt; }
+
+void *tensor_data(tensor_t *pt) { return pt->data(); }

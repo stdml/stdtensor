@@ -17,8 +17,21 @@ TEST(c_api_test, test1)
             tensor_t *pt = new_tensor(dt, 2, 2, 3);
             del_tensor(pt);
         }
+        {
+            int dims[1] = {1};
+            tensor_t *pt = new_tensor1(dt, 1, dims);
+            del_tensor(pt);
+        }
+        {
+            int dims[2] = {2, 3};
+            tensor_t *pt = new_tensor1(dt, 2, dims);
+            del_tensor(pt);
+        }
     }
+}
 
+TEST(c_api_test, test2)
+{
     using scalar_encoding = raw_tensor::encoder_type;
 
     ASSERT_EQ(scalar_encoding::value<uint8_t>(), dtypes.u8);
