@@ -149,6 +149,28 @@ class TensorView : public BasicTensor<raw_tensor_view>
     TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
 };
 
+class TensorRef : public BasicTensor<raw_tensor_ref>
+{
+    using TT = raw_tensor_ref;
+    using P = BasicTensor<TT>;
+
+  public:
+    using P::E;
+    using P::V;
+
+    TensorRef(TT t);
+
+    TensorRef(const Tensor &);
+
+    template <typename R>
+    R *data() const
+    {
+        return t_.data<R>();
+    }
+
+    // TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
+};
+
 class Tensor : public BasicTensor<raw_tensor>
 {
     //   protected:
