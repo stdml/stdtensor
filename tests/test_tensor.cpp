@@ -87,9 +87,9 @@ struct test_5d_array {
 
         if (write) {
             int idx = 0;
-            for (const auto &t1 : t) {
-                for (const auto &t2 : t1) {
-                    for (const auto &t3 : t2) {
+            for (const auto &&t1 : t) {
+                for (const auto &&t2 : t1) {
+                    for (const auto &&t3 : t2) {
                         for (const auto &&t4 : t3) {
                             for (auto &&t5 : t4) {
                                 ++idx;
