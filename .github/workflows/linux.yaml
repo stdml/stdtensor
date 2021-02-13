@@ -1,0 +1,28 @@
+name: Linux
+
+on: [push]
+
+jobs:
+  ubuntu:
+    # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#example-running-with-more-than-one-operating-system
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os:
+        - ubuntu-18.04
+        - ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - run: sudo apt install -y libgtest-dev libbenchmark-dev
+    - run: |
+        mkdir /tmp/gtest
+        cd /tmp/gtest
+        cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
+        sudo make install
+
+    - run: ./configure --examples --tests --benchmarks
+    - run: make
+    - run: make test
