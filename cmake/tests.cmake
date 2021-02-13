@@ -29,3 +29,7 @@ IF(MSVC)
     LIST(REMOVE_ITEM tests ${CMAKE_SOURCE_DIR}/tests/test_tensor_type.cpp)
 ENDIF()
 ADD_UNIT_TESTS(${tests})
+
+IF(BUILD_LIB)
+    ADD_UNIT_TEST(test-libtensor tests/stdml/test_libtensor.cpp)
+ENDIF()

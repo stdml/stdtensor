@@ -8,8 +8,8 @@
 #include <ttl/bits/type_encoder.hpp>
 #include <ttl/tensor>
 
-#include <libtensor_config.hpp>
-#include <libtensor_dtype.hpp>
+#include <stdml/dtype.hpp>
+#include <stdml/tensor_config.hpp>
 
 namespace stdml
 {
@@ -87,7 +87,8 @@ class BasicTensor
 
     size_t len() const
     {
-        if (const auto &dims = t_.dims(); dims.size() > 0) { return dims[0]; }
+        const auto &dims = t_.dims();
+        if (dims.size() > 0) { return dims[0]; }
         return 0;
     }
 

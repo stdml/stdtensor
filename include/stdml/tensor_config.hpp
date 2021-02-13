@@ -24,5 +24,4 @@ using raw_tensor_ref =
     raw_tensor_t<ttl::internal::host_memory, ttl::internal::readwrite>;
 using raw_tensor_view =
     raw_tensor_t<ttl::internal::host_memory, ttl::internal::readonly>;
-
 }  // namespace stdml
