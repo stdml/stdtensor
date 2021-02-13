@@ -246,6 +246,8 @@ class Tensor : public BasicTensor<raw_tensor>
         return flatten<R, ttl::internal::readonly>();
     }
 
+    TensorView view() const { return TensorView(*this); }
+
     TensorView operator[](size_t i) const
     {
         // TODO: check rank
