@@ -14,6 +14,7 @@ jobs:
 
   steps:
   - script: |
+      sudo apt install -y gtest-dev
       mkdir /tmp/gtest
       env -C /tmp/gtest cmake /usr/src/googletest -DCMAKE_CXX_FLAGS=-std=c++11 -Dgtest_disable_pthreads=1
       env -C /tmp/gtest make -j $(nproc)
