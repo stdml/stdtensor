@@ -30,6 +30,8 @@ IF(MSVC)
 ENDIF()
 ADD_UNIT_TESTS(${tests})
 
+#
 IF(BUILD_LIB)
     ADD_UNIT_TEST(test-libtensor tests/stdml/test_libtensor.cpp)
+    TARGET_LINK_LIBRARIES(test-libtensor tensor)
 ENDIF()

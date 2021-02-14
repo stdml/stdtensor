@@ -179,6 +179,8 @@ class Tensor : public BasicTensor<raw_tensor>
     //     T t_;
     using TT = raw_tensor;
     using P = BasicTensor<TT>;
+
+    friend class TensorRef;
     friend class TensorView;
 
   public:
@@ -245,6 +247,8 @@ class Tensor : public BasicTensor<raw_tensor>
     {
         return flatten<R, ttl::internal::readonly>();
     }
+
+    TensorRef ref() const { return TensorRef(*this); }
 
     TensorView view() const { return TensorView(*this); }
 
