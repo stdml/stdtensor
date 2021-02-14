@@ -6,6 +6,7 @@ TEST(libtensor_test, test_1)
 {
     namespace ml = stdml;
     ml::Tensor x(ml::i32, ml::Shape());
+    ml::Tensor y = ml::Tensor::new_like(x);
 
     {
         auto r = x.ref();

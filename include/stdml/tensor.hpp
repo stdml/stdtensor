@@ -190,6 +190,12 @@ class Tensor : public BasicTensor<raw_tensor>
     // using E = TT::encoder_type;
     // using V = E::value_type;
 
+    template <typename TT1>
+    static Tensor new_like(const BasicTensor<TT1> &x)
+    {
+        return Tensor(x.dtype(), x.shape());
+    }
+
     Tensor(V v, const S &s) : P(TT(v, s)) {}
 
     Tensor(V v, const Shape &s) : P(TT(v, s.get())) {}
