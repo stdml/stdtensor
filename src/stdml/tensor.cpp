@@ -10,6 +10,8 @@ TensorView::TensorView(TT t) : P(std::move(t)) {}
 
 TensorView::TensorView(const Tensor &x) : P(TT(x.t_)) {}
 
+TensorRef::TensorRef(const Tensor &x) : P(TT(x.t_)) {}
+
 const char *tn(const DType dt)
 {
 #define CASE(t)                                                                \
