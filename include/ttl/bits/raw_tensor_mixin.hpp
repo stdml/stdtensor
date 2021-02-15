@@ -62,6 +62,7 @@ class raw_tensor_mixin
   public:
     using encoder_type = Encoder;
     using shape_type = S;
+    using access_type = A;
 
     template <typename R>
     static constexpr value_type_t type()

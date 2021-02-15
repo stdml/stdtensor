@@ -11,6 +11,22 @@
 #include <stdml/dtype.hpp>
 #include <stdml/tensor_config.hpp>
 
+namespace ttl
+{
+namespace internal
+{
+// TODO: promote to ttl
+template <typename A>
+struct default_ref_type {
+    using type = A;
+};
+template <>
+struct default_ref_type<owner> {
+    using type = readwrite;
+};
+}  // namespace internal
+}  // namespace ttl
+
 namespace stdml
 {
 template <typename T, typename C>
@@ -74,6 +90,19 @@ class BasicTensor
 
     BasicTensor(TT t) : t_(std::move(t)) {}
 
+    using AA = typename ttl::internal::default_ref_type<
+        typename TT::access_type>::type;
+
+    template <typename R, typename A = AA>
+    auto flatten() const
+    {
+        using vec =
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>,
+                                        ttl::internal::host_memory, A>;
+        auto x = t_.template typed<R>();
+        return vec(x.data(), x.size());
+    }
+
   public:
     size_t rank() const { return t_.rank(); }
 
@@ -126,6 +155,8 @@ class TensorView : public BasicTensor<raw_tensor_view>
     using P::E;
     using P::V;
 
+    using P::flatten;
+
     TensorView(TT t);
 
     TensorView(const Tensor &);
@@ -158,6 +189,8 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     using P::E;
     using P::V;
 
+    using P::flatten;
+
     TensorRef(TT t);
 
     TensorRef(const Tensor &);
@@ -186,6 +219,8 @@ class Tensor : public BasicTensor<raw_tensor>
   public:
     using P::E;
     using P::V;
+
+    using P::flatten;
 
     // using E = TT::encoder_type;
     // using V = E::value_type;
@@ -238,16 +273,6 @@ class Tensor : public BasicTensor<raw_tensor>
         return ranked<R, r, ttl::internal::readonly>();
     }
 
-    template <typename R, typename A = ttl::internal::readwrite>
-    auto flatten() const
-    {
-        using vec_ref =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>,
-                                        ttl::internal::host_memory, A>;
-        auto x = t_.typed<R>();
-        return vec_ref(x.data(), x.size());
-    }
-
     template <typename R>
     auto flatten_view() const
     {
@@ -284,6 +309,7 @@ struct type_switch {
         return f.template operator()<T>(args...);
 
         switch (vt) {
+            // TODO: list of types should depend on E
             CASE(uint8_t);
             CASE(int8_t);
             CASE(int16_t);
@@ -319,6 +345,13 @@ struct apply<F> {
     void operator()(const Tensor &z, const Tensor &x, const Tensor &y) const
     {
         F()(z.flatten<R>(), x.flatten_view<R>(), y.flatten_view<R>());
+    }
+
+    template <typename R>
+    void operator()(const TensorRef &z,  //
+                    const TensorView &x, const TensorView &y) const
+    {
+        F()(z.flatten<R>(), x.flatten<R>(), y.flatten<R>());
     }
 };
 
