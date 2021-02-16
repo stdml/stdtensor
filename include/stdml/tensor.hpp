@@ -76,6 +76,14 @@ class Shape
     size_t rank() const { return s_.rank(); }
 
     size_t size() const { return s_.size(); }
+
+    template <ttl::rank_t r, typename Dim = dim_t>
+    ttl::internal::basic_shape<r, Dim> ranked() const
+    {
+        std::vector<Dim> dims = cast_to<Dim>(s_.dims());
+        ttl::internal::basic_flat_shape<Dim> s(std::move(dims));
+        return s.template ranked<r>();
+    }
 };
 
 template <typename TT>
@@ -101,6 +109,15 @@ class BasicTensor
                                         ttl::internal::host_memory, A>;
         auto x = t_.template typed<R>();
         return vec(x.data(), x.size());
+    }
+
+    template <typename R, ttl::rank_t r, typename A = AA>
+    auto ranked() const
+    {
+        using tsr =
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>,
+                                        ttl::internal::host_memory, A>;
+        return tsr(t_.template data<R>(), ranked_shape<r>());
     }
 
   public:
@@ -156,6 +173,7 @@ class TensorView : public BasicTensor<raw_tensor_view>
     using P::V;
 
     using P::flatten;
+    using P::ranked;
 
     TensorView(TT t);
 
@@ -190,6 +208,7 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     using P::V;
 
     using P::flatten;
+    using P::ranked;
 
     TensorRef(TT t);
 
@@ -221,6 +240,7 @@ class Tensor : public BasicTensor<raw_tensor>
     using P::V;
 
     using P::flatten;
+    using P::ranked;
 
     // using E = TT::encoder_type;
     // using V = E::value_type;
@@ -256,15 +276,6 @@ class Tensor : public BasicTensor<raw_tensor>
     auto typed() const
     {
         return t_.typed<R>();
-    }
-
-    template <typename R, ttl::rank_t r, typename A = ttl::internal::readwrite>
-    auto ranked() const
-    {
-        using tensor_ref =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>,
-                                        ttl::internal::host_memory, A>;
-        return tensor_ref(t_.data<R>(), ranked_shape<r>());
     }
 
     template <typename R, ttl::rank_t r>
@@ -361,6 +372,13 @@ struct apply<F, r0, r1, r2> {
     void operator()(const Tensor &z, const Tensor &x, const Tensor &y) const
     {
         F()(z.ranked<R, r0>(), x.ranked_view<R, r1>(), y.ranked_view<R, r2>());
+    }
+
+    template <typename R>
+    void operator()(const TensorRef &z,  //
+                    const TensorView &x, const TensorView &y) const
+    {
+        F()(z.ranked<R, r0>(), x.ranked<R, r1>(), y.ranked<R, r2>());
     }
 };
 }  // namespace stdml

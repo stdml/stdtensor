@@ -34,7 +34,9 @@ class basic_flat_shape
         static_assert(sizeof...(D) <= 0xff, "too many dimensions");
     }
 
-    explicit basic_flat_shape(const std::vector<dim_t> &dims) : dims_(dims) {}
+    explicit basic_flat_shape(std::vector<dim_t> dims) : dims_(std::move(dims))
+    {
+    }
 
     template <rank_t r, typename D>
     explicit basic_flat_shape(const basic_shape<r, D> &shape)
