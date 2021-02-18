@@ -26,3 +26,9 @@ TEST(libtensor_test, test_flatten)
     static_assert(std::is_same<ttl::tensor_ref<int32_t, 1>, decltype(y)>::value,
                   "");
 }
+
+TEST(libtensor_test, test_show)
+{
+    namespace ml = stdml;
+    ml::Tensor x(ml::i32, ml::Shape());
+}
