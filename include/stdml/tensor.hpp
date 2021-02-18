@@ -342,6 +342,14 @@ namespace stdml
 extern void show_tensor(std::basic_ostream<char> &os, const TensorView &x);
 
 template <typename TT>
+std::string info(const TT &x)
+{
+    std::stringstream ss;
+    ss << tn(x.dtype()) << ttl::internal::to_string(x.shape().get());
+    return ss.str();
+}
+
+template <typename TT>
 std::string show(const TT &x)
 {
     std::stringstream ss;
