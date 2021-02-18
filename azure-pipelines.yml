@@ -6,8 +6,16 @@
 trigger:
 - libtensor-dev
 
+strategy:
+  matrix:
+    ubuntu-18.04:
+      imageName: 'ubuntu-18.04'
+
+    ubuntu-20.04:
+      imageName: 'ubuntu-20.04'
+
 pool:
-  vmImage: ubuntu-20.04
+  vmImage: $(imageName)
 
 jobs:
 - job: build
