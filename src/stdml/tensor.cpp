@@ -75,14 +75,7 @@ void show_cpp(std::basic_ostream<char> &os, const TensorView &x)
     type_switch<E>()(to<E>(x.dtype()), show_tensor_t(os, {'{', '}'}), x);
 }
 
-template <typename TT>
-std::string show(const TT &x)
-{
-    std::stringstream ss;
-    ss << tn(x.dtype()) << ttl::internal::to_string(x.shape().get());
-    show_tensor(ss, x);
-    return ss.str();
-}
+template std::string show(const Tensor &x);
 
 template <typename TT>
 std::string gen_cpp(const TT &x)

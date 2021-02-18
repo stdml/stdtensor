@@ -216,6 +216,13 @@ class Tensor : public BasicTensor<raw_tensor>
         return t_.data<R>();
     }
 
+    // TODO: support data_end
+    // template <typename R>
+    // R *data_end() const
+    // {
+    //     return t_.data_end<R>();
+    // }
+
     template <typename R>
     auto typed() const
     {
@@ -250,8 +257,6 @@ class Tensor : public BasicTensor<raw_tensor>
 
     TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
 };
-
-std::string show(const Tensor &x);
 
 template <typename E>
 struct type_switch {
@@ -325,4 +330,23 @@ struct apply<F, r0, r1, r2> {
         F()(z.ranked<R, r0>(), x.ranked<R, r1>(), y.ranked<R, r2>());
     }
 };
+}  // namespace stdml
+
+// io functions
+
+#include <sstream>
+#include <ttl/bits/std_shape_debug.hpp>
+
+namespace stdml
+{
+extern void show_tensor(std::basic_ostream<char> &os, const TensorView &x);
+
+template <typename TT>
+std::string show(const TT &x)
+{
+    std::stringstream ss;
+    ss << tn(x.dtype()) << ttl::internal::to_string(x.shape().get());
+    show_tensor(ss, x);
+    return ss.str();
+}
 }  // namespace stdml

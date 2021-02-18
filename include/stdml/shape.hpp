@@ -1,6 +1,9 @@
 #pragma once
+#include <list>
+
 #include <stdml/tensor_config.hpp>
 #include <ttl/bits/flat_shape.hpp>
+#include <ttl/shape>
 
 namespace stdml
 {

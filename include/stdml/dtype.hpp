@@ -26,6 +26,8 @@ enum DType {
     boolean,
 };
 
+extern const char *tn(const DType dt);
+
 template <typename E>
 DType from(typename E::value_type v)
 {
