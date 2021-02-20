@@ -27,6 +27,24 @@ TEST(libtensor_test, test_flatten)
                   "");
 }
 
+TEST(libtensor_test, test_data_end)
+{
+    namespace ml = stdml;
+    using T = int32_t;
+    ml::Tensor x(ml::i32, ttl::make_shape(2, 3, 4));
+    auto r = x.ref();
+    auto v = x.view();
+
+    x.data<T>();
+    x.data_end<T>();
+
+    r.data<T>();
+    r.data_end<T>();
+
+    v.data<T>();
+    v.data_end<T>();
+}
+
 /*
 TEST(libtensor_test, test_show)
 {

@@ -91,6 +91,20 @@ class BasicTensor
         return ttl::shape<r>(dims);
     }
 
+    // pointer accessors
+
+    template <typename R>
+    auto data() const
+    {
+        return t_.template data<R>();
+    }
+
+    template <typename R>
+    auto data_end() const
+    {
+        return t_.template data<R>() + t_.size();
+    }
+
     template <typename T>
     T _chunk(size_t k) const
     {
@@ -123,12 +137,6 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
     TensorView(const Tensor &);
 
-    template <typename R>
-    const R *data() const
-    {
-        return t_.data<R>();
-    }
-
     TensorView operator[](size_t i) const
     {
         // TODO: check rank
@@ -157,12 +165,6 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     TensorRef(TT t);
 
     TensorRef(const Tensor &);
-
-    template <typename R>
-    R *data() const
-    {
-        return t_.data<R>();
-    }
 
     // TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
 };
@@ -209,19 +211,6 @@ class Tensor : public BasicTensor<raw_tensor>
     {
         return v == t_.value_type() && s == t_.shape();
     }
-
-    template <typename R>
-    R *data() const
-    {
-        return t_.data<R>();
-    }
-
-    // TODO: support data_end
-    // template <typename R>
-    // R *data_end() const
-    // {
-    //     return t_.data_end<R>();
-    // }
 
     template <typename R>
     auto typed() const
