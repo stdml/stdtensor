@@ -35,6 +35,11 @@ class Shape
 
     Shape(const std::list<long> &dims) : s_(cast_to<int64_t>(dims)) {}
 
+    template <typename D>
+    Shape(const std::vector<D> &dims) : s_(cast_to<int64_t>(dims))
+    {
+    }
+
     template <typename D, size_t r>
     Shape(const std::array<D, r> &dims) : s_(cast_to<int64_t>(dims))
     {
