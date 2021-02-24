@@ -68,4 +68,11 @@ class Shape
         return s.template ranked<r>();
     }
 };
+
+template <typename... D>
+Shape shape(D... d)
+{
+    std::array<int64_t, sizeof...(D)> dims({static_cast<int64_t>(d)...});
+    return Shape(dims);
+}
 }  // namespace stdml
