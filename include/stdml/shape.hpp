@@ -67,6 +67,8 @@ class Shape
         ttl::internal::basic_flat_shape<Dim> s(std::move(dims));
         return s.template ranked<r>();
     }
+
+    const auto &dims() const { return s_.dims(); }
 };
 
 template <typename... D>

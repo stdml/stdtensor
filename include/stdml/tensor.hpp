@@ -82,6 +82,8 @@ class BasicTensor
         return 0;
     }
 
+    const auto &dims() const { return t_.dims(); }
+
     std::pair<V, S> meta() const { return {t_.value_type(), t_.shape()}; }
 
     template <size_t r>
