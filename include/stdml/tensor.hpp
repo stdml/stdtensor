@@ -275,6 +275,27 @@ struct type_switch {
     }
 };
 
+template <typename E>
+struct type_switch_float {
+    template <typename F, typename... Args>
+    decltype(auto) operator()(typename E::value_type vt, const F &f,
+                              const Args &... args) const
+    {
+#define CASE(T)                                                                \
+    case E::template value<T>():                                               \
+        return f.template operator()<T>(args...);
+
+        switch (vt) {
+            CASE(float);
+            CASE(double);
+        default:
+            throw std::invalid_argument("unsupported value type: " +
+                                        std::to_string(vt));
+        }
+#undef CASE
+    }
+};
+
 template <typename F, ttl::rank_t... ranks>
 struct apply;
 
@@ -303,6 +324,16 @@ struct apply<F> {
                     const TensorView &x, const TensorView &y) const
     {
         F()(z.flatten<R>(), x.flatten<R>(), y.flatten<R>());
+    }
+};
+
+template <typename F, ttl::rank_t r0, ttl::rank_t r1>
+struct apply<F, r0, r1> {
+
+    template <typename R>
+    void operator()(const TensorRef &y, const TensorView &x) const
+    {
+        F()(y.ranked<R, r0>(), x.ranked<R, r1>());
     }
 };
 
