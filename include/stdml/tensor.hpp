@@ -199,9 +199,13 @@ class Tensor : public BasicTensor<raw_tensor>
         return Tensor(x.dtype(), x.shape());
     }
 
+    // Tensor(V v) : P(TT(v, S())) {}
+
     Tensor(V v, const S &s) : P(TT(v, s)) {}
 
     Tensor(V v, const Shape &s) : P(TT(v, s.get())) {}
+
+    Tensor(DType dt) : P(TT(to<E>(dt), S())) {}
 
     Tensor(DType dt, const S &s) : P(TT(to<E>(dt), s)) {}
 

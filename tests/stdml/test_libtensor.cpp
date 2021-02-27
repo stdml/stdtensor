@@ -2,6 +2,12 @@
 
 #include <stdml/tensor.hpp>
 
+TEST(libtensor_test, test_construct)
+{
+    namespace ml = stdml;
+    ml::Tensor x(ml::i32);
+}
+
 TEST(libtensor_test, test_1)
 {
     namespace ml = stdml;

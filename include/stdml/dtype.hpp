@@ -4,7 +4,7 @@
 
 namespace stdml
 {
-enum DType {
+enum DType : uint8_t {
     i8,
     i16,
     i32,
