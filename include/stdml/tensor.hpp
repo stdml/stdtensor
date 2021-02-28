@@ -119,6 +119,12 @@ class BasicTensor
         auto shape = flat_shape(dims);
         return raw_tensor_view(t_.data(), t_.value_type(), shape);
     }
+
+    template <typename T>
+    T _slice(size_t i, size_t j) const
+    {
+        return t_.slice(i, j);
+    }
 };
 
 class Tensor;
@@ -150,6 +156,11 @@ class TensorView : public BasicTensor<raw_tensor_view>
     }
 
     TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
+
+    TensorView slice(size_t i, size_t j)
+    {
+        return this->_slice<TensorView>(i, j);
+    }
 };
 
 class TensorRef : public BasicTensor<raw_tensor_ref>
@@ -169,6 +180,11 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     TensorRef(const Tensor &);
 
     // TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
+
+    TensorRef slice(size_t i, size_t j)
+    {
+        return this->_slice<TensorRef>(i, j);
+    }
 };
 
 class Tensor : public BasicTensor<raw_tensor>
@@ -251,6 +267,11 @@ class Tensor : public BasicTensor<raw_tensor>
     }
 
     TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
+
+    TensorRef slice(size_t i, size_t j)
+    {
+        return this->_slice<TensorRef>(i, j);
+    }
 };
 
 template <typename E>

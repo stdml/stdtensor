@@ -49,6 +49,8 @@ class raw_tensor_mixin
     const S shape_;
     data_t data_;
 
+    using Access = typename basic_access_traits<A>::type;
+
   protected:
     using Dim = typename S::dimension_type;  // For MSVC C2248
 
@@ -63,6 +65,8 @@ class raw_tensor_mixin
     using encoder_type = Encoder;
     using shape_type = S;
     using access_type = A;
+
+    using slice_type = basic_raw_tensor<Encoder, S, D, Access>;
 
     template <typename R>
     static constexpr value_type_t type()
@@ -99,10 +103,17 @@ class raw_tensor_mixin
         return reinterpret_cast<ptr_type>(data_.get());
     }
 
+    slice_type slice(Dim i, Dim j) const
+    {
+        const auto sub_shape = shape_.subshape();
+        char *offset = (char *)(data_.get()) +
+                       i * sub_shape.size() * Encoder::size(value_type_);
+        return slice_type(offset, value_type_, sub_shape.batch_shape(j - i));
+    }
+
     template <typename R>
     auto typed() const
     {
-        using Access = typename basic_access_traits<A>::type;
         using T = basic_tensor<R, basic_flat_shape<Dim>, D, Access>;
         return T(data<R>(), shape_);
     }
@@ -110,7 +121,6 @@ class raw_tensor_mixin
     template <typename R, rank_t r>
     auto typed() const
     {
-        using Access = typename basic_access_traits<A>::type;
         using T = basic_tensor<R, basic_shape<r, Dim>, D, Access>;
         return T(data<R>(), shape_.template ranked<r>());
     }
