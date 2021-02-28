@@ -107,6 +107,15 @@ class BasicTensor
         return t_.template data<R>() + t_.size();
     }
 
+    template <typename R, ttl::rank_t r>
+    auto typed() const
+    {
+        using tsr =
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>,
+                                        ttl::internal::host_memory, AA>;
+        return tsr(t_.template data<R>(), ranked_shape<r>());
+    }
+
     template <typename T>
     T _chunk(size_t k) const
     {
