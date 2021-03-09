@@ -5,7 +5,10 @@
 TEST(libtensor_test, test_construct)
 {
     namespace ml = stdml;
-    ml::Tensor x(ml::i32);
+    ml::Tensor x1(ml::i32);
+    // ml::Tensor x2(ml::i32, {});
+    ml::Tensor x3(ml::i32, {1});
+    ml::Tensor x4(ml::i32, {2, 3});
 }
 
 TEST(libtensor_test, test_1)

@@ -236,6 +236,12 @@ class Tensor : public BasicTensor<raw_tensor>
 
     Tensor(DType dt, const Shape &s) : P(TT(to<E>(dt), s.get())) {}
 
+    template <typename D>
+    Tensor(DType dt, std::initializer_list<D> dims)
+        : Tensor(dt, Shape(std::vector<D>(std::move(dims))))
+    {
+    }
+
     Tensor(DType dt, const std::list<long> &dims) : Tensor(dt, Shape(dims)) {}
 
     bool match(const V v, const S &s) const
