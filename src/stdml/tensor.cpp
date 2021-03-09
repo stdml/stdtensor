@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include <stdml/tensor.hpp>
+#include <stdml/bits/tensor.hpp>
 #include <ttl/bits/std_shape_debug.hpp>
 #include <ttl/range>
 

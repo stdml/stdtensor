@@ -1,4 +1,4 @@
-#include <stdml/shape.hpp>
+#include <stdml/bits/shape.hpp>
 
 namespace stdml
 {

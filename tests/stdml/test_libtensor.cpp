@@ -1,6 +1,6 @@
 #include "../testing.hpp"
 
-#include <stdml/tensor.hpp>
+#include <stdml/tensor>
 
 TEST(libtensor_test, test_construct)
 {

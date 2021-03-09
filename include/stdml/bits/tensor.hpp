@@ -8,9 +8,9 @@
 #include <ttl/bits/type_encoder.hpp>
 #include <ttl/tensor>
 
-#include <stdml/dtype.hpp>
-#include <stdml/shape.hpp>
-#include <stdml/tensor_config.hpp>
+#include <stdml/bits/dtype.hpp>
+#include <stdml/bits/shape.hpp>
+#include <stdml/bits/tensor_config.hpp>
 
 namespace ttl
 {
