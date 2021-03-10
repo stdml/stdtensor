@@ -32,6 +32,15 @@ ADD_UNIT_TESTS(${tests})
 
 #
 IF(BUILD_LIB)
-    ADD_UNIT_TEST(test-libtensor tests/stdml/test_libtensor.cpp)
-    TARGET_LINK_LIBRARIES(test-libtensor tensor)
+    FUNCTION(ADD_UNIT_TESTS_WITH_LIB)
+        FOREACH(t ${ARGN})
+            GET_FILENAME_COMPONENT(name ${t} NAME_WE)
+            STRING(REPLACE "_" "-" name ${name})
+            ADD_UNIT_TEST(${name} ${t})
+            TARGET_LINK_LIBRARIES(${name} tensor)
+        ENDFOREACH()
+    ENDFUNCTION()
+
+    FILE(GLOB tests tests/stdml/test_*.cpp)
+    ADD_UNIT_TESTS_WITH_LIB(${tests})
 ENDIF()
