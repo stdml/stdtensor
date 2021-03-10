@@ -17,6 +17,9 @@ class basic_scalar_mixin
 
     data_t data_;
 
+    template <typename, typename, typename, typename>
+    friend class basic_raw_tensor;  // for move constructor
+
   protected:
     using Dim = typename S::dimension_type;  // For MSVC C2248
     using allocator = basic_allocator<R, D>;
@@ -98,6 +101,9 @@ class basic_tensor_mixin
 
     const S shape_;
     data_t data_;
+
+    template <typename, typename, typename, typename>
+    friend class basic_raw_tensor;  // for move constructor
 
     iterator _iter(data_ptr pos) const
     {

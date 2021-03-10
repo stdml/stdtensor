@@ -226,6 +226,11 @@ class Tensor : public BasicTensor<raw_tensor>
 
     // Tensor(V v) : P(TT(v, S())) {}
 
+    template <typename R, ttl::rank_t r>
+    Tensor(ttl::tensor<R, r> x) : P(TT(std::move(x)))
+    {
+    }
+
     Tensor(V v, const S &s) : P(TT(v, s)) {}
 
     Tensor(V v, const Shape &s) : P(TT(v, s.get())) {}

@@ -3,7 +3,7 @@
 #include <ttl/experimental/raw_tensor>
 #include <ttl/tensor>
 
-TEST(raw_tensor_test, test1)
+TEST(raw_tensor_test, test_construct)
 {
     using ttl::experimental::raw_tensor;
 
@@ -45,6 +45,22 @@ TEST(raw_tensor_test, test1)
         auto x = t.typed<float, 3>();
         static_assert(
             std::is_same<decltype(x), ttl::tensor_ref<float, 3>>::value, "");
+    }
+
+    // move constructor
+    {
+        ttl::tensor<int32_t, 0> x;
+        int32_t *p = x.data();
+        raw_tensor y(std::move(x));
+        ASSERT_EQ(x.data(), nullptr);
+        ASSERT_EQ(p, y.data());
+    }
+    {
+        ttl::tensor<int32_t, 2> x(3, 4);
+        int32_t *p = x.data();
+        raw_tensor y(std::move(x));
+        ASSERT_EQ(x.data(), nullptr);
+        ASSERT_EQ(p, y.data());
     }
 }
 

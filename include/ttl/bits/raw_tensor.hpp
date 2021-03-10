@@ -18,6 +18,12 @@ class basic_raw_tensor<Encoder, basic_flat_shape<Dim>, D, owner>
     using allocator = basic_allocator<char, D>;
 
   public:
+    template <typename R, typename S1>
+    explicit basic_raw_tensor(basic_tensor<R, S1, D, owner> t)
+        : mixin(t.data_.release(), Encoder::template value<R>(), S(t.shape()))
+    {
+    }
+
     template <typename... Dims>
     explicit basic_raw_tensor(const value_type_t value_type, Dims... d)
         : basic_raw_tensor(value_type, S(d...))

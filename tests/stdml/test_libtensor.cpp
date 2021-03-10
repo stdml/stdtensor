@@ -9,6 +9,10 @@ TEST(libtensor_test, test_construct)
     // ml::Tensor x2(ml::i32, {});
     ml::Tensor x3(ml::i32, {1});
     ml::Tensor x4(ml::i32, {2, 3});
+
+    ttl::tensor<int32_t, 2> y(3, 4);
+    ml::Tensor x5(std::move(y));
+    ASSERT_EQ(y.data(), nullptr);
 }
 
 TEST(libtensor_test, test_1)
