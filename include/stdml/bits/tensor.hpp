@@ -69,6 +69,8 @@ class BasicTensor
 
     size_t size() const { return t_.size(); }
 
+    size_t data_size() const { return t_.data_size(); }
+
     Shape shape() const { return t_.shape(); }
 
     DType dtype() const { return from<E>(t_.value_type()); }
@@ -94,6 +96,8 @@ class BasicTensor
     }
 
     // pointer accessors
+
+    auto data() const { return t_.data(); }
 
     template <typename R>
     auto data() const
