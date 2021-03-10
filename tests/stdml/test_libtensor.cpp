@@ -15,7 +15,7 @@ TEST(libtensor_test, test_construct)
     ASSERT_EQ(y.data(), nullptr);
 
     size_t bs = 100;
-    ml::Tensor x6(ml::i32, {bs, 2, 3});
+    ml::Tensor x6(ml::i32, {(int)bs, 2, 3});
 }
 
 TEST(libtensor_test, test_1)
@@ -71,7 +71,6 @@ TEST(libtensor_test, test_slice)
     ASSERT_EQ(s, 35);
 }
 
-/*
 TEST(libtensor_test, test_show)
 {
     namespace ml = stdml;
@@ -87,4 +86,3 @@ TEST(libtensor_test, test_show)
         ASSERT_EQ(s, std::string("i32(2, 3)[[0, 1, 2], [3, 4, 5]]"));
     }
 }
-*/

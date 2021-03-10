@@ -235,17 +235,27 @@ class Tensor : public BasicTensor<raw_tensor>
 
     Tensor(V v, const Shape &s) : P(TT(v, s.get())) {}
 
+    template <typename D>
+    Tensor(DType dt, std::initializer_list<D> dims)
+        : Tensor(dt, std::vector<D>(std::move(dims)))
+    {
+    }
+
+    template <typename D>
+    Tensor(DType dt, std::vector<D> dims) : Tensor(dt, Shape(std::move(dims)))
+    {
+    }
+
     Tensor(DType dt) : P(TT(to<E>(dt), S())) {}
+
+    template <ttl::rank_t r>
+    Tensor(DType dt, const ttl::shape<r> &s) : Tensor(dt, S(s))
+    {
+    }
 
     Tensor(DType dt, const S &s) : P(TT(to<E>(dt), s)) {}
 
     Tensor(DType dt, const Shape &s) : P(TT(to<E>(dt), s.get())) {}
-
-    template <typename D>
-    Tensor(DType dt, std::initializer_list<D> dims)
-        : Tensor(dt, Shape(std::vector<D>(std::move(dims))))
-    {
-    }
 
     Tensor(DType dt, const std::list<long> &dims) : Tensor(dt, Shape(dims)) {}
 
