@@ -13,6 +13,9 @@ TEST(libtensor_test, test_construct)
     ttl::tensor<int32_t, 2> y(3, 4);
     ml::Tensor x5(std::move(y));
     ASSERT_EQ(y.data(), nullptr);
+
+    size_t bs = 100;
+    ml::Tensor x6(ml::i32, {bs, 2, 3});
 }
 
 TEST(libtensor_test, test_1)

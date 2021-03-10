@@ -33,22 +33,22 @@ class Shape
   public:
     Shape() {}
 
-    Shape(const std::list<long> &dims) : s_(cast_to<int64_t>(dims)) {}
+    explicit Shape(const std::list<long> &dims) : s_(cast_to<int64_t>(dims)) {}
 
     template <typename D>
-    Shape(const std::vector<D> &dims) : s_(cast_to<int64_t>(dims))
+    explicit Shape(const std::vector<D> &dims) : s_(cast_to<int64_t>(dims))
     {
     }
 
     template <typename D, size_t r>
-    Shape(const std::array<D, r> &dims) : s_(cast_to<int64_t>(dims))
+    explicit Shape(const std::array<D, r> &dims) : s_(cast_to<int64_t>(dims))
     {
     }
 
     Shape(S s) : s_(std::move(s)) {}
 
     template <ttl::rank_t r>
-    Shape(const ttl::shape<r> &s) : s_(s)
+    explicit Shape(const ttl::shape<r> &s) : s_(s)
     {
     }
 
