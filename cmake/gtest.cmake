@@ -26,7 +26,7 @@ IF(BUILD_GTEST)
     LINK_DIRECTORIES(${PREFIX}/lib)
 
     FUNCTION(TARGET_USE_GTEST target)
-        TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${PREFIX}/include)
+        TARGET_INCLUDE_DIRECTORIES(${target} SYSTEM PRIVATE ${PREFIX}/include)
         TARGET_LINK_LIBRARIES(${target} gtest)
         ADD_DEPENDENCIES(${target} libgtest-dev-repo)
     ENDFUNCTION()
@@ -34,7 +34,8 @@ ELSE()
     FIND_PACKAGE(GTest REQUIRED)
 
     FUNCTION(TARGET_USE_GTEST target)
-        TARGET_INCLUDE_DIRECTORIES(${target} PRIVATE ${GTEST_INCLUDE_DIRS})
+        TARGET_INCLUDE_DIRECTORIES(${target} SYSTEM
+                                   PRIVATE ${GTEST_INCLUDE_DIRS})
         TARGET_LINK_LIBRARIES(${target} ${GTEST_BOTH_LIBRARIES})
         TARGET_LINK_LIBRARIES(${target} Threads::Threads)
     ENDFUNCTION()
