@@ -1,6 +1,7 @@
 #include "../testing.hpp"
 
 #include <stdml/tensor>
+#include <ttl/experimental/flat_tensor>
 
 TEST(libtensor_test, test_construct)
 {
@@ -32,6 +33,16 @@ TEST(libtensor_test, test_1)
         auto v = x.view();
         static_assert(std::is_same<ml::TensorView, decltype(v)>::value, "");
     }
+}
+
+TEST(libtensor_test, test_typed)
+{
+    namespace ml = stdml;
+    ml::Tensor x(ml::f32, ttl::make_shape(2, 3, 4));
+    auto y = x.typed<float>();
+    static_assert(std::is_same<ttl::experimental::flat_tensor_ref<float>,
+                               decltype(y)>::value,
+                  "");
 }
 
 TEST(libtensor_test, test_flatten)

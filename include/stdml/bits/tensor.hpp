@@ -111,6 +111,16 @@ class BasicTensor
         return t_.template data<R>() + t_.size();
     }
 
+    template <typename R>
+    auto typed() const
+    {
+        using tsr = ttl::internal::basic_tensor<
+            R, ttl::internal::basic_flat_shape<uint32_t>,
+            ttl::internal::host_memory, AA>;
+        auto dims = cast_to<uint32_t>(t_.dims());
+        return tsr(t_.template data<R>(), std::move(dims));
+    }
+
     template <typename R, ttl::rank_t r>
     auto typed() const
     {
@@ -266,12 +276,6 @@ class Tensor : public BasicTensor<raw_tensor>
     bool match(const V v, const S &s) const
     {
         return v == t_.value_type() && s == t_.shape();
-    }
-
-    template <typename R>
-    auto typed() const
-    {
-        return t_.typed<R>();
     }
 
     template <typename R, ttl::rank_t r>
