@@ -151,6 +151,7 @@ class BasicTensor
 };
 
 class Tensor;
+class TensorRef;
 
 class TensorView : public BasicTensor<raw_tensor_view>
 {
@@ -167,6 +168,8 @@ class TensorView : public BasicTensor<raw_tensor_view>
     TensorView(TT t);
 
     TensorView(const Tensor &);
+
+    TensorView(const TensorRef &);
 
     TensorView operator[](size_t i) const
     {
@@ -191,6 +194,8 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     using TT = raw_tensor_ref;
     using P = BasicTensor<TT>;
 
+    friend class TensorView;
+
   public:
     using P::E;
     using P::V;
@@ -203,6 +208,8 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     TensorRef(const Tensor &);
 
     // TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
+
+    TensorView view() const { return TensorView(*this); }
 
     TensorRef slice(size_t i, size_t j)
     {

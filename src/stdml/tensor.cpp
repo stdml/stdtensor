@@ -10,6 +10,8 @@ TensorView::TensorView(TT t) : P(std::move(t)) {}
 
 TensorView::TensorView(const Tensor &x) : P(TT(x.t_)) {}
 
+TensorView::TensorView(const TensorRef &x) : P(TT(x.t_)) {}
+
 TensorRef::TensorRef(TT t) : P(std::move(t)) {}
 
 TensorRef::TensorRef(const Tensor &x) : P(TT(x.t_)) {}
