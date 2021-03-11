@@ -1,0 +1,16 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/mixed_tensor_buffer.hpp>
+#include <ttl/bits/std_tensor_buffer.hpp>
+
+namespace ttl
+{
+namespace experimental
+{
+template <typename R, typename D = ttl::host_memory>
+using tensor_buffer = internal::basic_tensor_buffer<R, D>;
+
+template <typename E, typename D = ttl::host_memory>
+using mixed_tensor_buffer = internal::basic_mixed_tensor_buffer<E, D>;
+}  // namespace experimental
+}  // namespace ttl
