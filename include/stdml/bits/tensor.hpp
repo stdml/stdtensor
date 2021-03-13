@@ -167,6 +167,11 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
     TensorView(TT t);
 
+    template <typename R, ttl::rank_t r>
+    TensorView(ttl::tensor_view<R, r> x) : TensorView(raw_tensor_view(x))
+    {
+    }
+
     TensorView(const Tensor &);
 
     TensorView(const TensorRef &);
@@ -204,6 +209,11 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     using P::ranked;
 
     TensorRef(TT t);
+
+    template <typename R, ttl::rank_t r>
+    TensorRef(ttl::tensor_ref<R, r> x) : TensorRef(raw_tensor_ref(x))
+    {
+    }
 
     TensorRef(const Tensor &);
 
