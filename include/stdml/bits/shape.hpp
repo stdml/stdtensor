@@ -18,7 +18,7 @@ std::vector<T> cast_to(const C &xs)
 template <typename T, size_t r, typename C>
 std::array<T, r> cast_to(const C &xs)
 {
-    if (xs.size() != r) { throw std::invalid_argument(__func__); }
+    if (xs.size() != r) { throw std::invalid_argument("rank reification"); }
     std::array<T, r> ys;
     std::copy(xs.begin(), xs.end(), ys.begin());
     return ys;
