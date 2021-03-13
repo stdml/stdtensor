@@ -9,6 +9,7 @@
 namespace ttl
 {
 using internal::range;
+using internal::range1;
 
 using rank_t = uint8_t;
 
