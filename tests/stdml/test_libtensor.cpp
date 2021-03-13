@@ -17,6 +17,9 @@ TEST(libtensor_test, test_construct)
 
     size_t bs = 100;
     ml::Tensor x6(ml::i32, {(int)bs, 2, 3});
+
+    ml::TensorRef x7 = x6.ref();
+    ml::TensorView x8 = x7.view();
 }
 
 TEST(libtensor_test, test_1)
