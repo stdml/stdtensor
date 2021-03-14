@@ -182,8 +182,9 @@ class TensorView : public BasicTensor<raw_tensor_view>
         auto dims = t_.dims();
         dims.erase(dims.begin());
         auto sub_shape = flat_shape(dims);
-        return raw_tensor_view((char *)t_.data() + i * sub_shape.size(),
-                               t_.value_type(), sub_shape);
+        char *offset =
+            (char *)t_.data() + i * sub_shape.size() * E::size(t_.value_type());
+        return raw_tensor_view(offset, t_.value_type(), sub_shape);
     }
 
     TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
@@ -317,8 +318,9 @@ class Tensor : public BasicTensor<raw_tensor>
         auto dims = t_.dims();
         dims.erase(dims.begin());
         auto sub_shape = flat_shape(dims);
-        return raw_tensor_view((char *)t_.data() + i * sub_shape.size(),
-                               t_.value_type(), sub_shape);
+        char *offset =
+            (char *)t_.data() + i * sub_shape.size() * E::size(t_.value_type());
+        return raw_tensor_view(offset, t_.value_type(), sub_shape);
     }
 
     TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
