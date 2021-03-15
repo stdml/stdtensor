@@ -8,15 +8,15 @@
 
 namespace stdml
 {
-TensorView::TensorView(TT t) : P(std::move(t)) {}
+TensorView::TensorView(TT t) : P(std::move(t), cpu) {}
 
-TensorView::TensorView(const Tensor &x) : P(TT(x.t_)) {}
+TensorView::TensorView(const Tensor &x) : P(TT(x.t_), x.device_) {}
 
-TensorView::TensorView(const TensorRef &x) : P(TT(x.t_)) {}
+TensorView::TensorView(const TensorRef &x) : P(TT(x.t_), x.device_) {}
 
-TensorRef::TensorRef(TT t) : P(std::move(t)) {}
+TensorRef::TensorRef(TT t) : P(std::move(t), cpu) {}
 
-TensorRef::TensorRef(const Tensor &x) : P(TT(x.t_)) {}
+TensorRef::TensorRef(const Tensor &x) : P(TT(x.t_), x.device_) {}
 
 template <typename R>
 struct show_scalar {

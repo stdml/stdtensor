@@ -66,7 +66,8 @@ class BasicTensor
     const Device device_;
     TT t_;
 
-    BasicTensor(TT t, Device device = cpu) : device_(device), t_(std::move(t))
+    explicit BasicTensor(TT t, Device device)
+        : device_(device), t_(std::move(t))
     {
     }
 
@@ -302,13 +303,13 @@ class Tensor : public BasicTensor<raw_tensor>
     // Tensor(V v) : P(TT(v, S())) {}
 
     template <typename R, ttl::rank_t r>
-    Tensor(ttl::tensor<R, r> x) : P(TT(std::move(x)))
+    Tensor(ttl::tensor<R, r> x) : P(TT(std::move(x)), cpu)
     {
     }
 
-    Tensor(V v, const S &s) : P(TT(v, s)) {}
+    Tensor(V v, const S &s) : P(TT(v, s), cpu) {}
 
-    Tensor(V v, const Shape &s) : P(TT(v, s.get())) {}
+    Tensor(V v, const Shape &s) : P(TT(v, s.get()), cpu) {}
 
     template <typename D>
     Tensor(DType dt, std::initializer_list<D> dims)
@@ -321,16 +322,16 @@ class Tensor : public BasicTensor<raw_tensor>
     {
     }
 
-    Tensor(DType dt) : P(TT(to<E>(dt), S())) {}
+    Tensor(DType dt) : P(TT(to<E>(dt), S()), cpu) {}
 
     template <ttl::rank_t r>
     Tensor(DType dt, const ttl::shape<r> &s) : Tensor(dt, S(s))
     {
     }
 
-    Tensor(DType dt, const S &s) : P(TT(to<E>(dt), s)) {}
+    Tensor(DType dt, const S &s) : P(TT(to<E>(dt), s), cpu) {}
 
-    Tensor(DType dt, const Shape &s) : P(TT(to<E>(dt), s.get())) {}
+    Tensor(DType dt, const Shape &s) : P(TT(to<E>(dt), s.get()), cpu) {}
 
     Tensor(DType dt, const std::list<long> &dims) : Tensor(dt, Shape(dims)) {}
 
