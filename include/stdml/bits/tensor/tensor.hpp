@@ -14,22 +14,6 @@
 #include <stdml/bits/tensor/shape.hpp>
 #include <stdml/bits/tensor/tensor_config.hpp>
 
-namespace ttl
-{
-namespace internal
-{
-// TODO: promote to ttl
-template <typename A>
-struct default_ref_type {
-    using type = A;
-};
-template <>
-struct default_ref_type<owner> {
-    using type = readwrite;
-};
-}  // namespace internal
-}  // namespace ttl
-
 namespace stdml
 {
 class TensorMeta
@@ -71,7 +55,7 @@ class BasicTensor
     {
     }
 
-    using AA = typename ttl::internal::default_ref_type<
+    using AA = typename ttl::internal::basic_access_traits<
         typename TT::access_type>::type;
 
     template <typename R, typename D = ttl::internal::host_memory>
