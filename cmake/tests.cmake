@@ -38,6 +38,8 @@ IF(BUILD_LIB)
             STRING(REPLACE "_" "-" name ${name})
             ADD_UNIT_TEST(${name} ${t})
             TARGET_LINK_LIBRARIES(${name} tensor)
+            # FIXME: don't require c++17
+            SET_PROPERTY(TARGET ${name} PROPERTY CXX_STANDARD 17)
         ENDFOREACH()
     ENDFUNCTION()
 

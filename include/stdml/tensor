@@ -1,3 +1,5 @@
 // # -*- mode: c++ -*-
 #pragma once
+#include <stdml/bits/functional.hpp>
+#include <stdml/bits/io.hpp>
 #include <stdml/bits/tensor.hpp>
