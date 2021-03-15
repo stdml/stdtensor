@@ -186,8 +186,9 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
     TensorView(TT t, Device device = cpu);
 
-    template <typename R, ttl::rank_t r>
-    TensorView(ttl::tensor_view<R, r> x) : TensorView(raw_tensor_view(x))
+    template <typename R, ttl::rank_t r, typename D>
+    TensorView(ttl::tensor_view<R, r, D> x)
+        : TensorView(raw_tensor_view(x), device_type<D>::value)
     {
     }
 
@@ -233,8 +234,9 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
 
     TensorRef(TT t, Device device = cpu);
 
-    template <typename R, ttl::rank_t r>
-    TensorRef(ttl::tensor_ref<R, r> x) : TensorRef(raw_tensor_ref(x))
+    template <typename R, ttl::rank_t r, typename D>
+    TensorRef(ttl::tensor_ref<R, r, D> x)
+        : TensorRef(raw_tensor_ref(x), device_type<D>::value)
     {
     }
 

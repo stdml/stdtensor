@@ -71,17 +71,23 @@ struct show_tensor_t {
 
 void show_tensor(std::basic_ostream<char> &os, const TensorView &x)
 {
+    if (x.device() != cpu) {
+        throw std::invalid_argument(__func__ +
+                                    std::string(" requires device=cpu"));
+    }
     using E = Tensor::E;
     type_switch<E>()(to<E>(x.dtype()), show_tensor_t(os, {'[', ']'}), x);
 }
 
 void show_cpp(std::basic_ostream<char> &os, const TensorView &x)
 {
+    if (x.device() != cpu) {
+        throw std::invalid_argument(__func__ +
+                                    std::string(" requires device=cpu"));
+    }
     using E = Tensor::E;
     type_switch<E>()(to<E>(x.dtype()), show_tensor_t(os, {'{', '}'}), x);
 }
-
-template std::string show(const Tensor &x);
 
 template <typename TT>
 std::string gen_cpp(const TT &x)
