@@ -14,5 +14,17 @@ class invalid_type_reification : public std::invalid_argument
     {
     }
 };
+
+class invalid_rank_reification : public std::invalid_argument
+{
+  public:
+    invalid_rank_reification() : invalid_argument(__func__) {}
+};
+
+class invalid_device_reification : public std::invalid_argument
+{
+  public:
+    invalid_device_reification() : invalid_argument(__func__) {}
+};
 }  // namespace internal
 }  // namespace ttl

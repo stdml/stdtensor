@@ -38,7 +38,21 @@ class TensorMeta
     // shape
     // device
     // is_dense ?
+
+  protected:
+    using S = flat_shape;
+    using E = typename stdml::raw_tensor::encoder_type;
+    using V = typename E::value_type;
+
+    V value_type_;
+    S shape_;
+    Device device_;
+
   public:
+    TensorMeta(V value_type, S shape, Device device = cpu)
+        : value_type_(value_type), shape_(std::move(shape)), device_(device)
+    {
+    }
 };
 
 template <typename TT>
@@ -49,9 +63,12 @@ class BasicTensor
     using E = typename TT::encoder_type;
     using V = typename E::value_type;
 
+    const Device device_;
     TT t_;
 
-    BasicTensor(TT t) : t_(std::move(t)) {}
+    BasicTensor(TT t, Device device = cpu) : device_(device), t_(std::move(t))
+    {
+    }
 
     using AA = typename ttl::internal::default_ref_type<
         typename TT::access_type>::type;
@@ -87,6 +104,8 @@ class BasicTensor
     DType dtype() const { return from<E>(t_.value_type()); }
 
     V value_type() const { return t_.value_type(); }
+
+    Device device() const { return device_; }
 
     size_t len() const
     {
@@ -125,6 +144,9 @@ class BasicTensor
     template <typename R, typename D = ttl::internal::host_memory>
     auto typed() const
     {
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
         using tsr =
             ttl::internal::basic_tensor<R, ttl::internal::basic_flat_shape<>, D,
                                         AA>;
@@ -136,15 +158,21 @@ class BasicTensor
               typename D = ttl::internal::host_memory>
     auto typed() const
     {
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
         using tsr =
             ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>, D,
                                         AA>;
         return tsr(t_.template data<R>(), ranked_shape<r>());
     }
 
-    template <typename T>
+    template <typename T, typename D = ttl::internal::host_memory>
     T _chunk(size_t k) const
     {
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
         auto dims = t_.dims();
         if (dims.size() <= 0) { throw std::invalid_argument(__func__); }
         auto ld = dims[0];
@@ -155,9 +183,12 @@ class BasicTensor
         return raw_tensor_view(t_.data(), t_.value_type(), shape);
     }
 
-    template <typename T>
+    template <typename T, typename D = ttl::internal::host_memory>
     T _slice(size_t i, size_t j) const
     {
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
         return t_.slice(i, j);
     }
 };
