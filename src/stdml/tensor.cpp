@@ -8,13 +8,13 @@
 
 namespace stdml
 {
-TensorView::TensorView(TT t) : P(std::move(t), cpu) {}
+TensorView::TensorView(TT t, Device device) : P(std::move(t), device) {}
 
 TensorView::TensorView(const Tensor &x) : P(TT(x.t_), x.device_) {}
 
 TensorView::TensorView(const TensorRef &x) : P(TT(x.t_), x.device_) {}
 
-TensorRef::TensorRef(TT t) : P(std::move(t), cpu) {}
+TensorRef::TensorRef(TT t, Device device) : P(std::move(t), device) {}
 
 TensorRef::TensorRef(const Tensor &x) : P(TT(x.t_), x.device_) {}
 

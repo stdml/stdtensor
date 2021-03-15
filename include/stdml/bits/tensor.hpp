@@ -167,24 +167,6 @@ class BasicTensor
                                         AA>;
         return tsr(t_.template data<R>(), ranked_shape<r>());
     }
-
-    template <typename T, typename D = ttl::internal::host_memory>
-    T _chunk(size_t k) const
-    {
-        if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
-        }
-        return t_.chunk(k);
-    }
-
-    template <typename T, typename D = ttl::internal::host_memory>
-    T _slice(size_t i, size_t j) const
-    {
-        if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
-        }
-        return t_.slice(i, j);
-    }
 };
 
 class Tensor;
@@ -202,7 +184,7 @@ class TensorView : public BasicTensor<raw_tensor_view>
     using P::flatten;
     using P::ranked;
 
-    TensorView(TT t);
+    TensorView(TT t, Device device = cpu);
 
     template <typename R, ttl::rank_t r>
     TensorView(ttl::tensor_view<R, r> x) : TensorView(raw_tensor_view(x))
@@ -224,11 +206,14 @@ class TensorView : public BasicTensor<raw_tensor_view>
         return raw_tensor_view(offset, t_.value_type(), sub_shape);
     }
 
-    TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
+    TensorView chunk(size_t k) const
+    {
+        return TensorView(t_.chunk(k), device_);
+    }
 
     TensorView slice(size_t i, size_t j)
     {
-        return this->_slice<TensorView>(i, j);
+        return TensorView(t_.slice(i, j), device_);
     }
 };
 
@@ -246,7 +231,7 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     using P::flatten;
     using P::ranked;
 
-    TensorRef(TT t);
+    TensorRef(TT t, Device device = cpu);
 
     template <typename R, ttl::rank_t r>
     TensorRef(ttl::tensor_ref<R, r> x) : TensorRef(raw_tensor_ref(x))
@@ -255,13 +240,13 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
 
     TensorRef(const Tensor &);
 
-    TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
-
     TensorView view() const { return TensorView(*this); }
+
+    TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
     TensorRef slice(size_t i, size_t j)
     {
-        return this->_slice<TensorRef>(i, j);
+        return TensorRef(t_.slice(i, j), device_);
     }
 };
 
@@ -360,11 +345,11 @@ class Tensor : public BasicTensor<raw_tensor>
         return raw_tensor_view(offset, t_.value_type(), sub_shape);
     }
 
-    TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
+    TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
     TensorRef slice(size_t i, size_t j)
     {
-        return this->_slice<TensorRef>(i, j);
+        return TensorRef(t_.slice(i, j), device_);
     }
 };
 }  // namespace stdml
