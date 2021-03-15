@@ -58,19 +58,6 @@ class BasicTensor
     using AA = typename ttl::internal::basic_access_traits<
         typename TT::access_type>::type;
 
-    template <typename R, typename D = ttl::internal::host_memory>
-    auto flatten() const
-    {
-        if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
-        }
-        using vec =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>, D,
-                                        AA>;
-        auto x = t_.template typed<R>();
-        return vec(x.data(), x.size());
-    }
-
   public:
     size_t rank() const { return t_.rank(); }
 
@@ -114,6 +101,19 @@ class BasicTensor
     }
 
     template <typename R, typename D = ttl::internal::host_memory>
+    auto flatten() const
+    {
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
+        using vec =
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>, D,
+                                        AA>;
+        auto x = t_.template typed<R>();
+        return vec(x.data(), x.size());
+    }
+
+    template <typename R, typename D = ttl::internal::host_memory>
     auto typed() const
     {
         if (device_type<D>::value != device_) {
@@ -153,8 +153,6 @@ class TensorView : public BasicTensor<raw_tensor_view>
     using P::E;
     using P::V;
 
-    using P::flatten;
-
     TensorView(TT t, Device device = cpu);
 
     template <typename R, ttl::rank_t r, typename D>
@@ -190,8 +188,6 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
   public:
     using P::E;
     using P::V;
-
-    using P::flatten;
 
     TensorRef(TT t, Device device = cpu);
 
@@ -230,11 +226,6 @@ class Tensor : public BasicTensor<raw_tensor>
   public:
     using P::E;
     using P::V;
-
-    using P::flatten;
-
-    // using E = TT::encoder_type;
-    // using V = E::value_type;
 
     template <typename TT1>
     static Tensor new_like(const BasicTensor<TT1> &x)
