@@ -56,22 +56,22 @@ class BasicTensor
     using AA = typename ttl::internal::default_ref_type<
         typename TT::access_type>::type;
 
-    template <typename R, typename A = AA>
+    template <typename R, typename A = AA,
+              typename D = ttl::internal::host_memory>
     auto flatten() const
     {
         using vec =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>,
-                                        ttl::internal::host_memory, A>;
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>, D, A>;
         auto x = t_.template typed<R>();
         return vec(x.data(), x.size());
     }
 
-    template <typename R, ttl::rank_t r, typename A = AA>
+    template <typename R, ttl::rank_t r, typename A = AA,
+              typename D = ttl::internal::host_memory>
     auto ranked() const
     {
         using tsr =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>,
-                                        ttl::internal::host_memory, A>;
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>, D, A>;
         return tsr(t_.template data<R>(), ranked_shape<r>());
     }
 
@@ -122,22 +122,23 @@ class BasicTensor
         return t_.template data<R>() + t_.size();
     }
 
-    template <typename R>
+    template <typename R, typename D = ttl::internal::host_memory>
     auto typed() const
     {
-        using tsr = ttl::internal::basic_tensor<
-            R, ttl::internal::basic_flat_shape<uint32_t>,
-            ttl::internal::host_memory, AA>;
+        using tsr =
+            ttl::internal::basic_tensor<R, ttl::internal::basic_flat_shape<>, D,
+                                        AA>;
         auto dims = cast_to<uint32_t>(t_.dims());
         return tsr(t_.template data<R>(), std::move(dims));
     }
 
-    template <typename R, ttl::rank_t r>
+    template <typename R, ttl::rank_t r,
+              typename D = ttl::internal::host_memory>
     auto typed() const
     {
         using tsr =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>,
-                                        ttl::internal::host_memory, AA>;
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>, D,
+                                        AA>;
         return tsr(t_.template data<R>(), ranked_shape<r>());
     }
 

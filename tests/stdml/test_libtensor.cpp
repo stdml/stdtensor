@@ -80,7 +80,19 @@ TEST(libtensor_test, test_slice)
     namespace ml = stdml;
     ml::Tensor x(ml::i32, ml::shape(10));
     std::iota(x.data<int32_t>(), x.data_end<int32_t>(), 0);
+    for (int i = 0; i < 10; ++i) {
+        int xi = x[i].data<int32_t>()[0];
+        ASSERT_EQ(xi, i);
+    }
     auto y = x.slice(5, 10);
     int s = std::accumulate(y.data<int32_t>(), y.data_end<int32_t>(), 0);
     ASSERT_EQ(s, 35);
+    {
+        int tot = 0;
+        for (int i = 0; i < 5; ++i) {
+            int yi = y.view()[i].data<int32_t>()[0];
+            tot += yi;
+        }
+        ASSERT_EQ(tot, 35);
+    }
 }
