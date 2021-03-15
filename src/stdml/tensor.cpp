@@ -1,8 +1,8 @@
 #include <sstream>
 
-#include <stdml/bits/functional.hpp>
-#include <stdml/bits/io.hpp>
-#include <stdml/bits/tensor.hpp>
+#include <stdml/bits/tensor/functional.hpp>
+#include <stdml/bits/tensor/io.hpp>
+#include <stdml/bits/tensor/tensor.hpp>
 #include <ttl/bits/std_shape_debug.hpp>
 #include <ttl/range>
 

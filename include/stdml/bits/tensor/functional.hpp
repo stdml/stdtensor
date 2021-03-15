@@ -1,5 +1,5 @@
 #pragma once
-#include <stdml/bits/tensor.hpp>
+#include <stdml/bits/tensor/tensor.hpp>
 
 namespace stdml
 {

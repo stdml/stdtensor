@@ -1,4 +1,4 @@
-#include <stdml/bits/tensor.hpp>
+#include <stdml/bits/tensor/dtype.hpp>
 
 namespace stdml
 {

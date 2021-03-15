@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
 
-#include <stdml/bits/tensor.hpp>
+#include <stdml/bits/tensor/tensor.hpp>
 #include <ttl/bits/std_shape_debug.hpp>
 
 namespace stdml

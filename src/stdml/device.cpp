@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <stdml/bits/device.hpp>
+#include <stdml/bits/tensor/device.hpp>
 
 namespace stdml
 {

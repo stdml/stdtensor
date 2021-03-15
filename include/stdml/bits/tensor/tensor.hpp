@@ -9,10 +9,10 @@
 #include <ttl/device>
 #include <ttl/tensor>
 
-#include <stdml/bits/device.hpp>
-#include <stdml/bits/dtype.hpp>
-#include <stdml/bits/shape.hpp>
-#include <stdml/bits/tensor_config.hpp>
+#include <stdml/bits/tensor/device.hpp>
+#include <stdml/bits/tensor/dtype.hpp>
+#include <stdml/bits/tensor/shape.hpp>
+#include <stdml/bits/tensor/tensor_config.hpp>
 
 namespace ttl
 {
