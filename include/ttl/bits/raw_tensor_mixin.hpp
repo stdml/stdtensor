@@ -103,6 +103,14 @@ class raw_tensor_mixin
         return reinterpret_cast<ptr_type>(data_.get());
     }
 
+    slice_type chunk(Dim k) const
+    {
+        const auto sub_shape = shape_.subshape();
+        Dim n = shape_.dims()[0] / k;
+        return slice_type(data_.get(), value_type_,
+                          sub_shape.batch_shape(k).batch_shape(n));
+    }
+
     slice_type slice(Dim i, Dim j) const
     {
         const auto sub_shape = shape_.subshape();

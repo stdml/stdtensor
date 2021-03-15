@@ -174,14 +174,7 @@ class BasicTensor
         if (device_type<D>::value != device_) {
             throw ttl::internal::invalid_device_reification();
         }
-        auto dims = t_.dims();
-        if (dims.size() <= 0) { throw std::invalid_argument(__func__); }
-        auto ld = dims[0];
-        dims.erase(dims.begin());
-        dims.insert(dims.begin(), k);
-        dims.insert(dims.begin(), ld / k);
-        auto shape = flat_shape(dims);
-        return raw_tensor_view(t_.data(), t_.value_type(), shape);
+        return t_.chunk(k);
     }
 
     template <typename T, typename D = ttl::internal::host_memory>
@@ -262,7 +255,7 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
 
     TensorRef(const Tensor &);
 
-    // TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
+    TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
 
     TensorView view() const { return TensorView(*this); }
 
@@ -367,7 +360,7 @@ class Tensor : public BasicTensor<raw_tensor>
         return raw_tensor_view(offset, t_.value_type(), sub_shape);
     }
 
-    TensorView chunk(size_t k) const { return this->_chunk<TensorView>(k); }
+    TensorRef chunk(size_t k) const { return this->_chunk<TensorRef>(k); }
 
     TensorRef slice(size_t i, size_t j)
     {
