@@ -87,15 +87,6 @@ class BasicTensor
         return vec(x.data(), x.size());
     }
 
-    template <typename R, ttl::rank_t r, typename A = AA,
-              typename D = ttl::internal::host_memory>
-    auto ranked() const
-    {
-        using tsr =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>, D, A>;
-        return tsr(t_.template data<R>(), ranked_shape<r>());
-    }
-
   public:
     size_t rank() const { return t_.rank(); }
 
@@ -121,13 +112,6 @@ class BasicTensor
     const auto &dims() const { return t_.dims(); }
 
     std::pair<V, S> meta() const { return {t_.value_type(), t_.shape()}; }
-
-    template <size_t r>
-    ttl::shape<r> ranked_shape() const
-    {
-        auto dims = cast_to<uint32_t, r>(t_.dims());
-        return ttl::shape<r>(dims);
-    }
 
     // pointer accessors
 
@@ -168,7 +152,8 @@ class BasicTensor
         using tsr =
             ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>, D,
                                         AA>;
-        return tsr(t_.template data<R>(), ranked_shape<r>());
+        auto dims = cast_to<uint32_t, r>(t_.dims());
+        return tsr(t_.template data<R>(), ttl::internal::basic_shape<r>(dims));
     }
 };
 
@@ -185,7 +170,6 @@ class TensorView : public BasicTensor<raw_tensor_view>
     using P::V;
 
     using P::flatten;
-    using P::ranked;
 
     TensorView(TT t, Device device = cpu);
 
@@ -224,7 +208,6 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     using P::V;
 
     using P::flatten;
-    using P::ranked;
 
     TensorRef(TT t, Device device = cpu);
 
@@ -265,7 +248,6 @@ class Tensor : public BasicTensor<raw_tensor>
     using P::V;
 
     using P::flatten;
-    using P::ranked;
 
     // using E = TT::encoder_type;
     // using V = E::value_type;
@@ -314,18 +296,6 @@ class Tensor : public BasicTensor<raw_tensor>
     bool match(const V v, const S &s) const
     {
         return v == t_.value_type() && s == t_.shape();
-    }
-
-    template <typename R, ttl::rank_t r>
-    auto ranked_view() const
-    {
-        return ranked<R, r, ttl::internal::readonly>();
-    }
-
-    template <typename R>
-    auto flatten_view() const
-    {
-        return flatten<R, ttl::internal::readonly>();
     }
 
     TensorRef ref() const { return TensorRef(*this); }
