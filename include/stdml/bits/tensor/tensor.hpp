@@ -74,12 +74,15 @@ class BasicTensor
     using AA = typename ttl::internal::default_ref_type<
         typename TT::access_type>::type;
 
-    template <typename R, typename A = AA,
-              typename D = ttl::internal::host_memory>
+    template <typename R, typename D = ttl::internal::host_memory>
     auto flatten() const
     {
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
         using vec =
-            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>, D, A>;
+            ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>, D,
+                                        AA>;
         auto x = t_.template typed<R>();
         return vec(x.data(), x.size());
     }
