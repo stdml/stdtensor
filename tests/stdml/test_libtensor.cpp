@@ -3,6 +3,8 @@
 #include <stdml/tensor>
 #include <ttl/experimental/flat_tensor>
 
+void call_with_view(const stdml::TensorView &x) {}
+
 TEST(libtensor_test, test_construct)
 {
     namespace ml = stdml;
@@ -19,6 +21,8 @@ TEST(libtensor_test, test_construct)
     ml::Tensor x6(ml::i32, {(int)bs, 2, 3});
 
     ml::TensorRef x7 = x6.ref();
+    call_with_view(x7);
+    call_with_view(x7[0]);
     ml::TensorView x8 = x7.view();
 }
 

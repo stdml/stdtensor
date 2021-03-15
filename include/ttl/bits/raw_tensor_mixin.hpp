@@ -119,6 +119,14 @@ class raw_tensor_mixin
         return slice_type(offset, value_type_, sub_shape.batch_shape(j - i));
     }
 
+    slice_type operator[](Dim i) const
+    {
+        const auto sub_shape = shape_.subshape();
+        char *offset = (char *)(data_.get()) +
+                       i * sub_shape.size() * Encoder::size(value_type_);
+        return slice_type(offset, value_type_, std::move(sub_shape));
+    }
+
     template <typename R>
     auto typed() const
     {

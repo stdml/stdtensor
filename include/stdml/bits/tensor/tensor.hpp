@@ -196,16 +196,7 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
     TensorView(const TensorRef &);
 
-    TensorView operator[](size_t i) const
-    {
-        // TODO: check rank
-        auto dims = t_.dims();
-        dims.erase(dims.begin());
-        auto sub_shape = flat_shape(dims);
-        char *offset =
-            (char *)t_.data() + i * sub_shape.size() * E::size(t_.value_type());
-        return raw_tensor_view(offset, t_.value_type(), sub_shape);
-    }
+    TensorView operator[](size_t i) const { return TensorView(t_[i], device_); }
 
     TensorView chunk(size_t k) const
     {
@@ -243,6 +234,8 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     TensorRef(const Tensor &);
 
     TensorView view() const { return TensorView(*this); }
+
+    TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
 
     TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
@@ -336,16 +329,7 @@ class Tensor : public BasicTensor<raw_tensor>
 
     TensorView view() const { return TensorView(*this); }
 
-    TensorView operator[](size_t i) const
-    {
-        // TODO: check rank
-        auto dims = t_.dims();
-        dims.erase(dims.begin());
-        auto sub_shape = flat_shape(dims);
-        char *offset =
-            (char *)t_.data() + i * sub_shape.size() * E::size(t_.value_type());
-        return raw_tensor_view(offset, t_.value_type(), sub_shape);
-    }
+    TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
 
     TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
