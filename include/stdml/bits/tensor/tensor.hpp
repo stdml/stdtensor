@@ -233,10 +233,10 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     template <typename TT1>
     static Tensor new_like(const BasicTensor<TT1> &x)
     {
-        return Tensor(x.dtype(), x.shape());
+        return Tensor(x.value_type(), x.shape(), x.device());
     }
 
-    // Tensor(V v) : P(TT(v, S())) {}
+    Tensor(V v, Device device = cpu) : Tensor(v, flat_shape(), device) {}
 
     template <typename R, ttl::rank_t r>
     Tensor(ttl::tensor<R, r> x)
@@ -265,18 +265,31 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     {
     }
 
-    Tensor(DType dt) : Tensor(to<E>(dt), flat_shape(), cpu) {}
-
-    template <ttl::rank_t r>
-    Tensor(DType dt, const ttl::shape<r> &s) : Tensor(dt, flat_shape(s))
+    Tensor(DType dt, Device device = cpu)
+        : Tensor(to<E>(dt), flat_shape(), device)
     {
     }
 
-    Tensor(DType dt, const flat_shape &s) : Tensor(to<E>(dt), s, cpu) {}
+    template <ttl::rank_t r>
+    Tensor(DType dt, const ttl::shape<r> &s, Device device = cpu)
+        : Tensor(dt, flat_shape(s), device)
+    {
+    }
 
-    Tensor(DType dt, const Shape &s) : Tensor(to<E>(dt), s.get(), cpu) {}
+    Tensor(DType dt, const flat_shape &s, Device device = cpu)
+        : Tensor(to<E>(dt), s, device)
+    {
+    }
 
-    Tensor(DType dt, const std::list<long> &dims) : Tensor(dt, Shape(dims)) {}
+    Tensor(DType dt, const Shape &s, Device device = cpu)
+        : Tensor(to<E>(dt), s.get(), device)
+    {
+    }
+
+    Tensor(DType dt, const std::list<long> &dims, Device device = cpu)
+        : Tensor(dt, Shape(dims), device)
+    {
+    }
 
     TensorRef ref() const { return TensorRef(*this); }
 
