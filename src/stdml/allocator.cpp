@@ -23,7 +23,7 @@ void *generic_allocator::alloc(Device device, size_t size)
 
 void generic_allocator::free(Device device, void *addr)
 {
-    printf("generic_allocator::free(%s, %p)\n", device_name(device), addr);
+    // printf("generic_allocator::free(%s, %p)\n", device_name(device), addr);
     switch (device) {
     case cpu:
         ::free(addr);
