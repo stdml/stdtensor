@@ -37,7 +37,7 @@ class Buffer
     std::unique_ptr<generic_pointer> p_;
 
   public:
-    Buffer(void *addr) : p_(new generic_pointer(addr, cpu)) {}
+    Buffer(void *addr, Device device) : p_(new generic_pointer(addr, device)) {}
 
     Buffer(size_t size, Device device) : p_(new generic_pointer(device, size))
     {

@@ -222,7 +222,7 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     Buffer buffer_;
 
     Tensor(void *data, Device device, V v, flat_shape s)
-        : P(TT(data, v, s), device), buffer_(data)
+        : P(TT(data, v, s), device), buffer_(data, device)
     {
     }
 
