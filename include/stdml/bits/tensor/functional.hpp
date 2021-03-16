@@ -50,33 +50,33 @@ struct type_switch_float {
     }
 };
 
-template <typename F, ttl::rank_t... ranks>
+template <typename F, typename D = ttl::host_memory, ttl::rank_t... ranks>
 struct apply;
 
-template <typename F>
-struct apply<F> {
+template <typename F, typename D>
+struct apply<F, D> {
     template <typename R>
     void operator()(const TensorRef &x) const
     {
-        F()(x.flatten<R>());
+        F()(x.flatten<R, D>());
     }
 
     template <typename R>
     void operator()(const TensorRef &y, const TensorView &x) const
     {
-        F()(y.flatten<R>(), x.flatten<R>());
+        F()(y.flatten<R, D>(), x.flatten<R, D>());
     }
 
     template <typename R>
     void operator()(const TensorRef &z,  //
                     const TensorView &x, const TensorView &y) const
     {
-        F()(z.flatten<R>(), x.flatten<R>(), y.flatten<R>());
+        F()(z.flatten<R, D>(), x.flatten<R, D>(), y.flatten<R, D>());
     }
 };
 
-template <typename F, ttl::rank_t r0, ttl::rank_t r1>
-struct apply<F, r0, r1> {
+template <typename F, typename D, ttl::rank_t r0, ttl::rank_t r1>
+struct apply<F, D, r0, r1> {
     template <typename R>
     void operator()(const TensorRef &y, const TensorView &x) const
     {
@@ -84,8 +84,9 @@ struct apply<F, r0, r1> {
     }
 };
 
-template <typename F, ttl::rank_t r0, ttl::rank_t r1, ttl::rank_t r2>
-struct apply<F, r0, r1, r2> {
+template <typename F, typename D, ttl::rank_t r0, ttl::rank_t r1,
+          ttl::rank_t r2>
+struct apply<F, D, r0, r1, r2> {
     template <typename R>
     void operator()(const TensorRef &z,  //
                     const TensorView &x, const TensorView &y) const
