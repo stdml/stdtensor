@@ -3,6 +3,11 @@
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
 
+namespace stdml
+{
+class Tensor;
+}
+
 namespace ttl
 {
 namespace internal
@@ -19,6 +24,7 @@ class basic_scalar_mixin
 
     template <typename, typename, typename, typename>
     friend class basic_raw_tensor;  // for move constructor
+    friend class stdml::Tensor;     // for move constructor
 
   protected:
     using Dim = typename S::dimension_type;  // For MSVC C2248
@@ -104,6 +110,7 @@ class basic_tensor_mixin
 
     template <typename, typename, typename, typename>
     friend class basic_raw_tensor;  // for move constructor
+    friend class stdml::Tensor;     // for move constructor
 
     iterator _iter(data_ptr pos) const
     {

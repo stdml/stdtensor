@@ -9,6 +9,7 @@
 #include <ttl/device>
 #include <ttl/tensor>
 
+#include <stdml/bits/tensor/allocator.hpp>
 #include <stdml/bits/tensor/device.hpp>
 #include <stdml/bits/tensor/dtype.hpp>
 #include <stdml/bits/tensor/shape.hpp>
@@ -43,7 +44,6 @@ template <typename TT>
 class BasicTensor
 {
   protected:
-    using S = flat_shape;
     using E = typename TT::encoder_type;
     using V = typename E::value_type;
 
@@ -82,7 +82,7 @@ class BasicTensor
 
     const auto &dims() const { return t_.dims(); }
 
-    std::pair<V, S> meta() const { return {t_.value_type(), t_.shape()}; }
+    // std::pair<V, S> meta() const { return {t_.value_type(), t_.shape()}; }
 
     // pointer accessors
 
@@ -211,17 +211,20 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     }
 };
 
-class Tensor : public BasicTensor<raw_tensor>
+class Tensor : public BasicTensor<raw_tensor_ref>
 {
-    //   protected:
-    //     using S = flat_shape;
-    //     using T = raw_tensor;
-    //     T t_;
-    using TT = raw_tensor;
+    using TT = raw_tensor_ref;
     using P = BasicTensor<TT>;
 
     friend class TensorRef;
     friend class TensorView;
+
+    Buffer buffer_;
+
+    Tensor(void *data, Device device, V v, flat_shape s)
+        : P(TT(data, v, s), device), buffer_(data)
+    {
+    }
 
   public:
     using P::E;
@@ -236,13 +239,20 @@ class Tensor : public BasicTensor<raw_tensor>
     // Tensor(V v) : P(TT(v, S())) {}
 
     template <typename R, ttl::rank_t r>
-    Tensor(ttl::tensor<R, r> x) : P(TT(std::move(x)), cpu)
+    Tensor(ttl::tensor<R, r> x)
+        : Tensor(x.data_.release(), cpu, E::value<R>(), flat_shape(x.shape()))
     {
     }
 
-    Tensor(V v, const S &s) : P(TT(v, s), cpu) {}
+    Tensor(V v, const flat_shape &s, Device device = cpu)
+        : Tensor(GA::alloc(device, s.size() * E::size(v)), device, v, s)
+    {
+    }
 
-    Tensor(V v, const Shape &s) : P(TT(v, s.get()), cpu) {}
+    Tensor(V v, const Shape &s, Device device = cpu)
+        : Tensor(v, s.get(), device)
+    {
+    }
 
     template <typename D>
     Tensor(DType dt, std::initializer_list<D> dims)
@@ -255,23 +265,18 @@ class Tensor : public BasicTensor<raw_tensor>
     {
     }
 
-    Tensor(DType dt) : P(TT(to<E>(dt), S()), cpu) {}
+    Tensor(DType dt) : Tensor(to<E>(dt), flat_shape(), cpu) {}
 
     template <ttl::rank_t r>
-    Tensor(DType dt, const ttl::shape<r> &s) : Tensor(dt, S(s))
+    Tensor(DType dt, const ttl::shape<r> &s) : Tensor(dt, flat_shape(s))
     {
     }
 
-    Tensor(DType dt, const S &s) : P(TT(to<E>(dt), s), cpu) {}
+    Tensor(DType dt, const flat_shape &s) : Tensor(to<E>(dt), s, cpu) {}
 
-    Tensor(DType dt, const Shape &s) : P(TT(to<E>(dt), s.get()), cpu) {}
+    Tensor(DType dt, const Shape &s) : Tensor(to<E>(dt), s.get(), cpu) {}
 
     Tensor(DType dt, const std::list<long> &dims) : Tensor(dt, Shape(dims)) {}
-
-    bool match(const V v, const S &s) const
-    {
-        return v == t_.value_type() && s == t_.shape();
-    }
 
     TensorRef ref() const { return TensorRef(*this); }
 
