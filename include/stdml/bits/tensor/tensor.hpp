@@ -88,6 +88,15 @@ class BasicTensor
 
     auto data() const { return t_.data(); }
 
+    template <Device device>
+    auto data() const
+    {
+        if (device != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
+        return t_.data();
+    }
+
     template <typename R>
     auto data() const
     {
