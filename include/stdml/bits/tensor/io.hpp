@@ -12,7 +12,8 @@ template <typename TT>
 std::string info(const TT &x)
 {
     std::stringstream ss;
-    ss << tn(x.dtype()) << ttl::internal::to_string(x.shape().get());
+    ss << tn(x.dtype()) << ttl::internal::to_string(x.shape().get()) << '@'
+       << device_name(x.device());
     return ss.str();
 }
 
