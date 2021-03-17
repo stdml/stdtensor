@@ -25,4 +25,17 @@ template <>
 struct device_type<ttl::cuda_memory> {
     static constexpr Device value = cuda;
 };
+
+template <Device>
+struct device_t;
+
+template <>
+struct device_t<cpu> {
+    using type = ttl::host_memory;
+};
+
+template <>
+struct device_t<cuda> {
+    using type = ttl::cuda_memory;
+};
 }  // namespace stdml
