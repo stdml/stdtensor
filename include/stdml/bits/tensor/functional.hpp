@@ -80,7 +80,7 @@ struct apply<F, D, r0, r1> {
     template <typename R>
     void operator()(const TensorRef &y, const TensorView &x) const
     {
-        F()(y.typed<R, r0>(), x.typed<R, r1>());
+        F()(y.typed<R, r0, D>(), x.typed<R, r1, D>());
     }
 };
 
@@ -91,7 +91,7 @@ struct apply<F, D, r0, r1, r2> {
     void operator()(const TensorRef &z,  //
                     const TensorView &x, const TensorView &y) const
     {
-        F()(z.typed<R, r0>(), x.typed<R, r1>(), y.typed<R, r2>());
+        F()(z.typed<R, r0, D>(), x.typed<R, r1, D>(), y.typed<R, r2, D>());
     }
 };
 }  // namespace stdml
