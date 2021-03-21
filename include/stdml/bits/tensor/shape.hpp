@@ -71,10 +71,18 @@ class Shape
     const auto &dims() const { return s_.dims(); }
 };
 
+std::ostream &operator<<(std::ostream &os, const Shape &s);
+
 template <typename... D>
 Shape shape(D... d)
 {
     std::array<int64_t, sizeof...(D)> dims({static_cast<int64_t>(d)...});
     return Shape(dims);
+}
+
+template <typename D>
+Shape shape(std::vector<D> dims)
+{
+    return Shape(cast_to<int64_t>(dims));
 }
 }  // namespace stdml
