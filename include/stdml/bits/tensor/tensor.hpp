@@ -109,6 +109,19 @@ class BasicTensor
         return t_.template data<R>() + t_.size();
     }
 
+    template <typename R, typename... Dim>
+    auto at(Dim... i) const
+    {
+        using D = ttl::internal::host_memory;
+        if (device_type<D>::value != device_) {
+            throw ttl::internal::invalid_device_reification();
+        }
+        constexpr ttl::rank_t r = sizeof...(Dim);
+        auto t = typed<R, r, D>();
+        using dim_t = typename decltype(t)::shape_type::dimension_type;
+        return t.at(static_cast<dim_t>(i)...);
+    }
+
     template <typename R, typename D = ttl::internal::host_memory>
     auto flatten() const
     {

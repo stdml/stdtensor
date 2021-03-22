@@ -100,3 +100,27 @@ TEST(libtensor_test, test_slice)
         ASSERT_EQ(tot, 35);
     }
 }
+
+TEST(libtensor_test, test_at)
+{
+    namespace ml = stdml;
+    using T = int32_t;
+    {
+        ml::Tensor x(ml::i32, ttl::make_shape());
+        auto r = x.ref();
+        auto v = x.view();
+
+        x.at<T>();
+        r.at<T>();
+        v.at<T>();
+    }
+    {
+        ml::Tensor x(ml::i32, ttl::make_shape(2, 3, 4));
+        auto r = x.ref();
+        auto v = x.view();
+
+        x.at<T>(0, 0, 0);
+        r.at<T>(0, 0, 0);
+        v.at<T>(0, 0, 0);
+    }
+}
