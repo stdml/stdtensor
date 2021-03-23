@@ -19,7 +19,7 @@ class basic_raw_tensor<Encoder, basic_flat_shape<Dim>, D, owner>
 
   public:
     template <typename R, typename S1>
-    explicit basic_raw_tensor(basic_tensor<R, S1, D, owner> t)
+    explicit basic_raw_tensor(basic_tensor<R, S1, D, owner> &&t)
         : mixin(t.data_.release(), Encoder::template value<R>(), S(t.shape()))
     {
     }
