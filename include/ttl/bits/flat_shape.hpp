@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cstdint>
 #include <functional>
 #include <numeric>
@@ -34,7 +35,9 @@ class basic_flat_shape
         static_assert(sizeof...(D) <= 0xff, "too many dimensions");
     }
 
-    explicit basic_flat_shape(const std::vector<dim_t> &dims) : dims_(dims) {}
+    explicit basic_flat_shape(std::vector<dim_t> dims) : dims_(std::move(dims))
+    {
+    }
 
     template <rank_t r, typename D>
     explicit basic_flat_shape(const basic_shape<r, D> &shape)
@@ -45,6 +48,25 @@ class basic_flat_shape
     rank_t rank() const { return static_cast<rank_t>(dims_.size()); }
 
     dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }
+
+    basic_flat_shape subshape() const
+    {
+        if (dims_.size() < 1) {
+            throw std::logic_error("scalar shape has no sub shape");
+        }
+        std::vector<dim_t> sub_dims(dims_.begin() + 1, dims_.end());
+        return basic_flat_shape(std::move(sub_dims));
+    }
+
+    // experimental API!
+    basic_flat_shape batch_shape(Dim n) const
+    {
+        std::vector<dim_t> batch_dims(dims_.size() + 1);
+        batch_dims[0] = n;
+        std::copy(dims_.begin(), dims_.end(), batch_dims.begin() + 1);
+        return basic_flat_shape(std::move(batch_dims));
+    }
+    //
 
     template <rank_t r>
     basic_shape<r, dim_t> ranked() const
