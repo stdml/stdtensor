@@ -194,7 +194,7 @@ class TensorView : public BasicTensor<raw_tensor_view>
         return TensorView(t_.chunk(k), device_);
     }
 
-    TensorView slice(size_t i, size_t j)
+    TensorView slice(size_t i, size_t j) const
     {
         return TensorView(t_.slice(i, j), device_);
     }
@@ -227,7 +227,7 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
 
     TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
-    TensorRef slice(size_t i, size_t j)
+    TensorRef slice(size_t i, size_t j) const
     {
         return TensorRef(t_.slice(i, j), device_);
     }
@@ -321,7 +321,7 @@ class Tensor : public BasicTensor<raw_tensor_ref>
 
     TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
-    TensorRef slice(size_t i, size_t j)
+    TensorRef slice(size_t i, size_t j) const
     {
         return TensorRef(t_.slice(i, j), device_);
     }
