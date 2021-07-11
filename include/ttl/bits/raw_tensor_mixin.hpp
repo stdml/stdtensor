@@ -54,9 +54,8 @@ class raw_tensor_mixin
   protected:
     using Dim = typename S::dimension_type;  // For MSVC C2248
 
-    raw_tensor_mixin(data_ptr data, const value_type_t value_type,
-                     const S &shape)
-        : value_type_(value_type), shape_(shape),
+    raw_tensor_mixin(data_ptr data, const value_type_t value_type, S shape)
+        : value_type_(value_type), shape_(std::move(shape)),
           data_(reinterpret_cast<char *>(const_cast<void *>(data)))
     {
     }
@@ -101,6 +100,19 @@ class raw_tensor_mixin
         }
         using ptr_type = typename basic_tensor_traits<R, A, D>::ptr_type;
         return reinterpret_cast<ptr_type>(data_.get());
+    }
+
+    slice_type reshape(S shape) const
+    {
+        if (shape.size() != shape_.size()) {
+            throw std::invalid_argument("inconsistent reshape");
+        }
+        return slice_type(data_.get(), value_type_, std::move(shape));
+    }
+
+    slice_type flatten() const
+    {
+        return slice_type(data_.get(), value_type_, S(shape_.size()));
     }
 
     slice_type chunk(Dim k) const
