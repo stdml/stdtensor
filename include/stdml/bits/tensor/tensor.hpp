@@ -173,6 +173,7 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
   public:
     using P::E;
+    using P::flatten;
     using P::V;
 
     TensorView(TT t, Device device = cpu);
@@ -188,6 +189,8 @@ class TensorView : public BasicTensor<raw_tensor_view>
     TensorView(const TensorRef &);
 
     TensorView operator[](size_t i) const { return TensorView(t_[i], device_); }
+
+    TensorView flatten() const { return TensorView(t_.flatten(), device_); }
 
     TensorView chunk(size_t k) const
     {
@@ -209,6 +212,7 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
 
   public:
     using P::E;
+    using P::flatten;
     using P::V;
 
     TensorRef(TT t, Device device = cpu);
@@ -224,6 +228,8 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     TensorView view() const { return TensorView(*this); }
 
     TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
+
+    TensorRef flatten() const { return TensorRef(t_.flatten(), device_); }
 
     TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
@@ -250,6 +256,7 @@ class Tensor : public BasicTensor<raw_tensor_ref>
 
   public:
     using P::E;
+    using P::flatten;
     using P::V;
 
     template <typename TT1>
@@ -316,6 +323,8 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     TensorRef ref() const { return TensorRef(*this); }
 
     TensorView view() const { return TensorView(*this); }
+
+    TensorRef flatten() const { return TensorRef(t_.flatten(), device_); }
 
     TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
 
