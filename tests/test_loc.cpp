@@ -30,5 +30,5 @@ TEST(test_loc, test1)
         ++n;
     }
     printf("total: %d lines in %d files\n", tot, n);
-    ASSERT_TRUE(tot <= 2200);
+    ASSERT_TRUE(tot <= 2500);
 }

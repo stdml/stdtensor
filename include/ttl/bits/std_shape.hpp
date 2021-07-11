@@ -48,16 +48,21 @@ class basic_shape
         static_assert(sizeof...(D) == r, "invalid number of dims");
     }
 
+    template <typename I>
+    dim_t offset(const std::array<I, r> &offs) const
+    {
+        dim_t off = 0;
+        for (rank_t i = 0; i < r; ++i) { off = off * dims_[i] + offs[i]; }
+        return off;
+    }
+
     template <typename... I>
     dim_t offset(I... args) const
     {
         static_assert(sizeof...(I) == r, "invalid number of indexes");
-
-        // TODO: expand the expression
+        // TODO: expand the expression?
         const std::array<dim_t, r> offs({static_cast<dim_t>(args)...});
-        dim_t off = 0;
-        for (rank_t i = 0; i < r; ++i) { off = off * dims_[i] + offs[i]; }
-        return off;
+        return offset(offs);
     }
 
     std::array<dim_t, r> expand(dim_t off) const

@@ -5,4 +5,5 @@
 namespace ttl
 {
 using internal::experimental::copy;
+using internal::experimental::memcpy;
 }  // namespace ttl
