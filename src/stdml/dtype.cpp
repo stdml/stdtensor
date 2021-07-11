@@ -21,6 +21,8 @@ const char *tn(const DType dt)
         //
         CASE(f32);
         CASE(f64);
+
+        CASE(boolean);
     default:
         throw std::invalid_argument(__func__);
     }

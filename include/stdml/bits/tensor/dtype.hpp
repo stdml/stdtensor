@@ -26,6 +26,32 @@ enum DType : uint8_t {
     boolean,
 };
 
+template <typename R>
+struct dtypeof;
+
+#define DEFINE_DTYPE(R, t)                                                     \
+    template <>                                                                \
+    struct dtypeof<R> {                                                        \
+        static constexpr DType value = t;                                      \
+    };
+
+DEFINE_DTYPE(int8_t, i8);
+DEFINE_DTYPE(int16_t, i16);
+DEFINE_DTYPE(int32_t, i32);
+DEFINE_DTYPE(int64_t, i64);
+
+DEFINE_DTYPE(uint8_t, u8);
+DEFINE_DTYPE(uint16_t, u16);
+DEFINE_DTYPE(uint32_t, u32);
+DEFINE_DTYPE(uint64_t, u64);
+
+DEFINE_DTYPE(float, f32);
+DEFINE_DTYPE(double, f64);
+
+DEFINE_DTYPE(bool, boolean);
+
+#undef DEFINE_DTYPE
+
 extern const char *tn(const DType dt);
 
 template <typename E>
