@@ -28,7 +28,7 @@ class Shape
 {
     using S = flat_shape;
 
-    const S s_;
+    S s_;
 
   public:
     Shape() {}

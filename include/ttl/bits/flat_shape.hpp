@@ -24,7 +24,8 @@ template <typename Dim = uint32_t>
 class basic_flat_shape
 {
     using dim_t = Dim;
-    const std::vector<dim_t> dims_;
+
+    std::vector<dim_t> dims_;
 
   public:
     using dimension_type = Dim;
