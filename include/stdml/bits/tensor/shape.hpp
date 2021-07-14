@@ -69,6 +69,8 @@ class Shape
     }
 
     const auto &dims() const { return s_.dims(); }
+
+    bool operator==(const Shape &s) const { return s_ == s.s_; }
 };
 
 std::ostream &operator<<(std::ostream &os, const Shape &s);
