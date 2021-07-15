@@ -1,0 +1,7 @@
+#pragma once
+#include <ttl/bits/type_traits.hpp>
+
+namespace ttl
+{
+using internal::lookup;
+}
