@@ -192,6 +192,11 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
     TensorView flatten() const { return TensorView(t_.flatten(), device_); }
 
+    TensorView reshape(Shape s) const
+    {
+        return TensorView(t_.reshape(s.get()), device_);
+    }
+
     TensorView chunk(size_t k) const
     {
         return TensorView(t_.chunk(k), device_);
@@ -230,6 +235,11 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
 
     TensorRef flatten() const { return TensorRef(t_.flatten(), device_); }
+
+    TensorRef reshape(Shape s) const
+    {
+        return TensorRef(t_.reshape(s.get()), device_);
+    }
 
     TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
 
@@ -325,6 +335,11 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     TensorView view() const { return TensorView(*this); }
 
     TensorRef flatten() const { return TensorRef(t_.flatten(), device_); }
+
+    TensorRef reshape(Shape s) const
+    {
+        return TensorRef(t_.reshape(s.get()), device_);
+    }
 
     TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
 
