@@ -52,7 +52,7 @@ jobs:
   - script: rm -fr release/_CPack_Packages
     displayName: Cleanup
 
-  - script: cp releases/* $(Build.ArtifactStagingDirectory)
+  - script: cp release/* $(Build.ArtifactStagingDirectory)
     displayName: Copy
 
   # - task: PublishPipelineArtifact@1
