@@ -49,3 +49,7 @@ install_manifest.txt
 Makefile
 
 *.png
+
+CPackConfig.cmake
+CPackSourceConfig.cmake
+release

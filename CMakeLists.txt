@@ -54,3 +54,7 @@ ENDIF()
 IF(BUILD_EXAMPLES)
     INCLUDE(cmake/examples.cmake)
 ENDIF()
+
+IF(BUILD_RELEASE)
+    INCLUDE(cmake/pack.cmake)
+ENDIF()

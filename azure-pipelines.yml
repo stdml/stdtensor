@@ -30,3 +30,17 @@ jobs:
   - script: ./configure --examples --tests --benchmarks
   - script: make -j $(nproc)
   - script: make test
+
+- job: release
+  strategy:
+    matrix:
+      ubuntu-18.04:
+        imageName: 'ubuntu-18.04'
+
+  pool:
+    vmImage: $(imageName)
+
+  steps:
+  - script: ./configure --release=v$(git log -1 --format=%ct)
+  - script: make -j $(nproc)
+  - script: make package
