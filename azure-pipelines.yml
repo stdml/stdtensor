@@ -54,6 +54,9 @@ jobs:
       artifact: 'stdtensor-preview'
       publishLocation: 'pipeline'
 
+  - script: echo '$(Build.ArtifactStagingDirectory)'
+  - script: ls '$(Build.ArtifactStagingDirectory)'
+
   - task: UniversalPackages@0
     inputs:
       command: 'publish'
