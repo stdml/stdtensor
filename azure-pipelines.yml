@@ -44,3 +44,21 @@ jobs:
   - script: ./configure --release=v$(git log -1 --format=%ct)
   - script: make -j $(nproc)
   - script: make package
+
+  - script: rm -fr release/_CPack_Packages
+    displayName: Cleanup
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: ./release
+      artifact: 'stdtensor-preview'
+      publishLocation: 'pipeline'
+
+  - task: UniversalPackages@0
+    inputs:
+      command: 'publish'
+      publishDirectory: '$(Build.ArtifactStagingDirectory)'
+      feedsToUsePublish: 'internal'
+      vstsFeedPublish: 'releases/libs'
+      vstsFeedPackagePublish: 'stdtensor-preview'
+      versionOption: 'patch'
