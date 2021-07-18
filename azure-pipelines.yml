@@ -45,17 +45,22 @@ jobs:
   - script: make -j $(nproc)
   - script: make package
 
+  - script: pwd
+  - script: echo '$(Build.ArtifactStagingDirectory)'
+  - script: ls '$(Build.ArtifactStagingDirectory)'
+
   - script: rm -fr release/_CPack_Packages
     displayName: Cleanup
 
-  - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: ./release
-      artifact: 'stdtensor-preview'
-      publishLocation: 'pipeline'
+  - script: cp releases/* $(Build.ArtifactStagingDirectory)
+    displayName: Copy
 
-  - script: echo '$(Build.ArtifactStagingDirectory)'
-  - script: ls '$(Build.ArtifactStagingDirectory)'
+  # - task: PublishPipelineArtifact@1
+  #   inputs:
+  #     targetPath: ./release
+  #     artifact: 'stdtensor-preview'
+  #     publishLocation: 'pipeline'
+
 
   - task: UniversalPackages@0
     inputs:
