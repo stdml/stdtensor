@@ -129,7 +129,7 @@ class raw_tensor_mixin
         S sub_shape;
         std::tie(n, sub_shape) = shape_.uncons();
         if (i > j) { throw std::invalid_argument("invalid slice"); }
-        if (i < 0 || j >= n) { throw std::invalid_argument("out of bound"); }
+        if (i < 0 || j > n) { throw std::invalid_argument("out of bound"); }
 
         char *offset = (char *)(data_.get()) +
                        i * sub_shape.size() * Encoder::size(value_type_);
