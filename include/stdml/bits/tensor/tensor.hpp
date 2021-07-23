@@ -270,22 +270,10 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     using P::V;
 
     template <typename TT1>
-    static Tensor new_like(const BasicTensor<TT1> &x)
-    {
-        return Tensor(x.value_type(), x.shape(), x.device());
-    }
+    static Tensor new_like(const BasicTensor<TT1> &x);
 
     template <typename TT1>
-    static Tensor clone(const BasicTensor<TT1> &x)
-    {
-        Tensor t(x.value_type(), x.shape(), x.device());
-        if (x.device() == cpu) {
-            std::memcpy(t.data(), x.data(), x.data_size());
-        } else {
-            throw std::runtime_error("only support clone cpu tensor.");
-        }
-        return t;
-    }
+    static Tensor clone(const BasicTensor<TT1> &x);
 
     Tensor(V v, Device device = cpu) : Tensor(v, flat_shape(), device) {}
 

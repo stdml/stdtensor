@@ -1,3 +1,4 @@
+#include <cstring>
 #include <sstream>
 
 #include <stdml/bits/tensor/functional.hpp>
@@ -8,6 +9,32 @@
 
 namespace stdml
 {
+template <typename TT1>
+Tensor Tensor::new_like(const BasicTensor<TT1> &x)
+{
+    return Tensor(x.value_type(), x.shape(), x.device());
+}
+
+template Tensor Tensor::new_like(const BasicTensor<raw_tensor> &);
+template Tensor Tensor::new_like(const BasicTensor<raw_tensor_ref> &);
+template Tensor Tensor::new_like(const BasicTensor<raw_tensor_view> &);
+
+template <typename TT1>
+Tensor Tensor::clone(const BasicTensor<TT1> &x)
+{
+    Tensor t(x.value_type(), x.shape(), x.device());
+    if (x.device() == cpu) {
+        std::memcpy(t.data(), x.data(), x.data_size());
+    } else {
+        throw std::runtime_error("only support clone cpu tensor.");
+    }
+    return t;
+}
+
+template Tensor Tensor::clone(const BasicTensor<raw_tensor> &);
+template Tensor Tensor::clone(const BasicTensor<raw_tensor_ref> &);
+template Tensor Tensor::clone(const BasicTensor<raw_tensor_view> &);
+
 TensorView::TensorView(TT t, Device device) : P(std::move(t), device) {}
 
 TensorView::TensorView(const Tensor &x) : P(TT(x.t_), x.device_) {}
