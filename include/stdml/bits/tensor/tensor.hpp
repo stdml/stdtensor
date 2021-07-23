@@ -275,6 +275,18 @@ class Tensor : public BasicTensor<raw_tensor_ref>
         return Tensor(x.value_type(), x.shape(), x.device());
     }
 
+    template <typename TT1>
+    static Tensor clone(const BasicTensor<TT1> &x)
+    {
+        Tensor t(x.value_type(), x.shape(), x.device());
+        if (x.device() == cpu) {
+            std::memcpy(t.data(), x.data(), x.data_size());
+        } else {
+            throw std::runtime_error("only support clone cpu tensor.");
+        }
+        return t;
+    }
+
     Tensor(V v, Device device = cpu) : Tensor(v, flat_shape(), device) {}
 
     template <typename R, ttl::rank_t r>
