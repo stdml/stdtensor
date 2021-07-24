@@ -8,7 +8,6 @@ FUNCTION(ADD_C_EXAMPLE target)
 ENDFUNCTION()
 
 ADD_CPP_EXAMPLE(example-1 examples/example_1.cpp)
-ADD_C_EXAMPLE(example-c-api examples/example_c_api.c)
 
 OPTION(USE_OPENCV "Build examples with libopencv-dev" OFF)
 
