@@ -1,0 +1,7 @@
+#pragma once
+#include <ttl/bits/consistent_variable.hpp>
+
+namespace ttl
+{
+using ttl::internal::consistent_variable;
+}

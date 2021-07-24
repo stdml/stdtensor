@@ -24,7 +24,8 @@ template <typename Dim = uint32_t>
 class basic_flat_shape
 {
     using dim_t = Dim;
-    const std::vector<dim_t> dims_;
+
+    std::vector<dim_t> dims_;
 
   public:
     using dimension_type = Dim;
@@ -56,6 +57,15 @@ class basic_flat_shape
         }
         std::vector<dim_t> sub_dims(dims_.begin() + 1, dims_.end());
         return basic_flat_shape(std::move(sub_dims));
+    }
+
+    std::pair<dim_t, basic_flat_shape> uncons() const
+    {
+        if (dims_.size() < 1) {
+            throw std::logic_error("scalar shape has no sub shape");
+        }
+        std::vector<dim_t> sub_dims(dims_.begin() + 1, dims_.end());
+        return std::make_pair(dims_[0], basic_flat_shape(std::move(sub_dims)));
     }
 
     // experimental API!

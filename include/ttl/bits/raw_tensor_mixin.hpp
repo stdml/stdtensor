@@ -125,7 +125,12 @@ class raw_tensor_mixin
 
     slice_type slice(Dim i, Dim j) const
     {
-        const auto sub_shape = shape_.subshape();
+        Dim n;
+        S sub_shape;
+        std::tie(n, sub_shape) = shape_.uncons();
+        if (i > j) { throw std::invalid_argument("invalid slice"); }
+        if (i < 0 || j > n) { throw std::invalid_argument("out of bound"); }
+
         char *offset = (char *)(data_.get()) +
                        i * sub_shape.size() * Encoder::size(value_type_);
         return slice_type(offset, value_type_, sub_shape.batch_shape(j - i));
@@ -133,7 +138,11 @@ class raw_tensor_mixin
 
     slice_type operator[](Dim i) const
     {
-        const auto sub_shape = shape_.subshape();
+        Dim n;
+        S sub_shape;
+        std::tie(n, sub_shape) = shape_.uncons();
+        if (i < 0 || i >= n) { throw std::invalid_argument("out of bound"); }
+
         char *offset = (char *)(data_.get()) +
                        i * sub_shape.size() * Encoder::size(value_type_);
         return slice_type(offset, value_type_, std::move(sub_shape));

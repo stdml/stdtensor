@@ -25,8 +25,8 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 
 OPTION(BUILD_LIB "Build c lib." OFF)
 IF(BUILD_LIB)
-    ADD_LIBRARY(stdtensor src/tensor.cpp)
-    INSTALL(TARGETS stdtensor ARCHIVE DESTINATION lib)
+    INCLUDE(cmake/lib.cmake)
+    BUILD_STDML_TENSOR_LIB(tensor)
 ENDIF()
 
 INSTALL(DIRECTORY include DESTINATION .)
@@ -54,4 +54,8 @@ ENDIF()
 
 IF(BUILD_EXAMPLES)
     INCLUDE(cmake/examples.cmake)
+ENDIF()
+
+IF(BUILD_RELEASE)
+    INCLUDE(cmake/pack.cmake)
 ENDIF()

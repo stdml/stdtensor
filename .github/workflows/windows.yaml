@@ -11,6 +11,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - run: cmake . -DBUILD_TESTS=1 -DBUILD_GTEST=1 -DUSE_STRICT=0 -DBUILD_LIB=1
+    - run: cmake . -DBUILD_TESTS=1 -DBUILD_GTEST=1 -DUSE_STRICT=0 -DBUILD_LIB=0
     - run: cmake --build . --config Release
     - run: ctest -C Release
