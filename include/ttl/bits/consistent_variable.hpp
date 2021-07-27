@@ -31,8 +31,8 @@ class consistent_variable
             if (value_ != v) {
                 // TODO: customized exception
                 throw std::invalid_argument(
-                    "consistent_variable was assigned: " + Str()(value_) +
-                    " now assigned: " + Str()(v));
+                    std::string("consistent_variable was assigned: ") +
+                    Str()(value_) + " now assigned: " + Str()(v));
             }
         } else {
             value_ = std::move(v);
