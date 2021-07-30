@@ -1,6 +1,4 @@
 #pragma once
-#include <list>
-
 #include <ttl/bits/flat_shape.hpp>
 #include <ttl/bits/raw_tensor.hpp>
 #include <ttl/bits/std_encoding.hpp>
@@ -322,11 +320,6 @@ class Tensor : public BasicTensor<raw_tensor_ref>
 
     Tensor(DType dt, const Shape &s, Device device = cpu)
         : Tensor(to<E>(dt), s.get(), device)
-    {
-    }
-
-    Tensor(DType dt, const std::list<long> &dims, Device device = cpu)
-        : Tensor(dt, Shape(dims), device)
     {
     }
 

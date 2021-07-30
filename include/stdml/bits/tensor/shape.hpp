@@ -1,6 +1,4 @@
 #pragma once
-#include <list>
-
 #include <stdml/bits/tensor/tensor_config.hpp>
 #include <ttl/bits/flat_shape.hpp>
 #include <ttl/shape>
@@ -32,8 +30,6 @@ class Shape
 
   public:
     Shape() {}
-
-    explicit Shape(const std::list<long> &dims) : s_(cast_to<int64_t>(dims)) {}
 
     template <typename D>
     explicit Shape(const std::vector<D> &dims) : s_(cast_to<int64_t>(dims))
