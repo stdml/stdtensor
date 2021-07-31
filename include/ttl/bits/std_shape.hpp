@@ -37,8 +37,8 @@ class basic_shape
 
     static constexpr rank_t rank = r;
 
-    constexpr explicit basic_shape(const std::array<dim_t, r> &dims)
-        : dims_(dims)
+    constexpr explicit basic_shape(std::array<dim_t, r> dims)
+        : dims_(std::move(dims))
     {
     }
 

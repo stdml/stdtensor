@@ -42,3 +42,16 @@ TEST(flat_shape_test, test_dims)
     ASSERT_EQ(dims[1], static_cast<dim_t>(3));
     ASSERT_EQ(dims[2], static_cast<dim_t>(4));
 }
+
+TEST(flat_shape_test, test_rank_reification)
+{
+    using flat_shape = ttl::internal::basic_flat_shape<uint32_t>;
+    flat_shape shape(2, 3, 4);
+
+    try {
+        shape.ranked<2>();
+        ASSERT_TRUE(false);
+    } catch (const ttl::internal::invalid_rank_reification &ex) {
+        ASSERT_EQ(std::string(ex.what()), std::string("(2, 3, 4) as rank 2"));
+    }
+}
