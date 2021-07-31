@@ -5,6 +5,15 @@
 
 void call_with_view(const stdml::TensorView &x) {}
 
+TEST(libtensor_test, test_construct_shape)
+{
+    namespace ml = stdml;
+    ml::Shape s0;
+    ml::Shape s01({});
+    ml::Shape s1({1});
+    ml::Shape s2({1, 2});
+}
+
 TEST(libtensor_test, test_construct)
 {
     namespace ml = stdml;

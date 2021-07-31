@@ -36,6 +36,12 @@ class Shape
     {
     }
 
+    template <typename D>
+    explicit Shape(std::initializer_list<D> dims)
+        : Shape(std::vector<D>(std::move(dims)))
+    {
+    }
+
     template <typename D, size_t r>
     explicit Shape(const std::array<D, r> &dims) : s_(cast_to<int64_t>(dims))
     {
