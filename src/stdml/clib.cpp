@@ -1,3 +1,5 @@
+#include <cstdarg>
+
 #include <stdml/bits/tensor/tensor.hpp>
 #include <stdml/tensor.h>
 
