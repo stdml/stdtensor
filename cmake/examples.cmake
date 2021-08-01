@@ -4,10 +4,11 @@ ENDFUNCTION()
 
 FUNCTION(ADD_C_EXAMPLE target)
     ADD_EXECUTABLE(${target} ${ARGN})
-    TARGET_LINK_LIBRARIES(${target} stdtensor)
+    TARGET_LINK_LIBRARIES(${target} tensor)
 ENDFUNCTION()
 
 ADD_CPP_EXAMPLE(example-1 examples/example_1.cpp)
+ADD_C_EXAMPLE(example-c examples/example_c.c)
 
 OPTION(USE_OPENCV "Build examples with libopencv-dev" OFF)
 
