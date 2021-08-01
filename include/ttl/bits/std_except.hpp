@@ -48,7 +48,12 @@ class invalid_rank_reification : public std::invalid_argument
 class invalid_device_reification : public std::invalid_argument
 {
   public:
-    invalid_device_reification() : invalid_argument(__func__) {}
+    // invalid_device_reification() : invalid_argument(__func__) {}
+
+    invalid_device_reification(std::string from, std::string to)
+        : invalid_argument(std::move(from) + " as " + std::move(to))
+    {
+    }
 };
 }  // namespace internal
 }  // namespace ttl

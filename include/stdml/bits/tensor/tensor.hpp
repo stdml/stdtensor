@@ -90,7 +90,8 @@ class BasicTensor
     auto data() const
     {
         if (device != device_) {
-            throw ttl::internal::invalid_device_reification();
+            throw ttl::internal::invalid_device_reification(
+                device_name(device_), device_name(device));
         }
         return t_.data();
     }
@@ -112,7 +113,8 @@ class BasicTensor
     {
         using D = ttl::internal::host_memory;
         if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
+            throw ttl::internal::invalid_device_reification(
+                device_name(device_), device_name(device_type<D>::value));
         }
         constexpr ttl::rank_t r = sizeof...(Dim);
         auto t = typed<R, r, D>();
@@ -124,7 +126,8 @@ class BasicTensor
     auto flatten() const
     {
         if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
+            throw ttl::internal::invalid_device_reification(
+                device_name(device_), device_name(device_type<D>::value));
         }
         using vec =
             ttl::internal::basic_tensor<R, ttl::internal::basic_shape<1>, D,
@@ -137,7 +140,8 @@ class BasicTensor
     auto typed() const
     {
         if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
+            throw ttl::internal::invalid_device_reification(
+                device_name(device_), device_name(device_type<D>::value));
         }
         using tsr =
             ttl::internal::basic_tensor<R, ttl::internal::basic_flat_shape<>, D,
@@ -151,7 +155,8 @@ class BasicTensor
     auto typed() const
     {
         if (device_type<D>::value != device_) {
-            throw ttl::internal::invalid_device_reification();
+            throw ttl::internal::invalid_device_reification(
+                device_name(device_), device_name(device_type<D>::value));
         }
         using tsr =
             ttl::internal::basic_tensor<R, ttl::internal::basic_shape<r>, D,
