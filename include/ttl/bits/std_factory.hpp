@@ -17,7 +17,7 @@ struct basic_new_ptr_constructor {
 template <typename T, typename A, typename K>
 class basic_factory_t
 {
-    using constructor = constructor_t<T, A>;
+    using constructor = basic_constructor_t<T, A>;
     std::map<K, constructor> constructors_;
 
   public:
