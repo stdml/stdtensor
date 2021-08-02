@@ -7,7 +7,12 @@ namespace ttl
 namespace internal
 {
 template <typename T, typename A>
-using constructor_t = std::function<T(A)>;
+using basic_constructor_t = std::function<T(A)>;
+
+template <typename T, typename C, typename A>
+struct basic_new_ptr_constructor {
+    T *operator()(A a) const { return new C(std::move(a)); }
+};
 
 template <typename T, typename A, typename K>
 class basic_factory_t
