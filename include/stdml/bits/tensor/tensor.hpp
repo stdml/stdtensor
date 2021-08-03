@@ -67,6 +67,8 @@ class BasicTensor
 
     DType dtype() const { return from<E>(t_.value_type()); }
 
+    auto kind() const { return std::make_pair(dtype(), shape()); }
+
     V value_type() const { return t_.value_type(); }
 
     Device device() const { return device_; }
@@ -287,7 +289,8 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     }
 
     Tensor(V v, const flat_shape &s, Device device = cpu)
-        : Tensor(GA::alloc(device, s.size() * E::size(v)), device, v, s)
+        : Tensor(generic_allocator::alloc(device, s.size() * E::size(v)),
+                 device, v, s)
     {
     }
 

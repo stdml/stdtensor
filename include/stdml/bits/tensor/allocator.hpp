@@ -12,10 +12,10 @@ class generic_allocator
     static void free(Device device, void *addr);
 };
 
-using GA = generic_allocator;
-
 class generic_pointer
 {
+    using GA = generic_allocator;
+
     Device device_;
     void *addr_;
 
