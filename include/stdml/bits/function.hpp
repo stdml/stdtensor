@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 
-#include <stdml/tensor>
+#include <stdml/bits/apply.hpp>
+#include <stdml/bits/tensor/tensor.hpp>
 
 namespace stdml
 {
@@ -51,9 +52,7 @@ class Apply
     {
         static_assert(std::is_same<P, X>::value || std::is_same<P, Y>::value,
                       "");
-        if (p.size() != a) {
-            throw std::invalid_argument("invalid arity");
-        }
+        if (p.size() != a) { throw std::invalid_argument("invalid arity"); }
     }
 
   public:
@@ -94,9 +93,7 @@ class Function
     {
         static_assert(std::is_same<P, X>::value || std::is_same<P, Y>::value,
                       "");
-        if (p.size() != a) {
-            throw std::invalid_argument("invalid arity");
-        }
+        if (p.size() != a) { throw std::invalid_argument("invalid arity"); }
     }
 
     using Type = std::pair<DType, Shape>;
@@ -113,9 +110,7 @@ class Function
 
     virtual void operator()(const Y &ys, const X &xs) const = 0;
 
-    virtual void info()
-    {
-    }
+    virtual void info() {}
 };
 
 template <typename F, typename TY, typename D = ttl::host_memory>
