@@ -17,11 +17,13 @@ struct basic_new_ptr_constructor {
 template <typename T, typename A, typename K>
 class basic_factory_t
 {
-    using constructor = basic_constructor_t<T, A>;
-    std::map<K, constructor> constructors_;
+    using C = basic_constructor_t<T, A>;
+    std::map<K, C> constructors_;
 
   public:
-    void operator()(K k, constructor c)
+    using constructor_type = C;
+
+    void operator()(K k, C c)
     {
         if (constructors_.count(k) > 0) {
             throw std::invalid_argument("registering duplicated constructor");
@@ -31,7 +33,7 @@ class basic_factory_t
 
     bool contains(K k) const { return constructors_.count(k) > 0; }
 
-    constructor operator[](K k) const { return constructors_.at(k); }
+    C operator[](K k) const { return constructors_.at(k); }
 
     T operator()(K k, A a) const
     {
