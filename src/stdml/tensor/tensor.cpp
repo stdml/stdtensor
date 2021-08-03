@@ -1,7 +1,7 @@
 #include <cstring>
 #include <sstream>
 
-#include <stdml/bits/tensor/functional.hpp>
+#include <stdml/bits/apply.hpp>
 #include <stdml/bits/tensor/io.hpp>
 #include <stdml/bits/tensor/tensor.hpp>
 #include <ttl/bits/std_shape_debug.hpp>
