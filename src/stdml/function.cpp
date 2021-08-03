@@ -19,14 +19,14 @@ std::string Function::call_info(const Y &ys, const X &xs)
     return ss.str();
 }
 
-Function::Type Function::operator()(const std::vector<Type> &types) const
+Function::Kind Function::operator()(const std::vector<Kind> &ks) const
 {
     std::vector<DType> dtypes;
     std::vector<Shape> shapes;
-    std::transform(types.begin(), types.end(), std::back_inserter(dtypes),
+    std::transform(ks.begin(), ks.end(), std::back_inserter(dtypes),
                    [](auto &p) { return p.first; });
-    std::transform(types.begin(), types.end(), std::back_inserter(shapes),
+    std::transform(ks.begin(), ks.end(), std::back_inserter(shapes),
                    [](auto &p) { return p.second; });
-    return Type((*this)(dtypes), (*this)(shapes));
+    return Kind((*this)(dtypes), (*this)(shapes));
 }
 }  // namespace stdml

@@ -96,19 +96,19 @@ class Function
         if (p.size() != a) { throw std::invalid_argument("invalid arity"); }
     }
 
-    using Type = std::pair<DType, Shape>;
+    using Kind = std::pair<DType, Shape>;
 
   public:
     static std::string call_info(const Y &ys, const X &xs);
 
     virtual ~Function() = default;
 
-    virtual DType operator()(const std::vector<DType> &dtypes) const = 0;
-    virtual Shape operator()(const std::vector<Shape> &shapes) const = 0;
+    virtual DType operator()(const std::vector<DType> &) const = 0;
+    virtual Shape operator()(const std::vector<Shape> &) const = 0;
 
-    Type operator()(const std::vector<Type> &types) const;
+    Kind operator()(const std::vector<Kind> &) const;
 
-    virtual void operator()(const Y &ys, const X &xs) const = 0;
+    virtual void operator()(const Y &, const X &) const = 0;
 
     virtual void info() {}
 };
