@@ -25,4 +25,12 @@ void *dll::raw_sym(const std::string &name) const
     }
     return f;
 }
+
+bool try_dl_open(std::string path)
+{
+    void *handle = dlopen(path.c_str(), mode);
+    if (handle == nullptr) { return false; }
+    dlclose(handle);
+    return true;
+}
 }  // namespace stdml

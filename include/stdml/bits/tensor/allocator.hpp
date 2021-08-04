@@ -4,6 +4,8 @@
 
 namespace stdml
 {
+bool has_cuda();
+
 class generic_allocator
 {
   public:
