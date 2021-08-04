@@ -10,15 +10,20 @@ class libcudart
     typedef int (*alloc_fn)(void **devPtr, size_t size);
     typedef int (*free_fn)(void *addr);
 
+    typedef int (*copy_fn)(void *dst, const void *src, size_t size,
+                           int /* cudaMemcpyKind */ dir);
+
     dll dll_;
     alloc_fn alloc_fn_;
     free_fn free_fn_;
+    copy_fn copy_fn_;
 
   public:
     libcudart()
         : dll_("cudart", "/usr/local/cuda/lib64/"),
           alloc_fn_(dll_.sym<alloc_fn>("cudaMalloc")),
-          free_fn_(dll_.sym<free_fn>("cudaFree"))
+          free_fn_(dll_.sym<free_fn>("cudaFree")),
+          copy_fn_(dll_.sym<copy_fn>("cudaMemcpy"))
     {
     }
 
@@ -69,5 +74,11 @@ void generic_allocator::free(Device device, void *addr)
     default:
         throw std::runtime_error("invalid device!");
     }
+}
+
+template <Device Dst, Device Src>
+void generic_copier<Dst, Src>::operator()(void *dst, const void *src,
+                                          size_t size) const
+{
 }
 }  // namespace stdml

@@ -14,6 +14,13 @@ class generic_allocator
     static void free(Device device, void *addr);
 };
 
+template <Device Dst, Device Src>
+class generic_copier
+{
+  public:
+    void operator()(void *dst, const void *src, size_t size) const;
+};
+
 class generic_pointer
 {
     using GA = generic_allocator;

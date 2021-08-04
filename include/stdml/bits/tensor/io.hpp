@@ -8,6 +8,8 @@ namespace stdml
 {
 extern void show_tensor(std::basic_ostream<char> &os, const TensorView &x);
 
+void copy(const TensorRef &y, const TensorView &x);
+
 template <typename TT>
 std::string info(const TT &x)
 {
