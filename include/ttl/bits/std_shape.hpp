@@ -1,10 +1,10 @@
 #pragma once
 #include <array>
-#include <cstddef>
-#include <cstdint>
 #include <functional>
 #include <numeric>
 #include <utility>
+
+#include <ttl/bits/std_def.hpp>
 
 namespace ttl
 {
@@ -16,14 +16,12 @@ N product(Iterator begin, Iterator end)
     return std::accumulate(begin, end, static_cast<N>(1), std::multiplies<N>());
 };
 
-template <size_t off, typename T, size_t r, size_t... Is>
+template <rank_t off, typename T, rank_t r, rank_t ... Is>
 constexpr std::array<T, r - off> shift_idx(const std::array<T, r> &a,
-                                           std::index_sequence<Is...>)
+                                           std::integer_sequence<rank_t, Is...>)
 {
     return std::array<T, r - off>({std::get<Is + off>(a)...});
 }
-
-using rank_t = uint8_t;
 
 template <rank_t r, typename Dim = uint32_t>
 class basic_shape
@@ -100,7 +98,7 @@ class basic_shape
         static_assert(0 <= corank && corank <= r, "invalid corank");
         constexpr rank_t s = r - corank;
         return basic_shape<s, dim_t>(
-            shift_idx<corank>(dims_, std::make_index_sequence<s>()));
+            shift_idx<corank, dim_t, r>(dims_, std::make_integer_sequence<rank_t, s>()));
     }
 
     bool operator==(const basic_shape &s) const

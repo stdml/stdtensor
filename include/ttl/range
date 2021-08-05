@@ -1,8 +1,8 @@
 // # -*- mode: c++ -*-
 #pragma once
 #include <array>
-#include <cstdint>
 
+#include <ttl/bits/std_def.hpp>
 #include <ttl/bits/std_range.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 
@@ -11,11 +11,9 @@ namespace ttl
 using internal::range;
 using internal::range1;
 
-using rank_t = uint8_t;
-
 template <rank_t r, typename R, typename S, typename D, typename A>
 auto range(const internal::basic_tensor<R, S, D, A> &t)
 {
-    return range(std::get<r>(t.shape().dims()));
+    return range(std::get<r>(t.dims()));
 }
 }  // namespace ttl

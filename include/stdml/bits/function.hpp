@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
 
+#include <ttl/bits/std_def.hpp>
+
 #include <stdml/bits/apply.hpp>
 #include <stdml/bits/tensor/tensor.hpp>
 
 namespace stdml
 {
-using arity_t = uint8_t;
-
 template <typename R, ttl::rank_t r>
 struct type_rank {
     template <typename D, typename T>
@@ -65,7 +65,7 @@ class Apply
     }
 };
 
-template <arity_t i, typename G, typename D, typename TY, typename... TX>
+template <ttl::arity_t i, typename G, typename D, typename TY, typename... TX>
 void apply_grad(Apply<D, TY, TX...>, const G &g,
                 const std::vector<TensorRef> &ys,
                 const std::vector<TensorView> &xs)
