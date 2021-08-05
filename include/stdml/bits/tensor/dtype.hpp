@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <stdexcept>
+#include <string>
 
 namespace stdml
 {
@@ -105,4 +106,6 @@ auto to(DType v)
     }
 #undef CASE
 }
+
+DType parse_dtype(std::string name);
 }  // namespace stdml
