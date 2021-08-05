@@ -91,6 +91,7 @@ class basic_flat_shape
 
     bool operator==(const basic_flat_shape &s) const
     {
+        if (dims_.size() != s.dims_.size()) { return false; }
         return std::equal(dims_.begin(), dims_.end(), s.dims().begin());
     }
 
