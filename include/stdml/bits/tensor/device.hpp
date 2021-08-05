@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <string>
+
 #include <ttl/device>
 
 namespace stdml
@@ -10,6 +12,7 @@ enum Device : uint8_t {
 };
 
 extern const char *device_name(const Device d);
+Device parse_device(std::string);
 
 inline constexpr Device gpu = cuda;
 
