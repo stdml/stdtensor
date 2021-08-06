@@ -36,7 +36,10 @@ bool TenosrTupleType::operator!=(const TenosrTupleType &t) const
     return value_ != t.value_;
 }
 
-TenosrTupleType::tt operator[](ttl::arity_t i) const { return value_.at(i); }
+TenosrTupleType::tt TenosrTupleType::operator[](ttl::arity_t i) const
+{
+    return value_.at(i);
+}
 
 size_t TenosrTupleType::arity() const { return value_.size(); }
 }  // namespace stdml
