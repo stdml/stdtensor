@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include <ttl/bits/std_except.hpp>
 #include <ttl/bits/std_shape.hpp>
 
 namespace ttl
@@ -76,22 +77,21 @@ class basic_flat_shape
         std::copy(dims_.begin(), dims_.end(), batch_dims.begin() + 1);
         return basic_flat_shape(std::move(batch_dims));
     }
-    //
 
     template <rank_t r>
     basic_shape<r, dim_t> ranked() const
     {
-        // TODO: use contracts of c++20
-        if (r != rank()) { throw std::invalid_argument("invalid rank"); }
+        if (r != rank()) { throw invalid_rank_reification(dims_, r); }
         std::array<dim_t, r> dims;
         std::copy(dims_.begin(), dims_.end(), dims.begin());
-        return basic_shape<r, dim_t>(dims);
+        return basic_shape<r, dim_t>(std::move(dims));
     }
 
     const std::vector<dim_t> &dims() const { return dims_; }
 
     bool operator==(const basic_flat_shape &s) const
     {
+        if (dims_.size() != s.dims_.size()) { return false; }
         return std::equal(dims_.begin(), dims_.end(), s.dims().begin());
     }
 
