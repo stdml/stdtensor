@@ -3,6 +3,7 @@
 
 #include <stdml/bits/tensor/dtype.hpp>
 #include <stdml/bits/tensor/shape.hpp>
+#include <ttl/bits/std_def.hpp>
 
 namespace stdml
 {
@@ -24,6 +25,8 @@ class TenosrTupleType
 
     // FIXME: n * TTT and TTT * n are different
     TenosrTupleType operator*(size_t n) const;
+
+    tt operator[](ttl::arity_t i) const;
 
     size_t arity() const;
 
