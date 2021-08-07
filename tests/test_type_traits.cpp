@@ -14,7 +14,7 @@ TEST(type_traits_test, test_1)
         ASSERT_EQ(pos, 1);
     }
     {  // won't compile
-       // constexpr int pos = ttl::lookup_type<double, Ts>::value;
+       // constexpr int pos = ttl::lookup<double, Ts>::value;
        // ASSERT_EQ(pos, 2);
     }
 }
