@@ -1,6 +1,11 @@
 #include "testing.hpp"
 
-#include <ttl/type_traits>
+#include <ttl/bits/type_traits.hpp>
+
+namespace ttl
+{
+using internal::lookup;
+}
 
 TEST(type_traits_test, test_1)
 {
