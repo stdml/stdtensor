@@ -1,4 +1,5 @@
 #pragma once
+#include <ttl/bits/std_def.hpp>
 #include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
@@ -7,8 +8,6 @@ namespace ttl
 {
 namespace internal
 {
-using rank_t = uint8_t;
-
 template <rank_t r, typename I>
 class basic_index;
 
