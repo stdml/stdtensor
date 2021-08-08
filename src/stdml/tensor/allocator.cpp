@@ -13,25 +13,30 @@ class libcudart
     typedef int (*copy_fn)(void *dst, const void *src, size_t size,
                            int /* cudaMemcpyKind */ dir);
 
+    typedef const char *(*get_err_str_fn)(int err);
+
     dll dll_;
     alloc_fn alloc_fn_;
     free_fn free_fn_;
     copy_fn copy_fn_;
+    get_err_str_fn get_err_str_;
 
   public:
     libcudart()
         : dll_("cudart", "/usr/local/cuda/lib64/"),
           alloc_fn_(dll_.sym<alloc_fn>("cudaMalloc")),
           free_fn_(dll_.sym<free_fn>("cudaFree")),
-          copy_fn_(dll_.sym<copy_fn>("cudaMemcpy"))
+          copy_fn_(dll_.sym<copy_fn>("cudaMemcpy")),
+          get_err_str_(dll_.sym<get_err_str_fn>("cudaGetErrorString"))
     {
     }
 
     void *cuda_alloc(size_t size) const
     {
         void *ptr = nullptr;
-        if (int code = alloc_fn_(&ptr, size); code != 0) {
-            throw std::runtime_error("cudaMalloc failed: ?");
+        if (int err = alloc_fn_(&ptr, size); err != 0) {
+            throw std::runtime_error("cudaMalloc() failed: " +
+                                     std::string(get_err_str_(err)));
         }
         return ptr;
     }
