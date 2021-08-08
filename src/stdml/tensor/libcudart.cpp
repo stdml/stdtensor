@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <stdml/bits/dll.hpp>
 #include <stdml/bits/tensor/cudart.hpp>
 
@@ -10,21 +12,24 @@ class libcudart_impl : public libcudart
 
     typedef int (*copy_fn)(void *dst, const void *src, size_t size,
                            int /* cudaMemcpyKind */ dir);
+    typedef int (*get_dev_cnt_fn)(int *);
 
     typedef const char *(*get_err_str_fn)(int err);
 
     dll dll_;
-    alloc_fn alloc_fn_;
-    free_fn free_fn_;
-    copy_fn copy_fn_;
+    alloc_fn alloc_;
+    free_fn free_;
+    copy_fn copy_;
+    get_dev_cnt_fn get_dev_cnt_;
     get_err_str_fn get_err_str_;
 
   public:
     libcudart_impl()
         : dll_("cudart", "/usr/local/cuda/lib64/"),
-          alloc_fn_(dll_.sym<alloc_fn>("cudaMalloc")),
-          free_fn_(dll_.sym<free_fn>("cudaFree")),
-          copy_fn_(dll_.sym<copy_fn>("cudaMemcpy")),
+          alloc_(dll_.sym<alloc_fn>("cudaMalloc")),
+          free_(dll_.sym<free_fn>("cudaFree")),
+          copy_(dll_.sym<copy_fn>("cudaMemcpy")),
+          get_dev_cnt_(dll_.sym<get_dev_cnt_fn>("cudaGetDeviceCount")),
           get_err_str_(dll_.sym<get_err_str_fn>("cudaGetErrorString"))
     {
     }
@@ -32,7 +37,7 @@ class libcudart_impl : public libcudart
     void *cuda_alloc(size_t size) const override
     {
         void *ptr = nullptr;
-        if (int err = alloc_fn_(&ptr, size); err != 0) {
+        if (int err = alloc_(&ptr, size); err != 0) {
             throw std::runtime_error("cudaMalloc() failed: " +
                                      std::string(get_err_str_(err)));
         }
@@ -41,7 +46,7 @@ class libcudart_impl : public libcudart
 
     void cuda_free(void *p) const override
     {
-        if (int err = free_fn_(p); err != 0) {
+        if (int err = free_(p); err != 0) {
             throw std::runtime_error("cudaFree() failed: " +
                                      std::string(get_err_str_(err)));
         }
@@ -50,7 +55,7 @@ class libcudart_impl : public libcudart
     void from_host(void *dst, const void *src, size_t n) const override
     {
         int dir = 0;
-        if (int err = copy_fn_(dst, src, n, dir); err != 0) {
+        if (int err = copy_(dst, src, n, dir); err != 0) {
             throw std::runtime_error("cudaMemcpy() failed: " +
                                      std::string(get_err_str_(err)));
         }
@@ -59,10 +64,20 @@ class libcudart_impl : public libcudart
     void to_host(void *dst, const void *src, size_t n) const override
     {
         int dir = 0;
-        if (int err = copy_fn_(dst, src, n, dir); err != 0) {
+        if (int err = copy_(dst, src, n, dir); err != 0) {
             throw std::runtime_error("cudaMemcpy() failed: " +
                                      std::string(get_err_str_(err)));
         }
+    }
+
+    int get_gpu_count() const override
+    {
+        int cnt = 0;
+        if (int err = get_dev_cnt_(&cnt); err != 0) {
+            throw std::runtime_error("cudaGetDeviceCount() failed: " +
+                                     std::string(get_err_str_(err)));
+        }
+        return cnt;
     }
 };
 
@@ -70,5 +85,17 @@ libcudart &libcudart::get()
 {
     static libcudart_impl instance;
     return instance;
+}
+
+bool has_cuda()
+{
+    static bool ok = try_dl_open("/usr/local/cuda/lib64/libcudart.so");
+    return ok;
+}
+
+int get_cuda_gpu_count()
+{
+    if (!has_cuda()) { return 0; }
+    return libcudart::get().get_gpu_count();
 }
 }  // namespace stdml

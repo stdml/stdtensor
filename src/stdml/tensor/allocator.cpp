@@ -6,8 +6,6 @@
 
 namespace stdml
 {
-bool has_cuda() { return try_dl_open("/usr/local/cuda/lib64/libcudart.so"); }
-
 void *generic_allocator::alloc(Device device, size_t size)
 {
     switch (device) {
