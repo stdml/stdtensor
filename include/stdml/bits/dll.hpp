@@ -18,4 +18,6 @@ class dll
         return reinterpret_cast<T>(raw_sym(name));
     }
 };
+
+bool try_dl_open(std::string path);
 }  // namespace stdml
