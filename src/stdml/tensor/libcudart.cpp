@@ -9,17 +9,17 @@ class libcudart_impl : public libcudart
 {
     typedef int (*alloc_fn)(void **devPtr, size_t size);
     typedef int (*free_fn)(void *addr);
-
     typedef int (*copy_fn)(void *dst, const void *src, size_t size,
                            int /* cudaMemcpyKind */ dir);
+    typedef int (*set_dev_fn)(int);
     typedef int (*get_dev_cnt_fn)(int *);
-
     typedef const char *(*get_err_str_fn)(int err);
 
     dll dll_;
     alloc_fn alloc_;
     free_fn free_;
     copy_fn copy_;
+    set_dev_fn set_dev_;
     get_dev_cnt_fn get_dev_cnt_;
     get_err_str_fn get_err_str_;
 
@@ -29,6 +29,7 @@ class libcudart_impl : public libcudart
           alloc_(dll_.sym<alloc_fn>("cudaMalloc")),
           free_(dll_.sym<free_fn>("cudaFree")),
           copy_(dll_.sym<copy_fn>("cudaMemcpy")),
+          set_dev_(dll_.sym<set_dev_fn>("cudaSetDevice")),
           get_dev_cnt_(dll_.sym<get_dev_cnt_fn>("cudaGetDeviceCount")),
           get_err_str_(dll_.sym<get_err_str_fn>("cudaGetErrorString"))
     {
@@ -70,6 +71,14 @@ class libcudart_impl : public libcudart
     {
         if (int err = copy_(dst, src, n, cudaMemcpyDeviceToHost); err != 0) {
             throw std::runtime_error("cudaMemcpy() failed: " +
+                                     std::string(get_err_str_(err)));
+        }
+    }
+
+    void set_cuda_device(int d) const override
+    {
+        if (int err = set_dev_(d); err != 0) {
+            throw std::runtime_error("cudaSetDevice() failed: " +
                                      std::string(get_err_str_(err)));
         }
     }
