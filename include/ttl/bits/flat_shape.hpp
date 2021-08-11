@@ -79,12 +79,18 @@ class basic_flat_shape
     }
 
     template <rank_t r>
-    basic_shape<r, dim_t> ranked() const
+    std::array<dim_t, r> dims() const
     {
         if (r != rank()) { throw invalid_rank_reification(dims_, r); }
         std::array<dim_t, r> dims;
         std::copy(dims_.begin(), dims_.end(), dims.begin());
-        return basic_shape<r, dim_t>(std::move(dims));
+        return dims;
+    }
+
+    template <rank_t r>
+    basic_shape<r, dim_t> ranked() const
+    {
+        return basic_shape<r, dim_t>(dims<r>());
     }
 
     const std::vector<dim_t> &dims() const { return dims_; }

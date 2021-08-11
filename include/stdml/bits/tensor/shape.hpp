@@ -25,7 +25,7 @@ std::array<T, r> cast_to(const C &xs)
 class Shape
 {
     using S = flat_shape;
-
+    using D = typename S::dimension_type;
     S s_;
 
   public:
@@ -71,6 +71,12 @@ class Shape
     }
 
     const auto &dims() const { return s_.dims(); }
+
+    template <ttl::rank_t r>
+    std::array<D, r> dims()
+    {
+        return s_.dims<r>();
+    }
 
     bool operator==(const Shape &s) const { return s_ == s.s_; }
 };
