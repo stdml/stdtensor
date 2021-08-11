@@ -40,6 +40,15 @@ class consistent_variable
         }
     }
 
+    void operator=(T v) const
+    {
+        if (static_cast<T>(*this) != v) {
+            throw std::invalid_argument(
+                std::string("consistent_variable was assigned: ") +
+                Str()(value_) + " now assigned: " + Str()(v));
+        }
+    }
+
     operator T() const
     {
         if (!assigned_) {
