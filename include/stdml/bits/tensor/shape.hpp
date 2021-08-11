@@ -73,7 +73,7 @@ class Shape
     const auto &dims() const { return s_.dims(); }
 
     template <ttl::rank_t r>
-    std::array<D, r> dims()
+    std::array<D, r> dims() const
     {
         return s_.dims<r>();
     }
