@@ -1,3 +1,5 @@
+#include <map>
+#include <memory>
 #include <stdexcept>
 
 #include <stdml/bits/dll.hpp>
@@ -5,6 +7,50 @@
 
 namespace stdml
 {
+static constexpr int Mi = 1 << 20;
+
+class memstat
+{
+    int64_t allocated_;
+    int64_t blocks_;
+
+    int64_t peek_;
+    int64_t peek_blocks_;
+
+    std::map<const void *, int64_t> _allocs;
+
+  public:
+    memstat() : allocated_(0), blocks_(0), peek_(0), peek_blocks_(0) {}
+
+    void in(int64_t n, const void *p)
+    {
+        allocated_ += n;
+        ++blocks_;
+        _allocs[p] = n;
+
+        if (allocated_ > peek_) { peek_ = allocated_; }
+        if (blocks_ > peek_blocks_) { peek_blocks_ = blocks_; }
+        fprintf(stderr,
+                ">>>total allocated: %.2fMiB (peek: %.2fMiB), %d blocks (peek: "
+                "%d)\n",
+                (double)allocated_ / Mi, (double)peek_ / Mi, (int)blocks_,
+                (int)peek_blocks_);
+    }
+
+    void out(const void *p)
+    {
+        if (_allocs.count(p) == 0) {
+            fprintf(stderr, "invalid free\n");
+        } else {
+            int64_t n = _allocs.at(p);
+            allocated_ -= n;
+            --blocks_;
+            fprintf(stderr, "...still allocated: %.2fMiB, %d blocks_\n",
+                    (double)allocated_ / Mi, (int)blocks_);
+        }
+    }
+};
+
 class libcudart_impl : public libcudart
 {
     typedef int (*alloc_fn)(void **devPtr, size_t size);
@@ -23,6 +69,8 @@ class libcudart_impl : public libcudart
     get_dev_cnt_fn get_dev_cnt_;
     get_err_str_fn get_err_str_;
 
+    std::unique_ptr<memstat> ms_;
+
   public:
     libcudart_impl()
         : dll_("cudart", "/usr/local/cuda/lib64/"),
@@ -31,17 +79,21 @@ class libcudart_impl : public libcudart
           copy_(dll_.sym<copy_fn>("cudaMemcpy")),
           set_dev_(dll_.sym<set_dev_fn>("cudaSetDevice")),
           get_dev_cnt_(dll_.sym<get_dev_cnt_fn>("cudaGetDeviceCount")),
-          get_err_str_(dll_.sym<get_err_str_fn>("cudaGetErrorString"))
+          get_err_str_(dll_.sym<get_err_str_fn>("cudaGetErrorString")),
+          ms_(new memstat)
     {
     }
 
     void *cuda_alloc(size_t size) const override
     {
+        fprintf(stderr, "<<<request: %d (%.2fMiB)\n", (int)size,
+                (double)size / Mi);
         void *ptr = nullptr;
         if (int err = alloc_(&ptr, size); err != 0) {
             throw std::runtime_error("cudaMalloc() failed: " +
                                      std::string(get_err_str_(err)));
         }
+        ms_->in(size, ptr);
         return ptr;
     }
 
@@ -51,6 +103,7 @@ class libcudart_impl : public libcudart
             throw std::runtime_error("cudaFree() failed: " +
                                      std::string(get_err_str_(err)));
         }
+        ms_->out(p);
     }
 
     // cudaMemcpy won't return error when dir = 0
