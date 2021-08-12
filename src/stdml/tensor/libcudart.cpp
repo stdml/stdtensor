@@ -7,7 +7,7 @@
 
 namespace stdml
 {
-static constexpr int Mi = 1 << 20;
+// static constexpr int Mi = 1 << 20;
 
 class memstat
 {
