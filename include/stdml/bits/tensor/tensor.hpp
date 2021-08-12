@@ -177,9 +177,7 @@ class TensorView : public BasicTensor<raw_tensor_view>
     using P = BasicTensor<TT>;
 
   public:
-    using P::E;
     using P::flatten;
-    using P::V;
 
     TensorView(TT t, Device device = cpu);
 
@@ -221,9 +219,7 @@ class TensorRef : public BasicTensor<raw_tensor_ref>
     friend class TensorView;
 
   public:
-    using P::E;
     using P::flatten;
-    using P::V;
 
     TensorRef(TT t, Device device = cpu);
 
