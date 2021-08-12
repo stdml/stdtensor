@@ -107,25 +107,32 @@ class libcudart_impl : public libcudart
     }
 
     // cudaMemcpy won't return error when dir = 0
-
-    // https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html#group__CUDART__TYPES_1g18fa99055ee694244a270e4d5101e95b
-    static constexpr int cudaMemcpyHostToDevice = 1;
-    static constexpr int cudaMemcpyDeviceToHost = 2;
-
-    void from_host(void *dst, const void *src, size_t n) const override
+    void _copy(void *dst, const void *src, size_t n, int dir) const
     {
-        if (int err = copy_(dst, src, n, cudaMemcpyHostToDevice); err != 0) {
+        if (int err = copy_(dst, src, n, dir); err != 0) {
             throw std::runtime_error("cudaMemcpy() failed: " +
                                      std::string(get_err_str_(err)));
         }
     }
 
+    // https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html#group__CUDART__TYPES_1g18fa99055ee694244a270e4d5101e95b
+    static constexpr int cudaMemcpyHostToDevice = 1;
+    static constexpr int cudaMemcpyDeviceToHost = 2;
+    static constexpr int cudaMemcpyDeviceToDevice = 3;
+
+    void from_host(void *dst, const void *src, size_t n) const override
+    {
+        _copy(dst, src, n, cudaMemcpyHostToDevice);
+    }
+
     void to_host(void *dst, const void *src, size_t n) const override
     {
-        if (int err = copy_(dst, src, n, cudaMemcpyDeviceToHost); err != 0) {
-            throw std::runtime_error("cudaMemcpy() failed: " +
-                                     std::string(get_err_str_(err)));
-        }
+        _copy(dst, src, n, cudaMemcpyDeviceToHost);
+    }
+
+    void d2d(void *dst, const void *src, size_t n) const override
+    {
+        _copy(dst, src, n, cudaMemcpyDeviceToDevice);
     }
 
     void set_cuda_device(int d) const override
