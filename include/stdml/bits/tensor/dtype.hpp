@@ -107,5 +107,7 @@ auto to(DType v)
 #undef CASE
 }
 
+size_t dtype_size(DType dt);
+
 DType parse_dtype(std::string name);
 }  // namespace stdml
