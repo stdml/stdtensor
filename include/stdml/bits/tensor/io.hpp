@@ -6,9 +6,18 @@
 
 namespace stdml
 {
-extern void show_tensor(std::basic_ostream<char> &os, const TensorView &x);
+namespace ops
+{
+class copy
+{
+  public:
+    void operator()(const TensorRef &y, const TensorView &x) const;
+};
+}  // namespace ops
 
 void copy(const TensorRef &y, const TensorView &x);
+
+extern void show_tensor(std::basic_ostream<char> &os, const TensorView &x);
 
 template <typename TT>
 std::string info(const TT &x)
