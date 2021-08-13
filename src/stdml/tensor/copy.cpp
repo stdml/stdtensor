@@ -15,6 +15,10 @@ void copy::operator()(const TensorRef &y, const TensorView &x) const
     if (n != y.data_size()) {
         throw std::invalid_argument("copy: inconsistent size");
     }
+    if (x.dtype() != y.dtype()) {
+        fprintf(stderr, "copy: inconsistent size dtype %s -> %s\n",
+                tn(x.dtype()), tn(y.dtype()));
+    }
     if (x.device() == cpu && y.device() == cpu) {
         std::memcpy(y.data(), x.data(), n);
         return;
