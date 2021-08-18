@@ -3,10 +3,23 @@
 
 #include <stdml/bits/tensor/dtype.hpp>
 #include <stdml/bits/tensor/shape.hpp>
+#include <stdml/tensor>
 #include <ttl/bits/std_def.hpp>
 
 namespace stdml
 {
+class TensorTuple : public std::vector<Tensor>
+{
+};
+
+class TensorTupleRef : public std::vector<TensorRef>
+{
+};
+
+class TensorTupleView : public std::vector<TensorView>
+{
+};
+
 class TenosrTupleType
 {
     using tt = std::pair<DType, Shape>;
@@ -31,5 +44,7 @@ class TenosrTupleType
     size_t arity() const;
 
     bool operator!=(const TenosrTupleType &t) const;
+
+    TensorTuple make(Device device = cpu) const;
 };
 }  // namespace stdml

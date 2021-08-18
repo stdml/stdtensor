@@ -42,4 +42,11 @@ TenosrTupleType::tt TenosrTupleType::operator[](ttl::arity_t i) const
 }
 
 size_t TenosrTupleType::arity() const { return value_.size(); }
+
+TensorTuple TenosrTupleType::make(Device device) const
+{
+    TensorTuple tt;
+    for (auto &[dt, s] : value_) { tt.emplace_back(dt, s, device); }
+    return tt;
+}
 }  // namespace stdml
