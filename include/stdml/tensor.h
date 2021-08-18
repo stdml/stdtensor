@@ -30,6 +30,7 @@ enum stdml_dtype_e {
 
     boolean,
     str,
+    resource
 };
 
 typedef enum stdml_dtype_e stdml_dtype_t;
