@@ -45,6 +45,8 @@ class TenosrTupleType
 
     bool operator!=(const TenosrTupleType &t) const;
 
+    std::string str() const;
+
     TensorTuple make(Device device = cpu) const;
 };
 }  // namespace stdml

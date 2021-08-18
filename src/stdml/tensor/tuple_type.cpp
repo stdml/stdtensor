@@ -43,6 +43,25 @@ TenosrTupleType::tt TenosrTupleType::operator[](ttl::arity_t i) const
 
 size_t TenosrTupleType::arity() const { return value_.size(); }
 
+std::string TenosrTupleType::str() const
+{
+    std::stringstream ss;
+    std::transform(value_.begin(), value_.end(),
+                   std::experimental::make_ostream_joiner(ss, ", "),
+                   [](auto p) {
+                       auto [dt, s] = p;
+                       std::stringstream ss;
+                       ss << tn(dt);
+                       ss << s;
+                       return ss.str();
+                   });
+    if (value_.size() == 1) {
+        return ss.str();
+    } else {
+        return '(' + ss.str() + ')';
+    }
+}
+
 TensorTuple TenosrTupleType::make(Device device) const
 {
     TensorTuple tt;
