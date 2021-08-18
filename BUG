@@ -1,1 +1,3 @@
  cudaMalloc() failed: an illegal memory access was encountered
+
+cause ealier cuda error not checked
