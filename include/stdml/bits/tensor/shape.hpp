@@ -29,7 +29,7 @@ class Shape
     S s_;
 
   public:
-    Shape() {}
+    Shape() = default;
 
     template <typename D>
     explicit Shape(const std::vector<D> &dims) : s_(cast_to<int64_t>(dims))
@@ -79,6 +79,8 @@ class Shape
     }
 
     bool operator==(const Shape &s) const { return s_ == s.s_; }
+
+    Shape subshape() const { return s_.subshape(); }
 };
 
 std::ostream &operator<<(std::ostream &os, const Shape &s);
