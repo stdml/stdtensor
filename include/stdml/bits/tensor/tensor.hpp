@@ -347,4 +347,10 @@ class Tensor : public BasicTensor<raw_tensor_ref>
         return TensorRef(t_.slice(i, j), device_);
     }
 };
+
+template <typename R, typename S, typename D, typename A>
+TensorView view(const ttl::internal::basic_tensor<R, S, D, A> &x)
+{
+    return TensorView(ttl::view(x));
+}
 }  // namespace stdml
