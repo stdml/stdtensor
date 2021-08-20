@@ -86,6 +86,11 @@ class libcudart_impl : public libcudart
     {
     }
 
+    const char *get_err_str(int err) const override
+    {
+        return get_err_str_(err);
+    }
+
     void *cuda_alloc(size_t size) const override
     {
         void *ptr = nullptr;
