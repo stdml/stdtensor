@@ -6,11 +6,19 @@
 
 namespace stdml
 {
+static constexpr const char *EXT =
+#if defined(__APPLE__) && defined(__MACH__)
+    ".dylib"
+#else
+    ".so"
+#endif
+    ;
+
 static constexpr int mode = RTLD_LAZY;
 
 dll::dll(std::string name, std::string prefix)
 {
-    std::string soname = "lib" + name + ".so";
+    std::string soname = "lib" + name + EXT;
     std::string path = prefix + soname;
     handle_ = dlopen(path.c_str(), mode);
     if (handle_ == nullptr) { throw std::runtime_error(dlerror()); }
