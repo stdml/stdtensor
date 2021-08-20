@@ -1,0 +1,30 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <cstdint>
+#include <ostream>
+
+#include <ttl/bits/experimental/std_region.hpp>
+
+namespace ttl
+{
+namespace internal
+{
+template <typename N>
+std::ostream &operator<<(std::ostream &os, const basic_range_t<N> &r)
+{
+    os << '[' << r.from << ", " << r.to << ')';
+    return os;
+}
+}  // namespace internal
+
+namespace experimental
+{
+using range_t = internal::basic_range_t<uint32_t>;
+using huge_range_t = internal::basic_range_t<uint64_t>;
+
+using region_t = internal::basic_region_t<uint32_t>;
+using huge_region_t = internal::basic_region_t<uint64_t>;
+
+// using range_list_t = std::vector<range_t>;
+}  // namespace experimental
+}  // namespace ttl
