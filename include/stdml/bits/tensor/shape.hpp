@@ -31,6 +31,8 @@ class Shape
   public:
     Shape() = default;
 
+    Shape(S s);
+
     template <typename D>
     explicit Shape(const std::vector<D> &dims) : s_(cast_to<int64_t>(dims))
     {
@@ -47,20 +49,16 @@ class Shape
     {
     }
 
-    Shape(S s) : s_(std::move(s)) {}
-
     template <ttl::rank_t r>
     explicit Shape(const ttl::shape<r> &s) : s_(s)
     {
     }
 
-    // operator S() const { return s_; }
-
     const S &get() const { return s_; }
 
-    size_t rank() const { return s_.rank(); }
+    ttl::rank_t rank() const;
 
-    size_t size() const { return s_.size(); }
+    size_t size() const;
 
     template <ttl::rank_t r, typename Dim = dim_t>
     ttl::internal::basic_shape<r, Dim> ranked() const
@@ -78,9 +76,9 @@ class Shape
         return s_.dims<r>();
     }
 
-    bool operator==(const Shape &s) const { return s_ == s.s_; }
+    bool operator==(const Shape &s) const;
 
-    Shape subshape() const { return s_.subshape(); }
+    Shape subshape() const;
 };
 
 std::ostream &operator<<(std::ostream &os, const Shape &s);

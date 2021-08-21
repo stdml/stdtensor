@@ -7,6 +7,16 @@
 
 namespace stdml
 {
+Shape::Shape(S s) : s_(std::move(s)) {}
+
+ttl::rank_t Shape::rank() const { return s_.rank(); }
+
+size_t Shape::size() const { return s_.size(); }
+
+bool Shape::operator==(const Shape &s) const { return s_ == s.s_; }
+
+Shape Shape::subshape() const { return s_.subshape(); }
+
 std::ostream &operator<<(std::ostream &os, const Shape &s)
 {
     os << '(';
