@@ -191,24 +191,15 @@ class TensorView : public BasicTensor<raw_tensor_view>
 
     TensorView(const TensorRef &);
 
-    TensorView operator[](size_t i) const { return TensorView(t_[i], device_); }
+    TensorView operator[](size_t i) const;
 
-    TensorView flatten() const { return TensorView(t_.flatten(), device_); }
+    TensorView flatten() const;
 
-    TensorView reshape(Shape s) const
-    {
-        return TensorView(t_.reshape(s.get()), device_);
-    }
+    TensorView reshape(Shape s) const;
 
-    TensorView chunk(size_t k) const
-    {
-        return TensorView(t_.chunk(k), device_);
-    }
+    TensorView chunk(size_t k) const;
 
-    TensorView slice(size_t i, size_t j) const
-    {
-        return TensorView(t_.slice(i, j), device_);
-    }
+    TensorView slice(size_t i, size_t j) const;
 };
 
 class TensorRef : public BasicTensor<raw_tensor_ref>

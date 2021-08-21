@@ -41,6 +41,31 @@ TensorView::TensorView(const Tensor &x) : P(TT(x.t_), x.device_) {}
 
 TensorView::TensorView(const TensorRef &x) : P(TT(x.t_), x.device_) {}
 
+TensorView TensorView::operator[](size_t i) const
+{
+    return TensorView(t_[i], device_);
+}
+
+TensorView TensorView::flatten() const
+{
+    return TensorView(t_.flatten(), device_);
+}
+
+TensorView TensorView::reshape(Shape s) const
+{
+    return TensorView(t_.reshape(s.get()), device_);
+}
+
+TensorView TensorView::chunk(size_t k) const
+{
+    return TensorView(t_.chunk(k), device_);
+}
+
+TensorView TensorView::slice(size_t i, size_t j) const
+{
+    return TensorView(t_.slice(i, j), device_);
+}
+
 TensorRef::TensorRef(TT t, Device device) : P(std::move(t), device) {}
 
 TensorRef::TensorRef(const Tensor &x) : P(TT(x.t_), x.device_) {}
