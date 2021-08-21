@@ -97,6 +97,32 @@ TensorRef TensorRef::slice(size_t i, size_t j) const
     return TensorRef(t_.slice(i, j), device_);
 }
 
+TensorRef Tensor::ref() const { return TensorRef(*this); }
+
+TensorView Tensor::view() const { return TensorView(*this); }
+
+TensorRef Tensor::flatten() const { return TensorRef(t_.flatten(), device_); }
+
+TensorRef Tensor::reshape(Shape s) const
+{
+    return TensorRef(t_.reshape(s.get()), device_);
+}
+
+TensorRef Tensor::operator[](size_t i) const
+{
+    return TensorRef(t_[i], device_);
+}
+
+TensorRef Tensor::chunk(size_t k) const
+{
+    return TensorRef(t_.chunk(k), device_);
+}
+
+TensorRef Tensor::slice(size_t i, size_t j) const
+{
+    return TensorRef(t_.slice(i, j), device_);
+}
+
 template <typename R>
 struct show_scalar {
     void operator()(std::basic_ostream<char> &os, const R *ptr)

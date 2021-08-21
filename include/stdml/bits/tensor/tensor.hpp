@@ -312,25 +312,19 @@ class Tensor : public BasicTensor<raw_tensor_ref>
     {
     }
 
-    TensorRef ref() const { return TensorRef(*this); }
+    TensorRef ref() const;
 
-    TensorView view() const { return TensorView(*this); }
+    TensorView view() const;
 
-    TensorRef flatten() const { return TensorRef(t_.flatten(), device_); }
+    TensorRef flatten() const;
 
-    TensorRef reshape(Shape s) const
-    {
-        return TensorRef(t_.reshape(s.get()), device_);
-    }
+    TensorRef reshape(Shape s) const;
 
-    TensorRef operator[](size_t i) const { return TensorRef(t_[i], device_); }
+    TensorRef operator[](size_t i) const;
 
-    TensorRef chunk(size_t k) const { return TensorRef(t_.chunk(k), device_); }
+    TensorRef chunk(size_t k) const;
 
-    TensorRef slice(size_t i, size_t j) const
-    {
-        return TensorRef(t_.slice(i, j), device_);
-    }
+    TensorRef slice(size_t i, size_t j) const;
 };
 
 template <typename R, typename S, typename D, typename A>
