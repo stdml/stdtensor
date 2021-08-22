@@ -55,3 +55,13 @@ TEST(flat_shape_test, test_rank_reification)
         ASSERT_EQ(std::string(ex.what()), std::string("(2, 3, 4) as rank 2"));
     }
 }
+
+TEST(flat_shape_test, test_convert_dim_type)
+{
+    using S1 = ttl::internal::basic_flat_shape<uint32_t>;
+    using S2 = ttl::internal::basic_flat_shape<uint64_t>;
+
+    S1 s1(2, 3, 4);
+    S2 s2(s1);
+    ASSERT_EQ(s2.size(), (uint64_t)24);
+}
