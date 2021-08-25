@@ -41,6 +41,12 @@ basic_integer_range<N> range(N n)
 }
 
 template <typename N>
+basic_integer_range<N> range1(N n)
+{
+    return basic_integer_range<N>(1, n + 1);
+}
+
+template <typename N>
 basic_integer_range<N> range(N m, N n)
 {
     return basic_integer_range<N>(m, n);

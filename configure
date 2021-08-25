@@ -8,7 +8,7 @@ BUILD_BENCHMARKS=0
 BUILD_EXAMPLES=0
 BUILD_GBENCH=0
 BUILD_GTEST=0
-BUILD_LIB=1 # FIXME: make it false
+BUILD_LIB=0
 BUILD_TESTS=0
 
 HAVE_CUDA=0
@@ -54,6 +54,9 @@ parse_args() {
         --with-cuda=*)
             CUDA_HOME="${i#*=}"
             echo "configure --with-cuda=$CUDA_HOME"
+            ;;
+        --release=*)
+            RELEASE="${i#*=}"
             ;;
         --verbose)
             VERBOSE=1
@@ -119,6 +122,11 @@ add_cmake_flags() {
 
     # add_cmake_flag BUILD_DOCS 1
     # add_cmake_flag CMAKE_FIND_DEBUG_MODE 1
+
+    if [ ! -z "$RELEASE" ]; then
+        add_cmake_flag CPACK_PACKAGE_VERSION $RELEASE
+        add_cmake_flag BUILD_RELEASE 1
+    fi
 }
 
 main() {

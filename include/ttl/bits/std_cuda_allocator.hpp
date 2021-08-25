@@ -61,6 +61,16 @@ class basic_copier<cuda_memory, host_memory>
     }
 };
 
+template <>
+class basic_copier<cuda_memory, cuda_memory>
+{
+  public:
+    void operator()(void *dst, const void *src, size_t size)
+    {
+        cuda_copier::copy<cuda_copier::d2d>(dst, src, size);
+    }
+};
+
 template <typename R>
 class basic_allocator<R, cuda_memory>
 {

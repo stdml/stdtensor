@@ -1,4 +1,5 @@
 #pragma once
+#include <ttl/bits/std_def.hpp>
 #include <ttl/bits/std_device.hpp>
 #include <ttl/bits/std_tensor_fwd.hpp>
 #include <ttl/bits/std_tensor_traits.hpp>
@@ -7,6 +8,9 @@ namespace ttl
 {
 namespace internal
 {
+template <rank_t r, typename I>
+class basic_index;
+
 template <typename R, typename S, typename D, typename A>
 class basic_scalar_mixin
 {
@@ -151,6 +155,14 @@ class basic_tensor_mixin
     iterator begin() const { return _iter(data()); }
 
     iterator end() const { return _iter(data_end()); }
+
+    template <typename I>
+    data_ref operator[](const basic_index<rank, I> &i) const
+    {
+        // FIXME: support other devices
+        static_assert(std::is_same<D, host_memory>::value, "");
+        return data_.get()[shape_.offset(i.offsets())];
+    }
 
     element_t operator[](Dim i) const
     {
