@@ -35,6 +35,16 @@ class basic_shape
 
     static constexpr rank_t rank = r;
 
+    template <typename D1>
+    constexpr explicit basic_shape(const std::array<D1, r> &dims)
+        : dims_([&](){
+            std::array<dim_t, r> a;
+            std::copy(dims.begin(), dims.end(), a.begin());
+            return a;
+        }())
+    {
+    }
+
     constexpr explicit basic_shape(std::array<dim_t, r> dims)
         : dims_(std::move(dims))
     {
