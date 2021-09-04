@@ -1,0 +1,9 @@
+// # -*- mode: c++ -*-
+#pragma once
+#include <ttl/bits/functional.hpp>
+
+namespace ttl
+{
+using internal::length;
+using internal::slice;
+}  // namespace ttl
