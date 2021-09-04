@@ -47,6 +47,16 @@ class basic_flat_shape
     {
     }
 
+    template <typename D>
+    basic_flat_shape(const basic_flat_shape<D> &shape)
+        : dims_([](auto v) {
+              std::vector<Dim> dims(v.size());
+              std::copy(v.begin(), v.end(), dims.begin());
+              return dims;
+          }(shape.dims()))
+    {
+    }
+
     rank_t rank() const { return static_cast<rank_t>(dims_.size()); }
 
     dim_t size() const { return product<dim_t>(dims_.begin(), dims_.end()); }

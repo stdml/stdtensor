@@ -22,8 +22,8 @@ void cast(const basic_host_tensor_view<R, r, Dim> &x,
                    [](const R &e) -> R1 { return static_cast<R1>(e); });
 }
 
-template <typename R, rank_t r, typename Dim>
-void fill(const basic_host_tensor_ref<R, r, Dim> &t, const R &x)
+template <typename R, typename S>
+void fill(const basic_tensor<R, S, host_memory, readwrite> &t, const R &x)
 {
     std::fill(t.data(), t.data_end(), x);
 }

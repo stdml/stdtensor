@@ -46,3 +46,15 @@ using matrix_ref = tensor_ref<R, 2, D>;
 template <typename R, typename D = internal::host_memory>
 using matrix_view = tensor_view<R, 2, D>;
 }  // namespace ttl
+
+// stl adaptors
+#include <vector>
+
+namespace ttl
+{
+template <typename R>
+vector_view<R> view(const std::vector<R> &x)
+{
+    return vector_view<R>(x.data(), x.size());
+}
+}  // namespace ttl
