@@ -14,6 +14,7 @@ IF(BUILD_GTEST)
     EXTERNALPROJECT_ADD(
         libgtest-dev-repo
         GIT_REPOSITORY ${GTEST_GIT_URL}
+        GIT_TAG main
         PREFIX ${PREFIX}
         # https://stackoverflow.com/questions/19024259/how-to-change-the-build-
         # type-to-release-mode-in-cmake

@@ -11,6 +11,7 @@ IF(BUILD_GBENCH)
 
     EXTERNALPROJECT_ADD(gbench-repo
                         GIT_REPOSITORY ${GBENCH_GIT_URL}
+                        GIT_TAG main
                         PREFIX ${PREFIX}
                         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PREFIX}
                                    -DCMAKE_BUILD_TYPE=Release
