@@ -42,7 +42,7 @@ parse_args() {
         --no-cuda)
             HAVE_CUDA=0
             ;;
-        --build-lib)
+        --lib)
             BUILD_LIB=1
             ;;
         --build-gtest)
@@ -60,6 +60,9 @@ parse_args() {
             ;;
         --verbose)
             VERBOSE=1
+            ;;
+        --deb)
+            BUILD_DEB=1
             ;;
         --quiet)
             QUIET=1
@@ -90,6 +93,9 @@ add_cmake_flags() {
     add_cmake_flag BUILD_BENCHMARKS ${BUILD_BENCHMARKS}
     add_cmake_flag BUILD_EXAMPLES ${BUILD_EXAMPLES}
 
+    if [ "$BUILD_DEB" = 1 ]; then
+        add_cmake_flag BUILD_DEB $BUILD_DEB
+    fi
     if [ ${HAVE_CUDA} -eq 1 ]; then
         add_cmake_flag HAVE_CUDA ${HAVE_CUDA}
         add_cmake_flag CUDA_HOME $CUDA_HOME
